@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
+    <system systemId="https://www.cp.gov.tw/SEWebApplication/AAmediator.asmx?wsdl" uri="wsdl/www.cp.gov.tw/SEWebApplication/AAmediator.asmx.wsdl"/>
+    <system systemId="https://www.cp.gov.tw/SEWebApplication/OMmediator.asmx?wsdl" uri="wsdl/www.cp.gov.tw/SEWebApplication/OMmediator.asmx.wsdl"/>
+    <system systemId="https://www.cp.gov.tw/SEWebApplication/SImediator.asmx?wsdl" uri="wsdl/www.cp.gov.tw/SEWebApplication/SImediator.asmx.wsdl"/>
+</catalog>

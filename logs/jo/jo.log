@@ -1,0 +1,14 @@
+[2015-09-16 16:48:26][hyweb.jo.util.JOCacheFileItem.load(JOCacheFileItem.java:36)]Load file : D:\will\work\nb\mwork\src\main\webapp\WEB-INF\prj\baphiq\cfg.json
+[2015-09-16 16:48:26][hyweb.jo.util.JOCacheFileItem.load(JOCacheFileItem.java:36)]Load file : D:\will\work\nb\mwork\src\main\webapp\WEB-INF\prj\baphiq\dp\pos.dao
+[2015-09-16 16:48:26][hyweb.jo.db.DBBase.ds(DBBase.java:105)]classId : hyweb.jo.db.DSC3P0
+[2015-09-16 16:48:26][hyweb.jo.util.JOFunctionCacheLoader.load(JOFunctionCacheLoader.java:13)]Load function  hyweb.jo.fun.model.FMPSFill
+[2015-09-16 16:48:27][hyweb.jo.util.JOFunctionCacheLoader.load(JOFunctionCacheLoader.java:13)]Load function  hyweb.jo.fun.model.FMRsmd2Metadata
+[2015-09-16 16:48:27][hyweb.jo.util.JOFunctionCacheLoader.load(JOFunctionCacheLoader.java:13)]Load function  hyweb.jo.fun.model.FMRS2Rows
+[2015-09-16 16:48:27][hyweb.jo.util.JOFunctionCacheLoader.load(JOFunctionCacheLoader.java:13)]Load function  hyweb.jo.fun.model.FMRS2Row
+[2015-09-16 16:48:27][hyweb.jo.util.JOCacheFileItem.load(JOCacheFileItem.java:36)]Load file : D:\Dropbox\resources\prj\baphiq\cfg.json
+[2015-09-16 16:48:27][hyweb.jo.util.JOCacheFileItem.load(JOCacheFileItem.java:36)]Load file : D:\Dropbox\resources\prj\baphiq\dp\combo\city.json
+[2015-09-16 16:48:27][hyweb.jo.util.JOFunctionCacheLoader.load(JOFunctionCacheLoader.java:13)]Load function  hyweb.jo.fun.util.FJA2String
+[2015-09-16 16:48:27][hyweb.jo.db.DBBase.ds(DBBase.java:105)]classId : hyweb.jo.db.DSC3P0
+[2015-09-16 16:48:27][hyweb.jo.util.JOCacheFileItem.load(JOCacheFileItem.java:36)]Load file : D:\will\work\nb\mwork\target\mwork-1.0-SNAPSHOT\WEB-INF\prj\baphiq\dp\metadata\ps_store.json
+[2015-09-16 16:48:27][hyweb.jo.util.JOFunctionCacheLoader.load(JOFunctionCacheLoader.java:13)]Load function  hyweb.jo.fun.model.FSQLInsert
+[2015-09-16 16:48:27][hyweb.jo.util.JOCacheFileItem.load(JOCacheFileItem.java:36)]Load file : D:\will\work\nb\mwork\target\mwork-1.0-SNAPSHOT\WEB-INF\prj\baphiq\cfg.json
