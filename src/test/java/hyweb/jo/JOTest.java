@@ -5,15 +5,24 @@
  */
 package hyweb.jo;
 
+import java.io.File;
+
 /**
  *
  * @author william
  */
 public class JOTest {
 
-    protected String root = "D:\\will\\work\\nb\\mwork\\target\\mwork-1.0-SNAPSHOT";
-    protected String upload_root = root + "\\public";
-    protected String base = root + "\\WEB-INF\\prj\\baphiq";
-    
-    
+    public static String root = "D:\\will\\work\\nb\\mwork\\target\\mwork-1.0-SNAPSHOT";
+    public static String upload_root = root + "\\public";
+    public static String base = root + "\\WEB-INF\\prj\\baphiq";
+
+    static {
+        File f = new File(root);
+        if (!f.exists()) {
+            root  ="D:\\Users\\william\\Dropbox\\resources\\";
+            base = root +"\\prj\\baphiq";
+        }
+    }
+
 }

@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.mvel2.MVEL;
-import org.mvel2.ParserContext;
 
 /**
  *
@@ -27,8 +26,6 @@ public class meval implements IJOFunction<Object, Object[]> {
         Map<String, Object> m = new HashMap<String, Object>();
         Map<String, Object> msg = new HashMap<String, Object>();
         ret.m().put("_err", msg);
-        //ParserContext ctx = ParserContext.create();
-        // ctx.addImport("$f", JOFunctional.class);
         m.put("$", ret.m());
         m.put("$$", ref.m());
         m.put("$p", proc);
@@ -64,15 +61,5 @@ public class meval implements IJOFunction<Object, Object[]> {
         return flag;
     }
 
-    public Object mvel() throws Exception {
-        ParserContext ctx = new ParserContext();
-
-        return null;
-    }
-
-    public Object mvel_eval() throws Exception {
-
-        return null;
-    }
 
 }

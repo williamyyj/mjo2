@@ -45,8 +45,8 @@ public class mapping implements IJOFunction<Boolean, Object[]> {
         String base = "D:\\will\\work\\nb\\mwork\\src\\main\\webapp\\WEB-INF\\prj\\baphiq";
         JOProcObject proc = new JOProcObject(base);
         try {
-            JOFunctional.exec2("mapping", proc, "m_upload","$m",JOProcObject.RequestValue);
-            JSONObject jo = (JSONObject) proc.get(JOProcObject.RequestValue,"$m",new JSONObject());
+            JOFunctional.exec2("mapping", proc, "m_upload","$m",JOProcObject.p_request);
+            JSONObject jo = (JSONObject) proc.get(JOProcObject.p_request,"$m",new JSONObject());
             System.out.println(jo.toString(4));
         } finally {
             proc.release();
