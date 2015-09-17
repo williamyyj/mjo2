@@ -10,7 +10,7 @@ import java.util.List;
  * @author william
  */
 
-public class mjoc_rows extends mjo_base   implements IJOFunction<List<JSONObject>, JSONObject> {
+public class mjoc_rows extends MJOBase   implements IJOFunction<List<JSONObject>, JSONObject> {
 
     @Override
     public List<JSONObject> exec(JSONObject wp) throws Exception {

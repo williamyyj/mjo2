@@ -3,12 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package hyweb.jo.fun;
+package hyweb.jo.model.field;
+
+import hyweb.jo.annotation.IAProxyClass;
 
 /**
  *
  * @author william
  */
-public class fset {
+@IAProxyClass(id = "field.vf")
+public class JOVFField {
     
 }

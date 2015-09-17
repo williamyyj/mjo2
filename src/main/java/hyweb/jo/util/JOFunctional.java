@@ -3,9 +3,16 @@ package hyweb.jo.util;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.LoadingCache;
 import hyweb.jo.IJOFunction;
-import hyweb.jo.fun.util.FldComboText;
-import hyweb.jo.fun.util.FldComboValue;
-import hyweb.jo.fun.util.FldDateFormat;
+import hyweb.jo.JOProcObject;
+import hyweb.jo.fun.MJOBase;
+import hyweb.jo.log.JOLogger;
+import hyweb.jo.model.JOMetadata;
+import hyweb.jo.org.json.JSONObject;
+import java.io.UnsupportedEncodingException;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -44,6 +51,15 @@ public class JOFunctional {
             return null;
         }
     }
+    
+        public static Object mjo(JSONObject wp) throws Exception {
+        IJOFunction fun = cache().get(key(MJOBase.act_classId(wp)));
+        if (fun != null) {
+            return fun.exec(wp);
+        } else {
+            return null;
+        }
+    }
 
     /**
      * 多變數
@@ -57,4 +73,48 @@ public class JOFunctional {
         return exec(id, args);
     }
 
+    public static boolean in(Set fs, Object o) {
+        if (fs != null && o != null) {
+            return fs.contains(o);
+        }
+        return false;
+    }
+
+    public static boolean ina(Set fs, Object o) {
+        boolean ret = false;
+        if (fs != null && o != null) {
+            ret = fs.contains(o);
+        }
+        if(!ret){
+            fs.add(o);
+        }
+        return ret ; 
+    }
+
+    public static String md5(Object... args) throws Exception {
+        StringBuilder sb = new StringBuilder();
+        for (Object o : args) {
+            if (o != null) {
+                sb.append(o);
+            }
+        }
+        byte[] buf = sb.toString().getBytes("UTF-8");
+        return ENDE.md5(buf);
+    }
+
+    public static Set<Object> load_set(JOProcObject proc, int field, String name, String sql, Object... params) throws Exception {
+        List<JSONObject> rows = proc.db().rows(sql, params);
+        Set<Object> ret = new HashSet<Object>();
+        for (JSONObject row : rows) {
+            ret.add(row.opt(name));
+        }
+        proc.set(field, "s_" + name, ret);
+        return ret ; 
+    }
+    
+    public static JSONObject json(Map<String,Object> m){
+        return new JSONObject(m);
+    }
+    
+   
 }

@@ -1,14 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package hyweb.jo.fun;
 
 import hyweb.jo.JOProcObject;
 import hyweb.jo.JOTest;
-import hyweb.jo.model.IJOField;
-import hyweb.jo.model.JOMetadata;
 import hyweb.jo.org.json.JSONObject;
 import hyweb.jo.util.JOFunctional;
 import hyweb.jo.util.JOTools;

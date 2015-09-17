@@ -2,16 +2,13 @@ package hyweb.jo.fun;
 
 import hyweb.jo.IJOFunction;
 import hyweb.jo.JOConst;
-import hyweb.jo.JOProcConst;
 import hyweb.jo.JOProcObject;
 import hyweb.jo.model.JOMetadata;
 import hyweb.jo.org.json.JSONArray;
 import hyweb.jo.org.json.JSONObject;
 import hyweb.jo.util.JOFunctional;
-import hyweb.jo.util.JOTools;
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
 /**

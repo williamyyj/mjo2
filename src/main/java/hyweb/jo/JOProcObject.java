@@ -1,6 +1,7 @@
 package hyweb.jo;
 
 import hyweb.jo.db.DB;
+import hyweb.jo.fun.MJOBase;
 import hyweb.jo.model.IJOField;
 import hyweb.jo.model.JOMetadata;
 import hyweb.jo.org.json.JSONObject;
@@ -105,8 +106,5 @@ public class JOProcObject extends JSONObject {
         o = get(p_app, name, null);
         return (o != null) ? o : dv;
     }
-    
-    
-    
-
+   
 }
