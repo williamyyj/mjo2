@@ -1,7 +1,6 @@
 package hyweb.jo;
 
 import hyweb.jo.db.DB;
-import hyweb.jo.fun.MJOBase;
 import hyweb.jo.model.IJOField;
 import hyweb.jo.model.JOMetadata;
 import hyweb.jo.org.json.JSONObject;

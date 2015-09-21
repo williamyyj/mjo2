@@ -22,7 +22,7 @@ public class mjo_eval extends MJOBase implements IJOFunction<Object, JSONObject>
         List<IJOField> eFields = eval_fields(wp);
         Map<String, Object> m = eval_pool(wp);
         JSONObject reval = new JSONObject();
-        m.put("$eval", reval.m());        
+        m.put("$eval", reval.m());
         for (IJOField fld : eFields) {
             try {
                 Object o = MVEL.eval(fld.eval(), m);
@@ -35,7 +35,7 @@ public class mjo_eval extends MJOBase implements IJOFunction<Object, JSONObject>
             } catch (Exception e) {
                 JOLogger.error("Can't eval : " + fld.id() + "\n" + m, e);
             }
-        }
+        }        
         return reval;
     }
 

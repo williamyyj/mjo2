@@ -3,20 +3,13 @@ package hyweb.jo.fun.model;
 
 
 import hyweb.jo.IJOFunction;
-import hyweb.jo.db.DB;
-import hyweb.jo.db.DBCmd;
-import hyweb.jo.log.JOLogger;
 import hyweb.jo.model.IJOField;
 import hyweb.jo.model.JOMetadata;
 import hyweb.jo.org.json.JSONObject;
 import hyweb.jo.util.JOFunctional;
 import hyweb.jo.util.JOTools;
-import hyweb.jo.JOProcConst;
 import hyweb.jo.JOProcObject;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  *
