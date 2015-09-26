@@ -28,7 +28,7 @@ public class MVELTemplate {
             mvel_context = jf.loadString(f, "UTF-8");
             template = TemplateCompiler.compileTemplate(mvel_context);
         } catch (Exception ex) {
-
+            ex.printStackTrace();
         }
 
     }

@@ -77,7 +77,7 @@ public class JOMetadata extends HashMap<String, IJOField> {
             for (int i = 0; i < metadata.length(); i++) {
                 JSONObject meta = metadata.optJSONObject(i);
                 try {
-                    IJOField fld = cast_field(meta);
+                    IJOField fld = JOFieldUtils.newInstance(meta);
                     if (fld != null) {
                         put(fld.id(), fld);
                     }
@@ -88,13 +88,7 @@ public class JOMetadata extends HashMap<String, IJOField> {
         }
     }
 
-    private IJOField cast_field(JSONObject jo) throws Exception {
-        IJOField fld = JOFieldFactory.newField(jo.optString("dt"));
-        if (fld != null) {
-            fld.__init__(new JSONObject(jo.m()));
-        }
-        return fld;
-    }
+
 
     public String name() {
         return cfg.optString("name");

@@ -22,18 +22,18 @@ public class MJOBase {
         JSONObject p = new JSONObject();
         JOProcObject proc = (JOProcObject) args[0];
         String metaId = (String) args[1];
-        String actId = (String) args[2];
+        String actId = (args.length > 2) ? (String) args[2] : null;
         JSONObject row = (JSONObject) ((args.length > 3) ? args[3] : proc.params());
         JSONObject ref = (JSONObject) ((args.length > 4) ? args[4] : new JSONObject());
         JOMetadata metadata = proc.metadata(metaId);
         JSONObject act = metadata.cfg().optJSONObject(actId);
         if (act == null) {
-            JOLogger.info("wp act : " + actId + " is null.");
+            JOLogger.info("WP act  is null.");
         }
         p.put("$p", proc);
         p.put("$db", proc.db());
-        p.put("$", row.m()); //  會轉成 json 
-        p.put("$$", ref.m());  //  會轉成 json
+        p.put("$", row);
+        p.put("$$", ref);
         p.put("$metadata", metadata);
         p.put("$act", act);
         return p;
@@ -90,6 +90,23 @@ public class MJOBase {
 
     public static JSONObject act(JSONObject wp) {
         return wp.optJSONObject("$act");
+    }
+
+    public static void caseInsensitive(JSONObject row) {
+        if (row != null) {
+            JSONArray name = row.names();
+
+        }
+    }
+
+    public static Object act_vf(JSONObject wp) {
+        String vf = wp.optJSONObject("$act").optString("vf");
+        try {
+            return Class.forName(vf).newInstance();
+        } catch (Exception e) {
+            JOLogger.warn("Can't new instance " + vf);
+        }
+        return null;
     }
 
 }

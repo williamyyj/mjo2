@@ -30,7 +30,6 @@ public class db_update implements IJOFunction<Boolean, Object[]> {
             jq.put(JOProcConst.act, "edit");
             jq.put(JOProcConst.cmd, JOFunctional.exec("model.FSQLUpdate", fields));
             JSONObject mq = DBCmd.parser_cmd(proc.db(), jq);
-            JOLogger.debug(mq);
             proc.db().action(mq);
             return true;
         } catch (Exception e) {

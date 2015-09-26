@@ -6,6 +6,7 @@ import hyweb.jo.IJOFunction;
 import hyweb.jo.JOProcObject;
 import hyweb.jo.fun.MJOBase;
 import hyweb.jo.org.json.JSONObject;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -48,8 +49,8 @@ public class JOFunctional {
             return null;
         }
     }
-    
-        public static Object mjo(JSONObject wp) throws Exception {
+
+    public static Object mjo(JSONObject wp) throws Exception {
         IJOFunction fun = cache().get(key(MJOBase.act_classId(wp)));
         if (fun != null) {
             return fun.exec(wp);
@@ -77,15 +78,19 @@ public class JOFunctional {
         return false;
     }
 
+    /*
+     集合中如果存在  true  不存在新增到集合
+     */
     public static boolean ina(Set fs, Object o) {
-        boolean ret = false;
-        if (fs != null && o != null) {
-            ret = fs.contains(o);
+        if (fs == null) {
+            return false;
         }
-        if(!ret){
+        if (fs.contains(o)) {
+            return true;
+        } else {
             fs.add(o);
+            return false;
         }
-        return ret ; 
     }
 
     public static String md5(Object... args) throws Exception {
@@ -106,12 +111,19 @@ public class JOFunctional {
             ret.add(row.opt(name));
         }
         proc.set(field, "s_" + name, ret);
-        return ret ; 
+        return ret;
     }
-    
-    public static JSONObject json(Map<String,Object> m){
+
+    public static JSONObject json(Map<String, Object> m) {
         return new JSONObject(m);
     }
+
+    public static boolean rdate(Date d, Date a, Date b) {
+        if (a == null || b == null || d == null) {
+            return false;
+        }
+        long v = d.getTime();
+        return a.getTime() < v && v < b.getTime();
+    }
     
-   
 }

@@ -1,15 +1,7 @@
 package hyweb.jo.fun.model;
 
-import hyweb.jo.JOConst;
-import hyweb.jo.db.DBCmd;
 import hyweb.jo.model.IJOField;
-import hyweb.jo.model.JOMetadata;
-import hyweb.jo.org.json.JSONObject;
-import hyweb.jo.util.JOFunctional;
-import hyweb.jo.JOProcObject;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author william 統一使用 eval
@@ -28,6 +20,9 @@ public class FSQLQuery extends FSQLBase {
         return sql.toString();
     }
 
+  /*
+    處理    qf   如果沒有定義使用 萬用字元 * 
+    */
     private void proc_qf(StringBuilder sql, List<IJOField> fields) {
         int idx = 0;
         for (IJOField fld : fields) {

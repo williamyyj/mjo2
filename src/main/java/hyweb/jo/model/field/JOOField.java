@@ -17,4 +17,14 @@ public class JOOField extends JOBaseField<String> {
         type = new JOStringType();
     }
 
+    @Override
+    public boolean valid(JSONObject wp) throws Exception {
+        JSONObject row = wp.optJSONObject("$");
+        if (super.valid(wp)) {
+            return true;
+        }
+        setErrData(row, null);
+        return false;
+    }
+
 }

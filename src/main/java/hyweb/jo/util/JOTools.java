@@ -168,13 +168,13 @@ public class JOTools {
         JSONArray ja = jo.optJSONArray(id);
         if (ja != null) {
             Object[] ret = new Object[ja.length()];
-            for(int i=0;i<ja.length();i++){
+            for (int i = 0; i < ja.length(); i++) {
                 JSONObject row = ja.optJSONObject(i);
-                if(row!=null && row.has(vid)){
+                if (row != null && row.has(vid)) {
                     ret[i] = row.opt(vid);
                 }
             }
-            return ret ; 
+            return ret;
         }
         return null;
     }
@@ -188,7 +188,16 @@ public class JOTools {
             cfg.put(name, value);
         }
     }
-    
-   
+
+    public static JSONObject toLowerCase(JSONObject row) {
+        JSONObject p = new JSONObject();
+        JSONArray names = row.names();
+        for (int i = 0; i < names.length(); i++) {
+            String n1 = names.optString(i);
+            String n2 = n1.toLowerCase();
+            p.put(n2, row.opt(n1));
+        }
+        return p;
+    }
 
 }

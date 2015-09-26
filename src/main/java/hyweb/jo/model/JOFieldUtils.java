@@ -3,15 +3,19 @@ package hyweb.jo.model;
 import com.google.common.reflect.ClassPath;
 import hyweb.jo.annotation.IAProxyClass;
 import hyweb.jo.log.JOLogger;
+import hyweb.jo.org.json.JSONObject;
+import hyweb.jo.util.JOFunctional;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import org.mvel2.MVEL;
 
-public class JOFieldFactory {
+public class JOFieldUtils {
 
     private static Map<String, Class> _cache;
 
-    public static Object newInstance(String classId) {
+    private static Object newInstance(String classId) {
         try {
             return Class.forName(classId).newInstance();
         } catch (Exception e) {
@@ -43,10 +47,20 @@ public class JOFieldFactory {
         }
     }
 
-    public static IJOField newField(String classId) throws Exception {
+    private static IJOField newField(String classId) throws Exception {
         Class cls = cache().get("field." + classId);
-        cls = (cls==null) ? cache().get("field.obj") : cls ; 
+        cls = (cls == null) ? cache().get("field.obj") : cls;
         return (IJOField) cls.newInstance();
     }
+
+    public static IJOField newInstance(JSONObject jo) throws Exception {
+        IJOField fld = newField(jo.optString("dt"));
+        if (fld != null) {
+            fld.__init__(new JSONObject(jo.m()));
+        }
+        return fld;
+    }
+    
+ 
 
 }
