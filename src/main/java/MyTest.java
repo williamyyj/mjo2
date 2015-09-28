@@ -5,6 +5,9 @@ import hyweb.jo.org.json.zip.Zipper;
 import hyweb.jo.util.JOTools;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -18,14 +21,10 @@ import java.io.IOException;
  */
 public class MyTest {
     public static void main(String[] args) throws IOException{
-        ByteArrayOutputStream bao = new ByteArrayOutputStream();
-        Zipper zip = new Zipper(new BitOutputStream(bao));
-        try{
-            JSONObject jo  = JOTools.loadString("{ $url:'https://pest.baphiq.gov.tw', x:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx }");
-            zip.encode(jo);
-            System.out.println(bao.toString());
-        } finally{
-            bao.close();
-        }
+      Properties prop = System.getProperties();
+	  Set<Map.Entry<Object,Object>>  entry = prop.entrySet();
+	  for(Map.Entry e : entry){
+		  System.out.println(e.getKey()+"---->"+e.getValue());
+	  }
     }
 }
