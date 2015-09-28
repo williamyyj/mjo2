@@ -44,9 +44,10 @@
             <type>jar</type>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>hyweb</groupId>
             <artifactId>mjo2lib</artifactId>
             <version>1.0.2-SNAPSHOT</version>
+            <type>jar</type>
         </dependency>
     </dependencies>
     <properties>
