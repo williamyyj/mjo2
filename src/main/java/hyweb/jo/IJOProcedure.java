@@ -3,14 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package hyweb.jo.util;
+package hyweb.jo;
 
 /**
- *
- * @author william
+ * @author William
+ * @param <S>
+ * @param <T>
  */
-public class JOMapItem {
-    public JOMapItem(String base, String id ){
-        
-    }
+
+public interface IJOProcedure<S,T> {
+    public void exec(S src, T target) throws Exception ; 
 }

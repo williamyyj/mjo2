@@ -33,14 +33,14 @@ public class JOCacheFileItem implements IJOCacheItem<JSONObject>, Callable<IJOCa
         File f = new File(id);
         if (f.exists()) {
             if (data == null) {
-                JOLogger.debug("Load file : " + f);
+                JOLogger.debug("Load file : " + f.getAbsolutePath());
                 data = loadJSON(f);
             } else if (f.lastModified() > this.lastModified) {
-                JOLogger.debug("Reload file : " + f);
+                JOLogger.debug("Reload file : " + f.getAbsolutePath());
                 data = loadJSON(f);
             } 
         } else {
-            JOLogger.debug("Can't find file : " + f);
+            JOLogger.debug("Can't find file : " + f.getAbsolutePath());
         }
         return data;
     }

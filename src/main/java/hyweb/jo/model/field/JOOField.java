@@ -23,6 +23,15 @@ public class JOOField extends JOBaseField<String> {
         if (super.valid(wp)) {
             return true;
         }
+        if(this.size()>0){
+            //  處理資料過大問題
+            Object o = getFieldValue(row) ;
+            if(o instanceof String){
+                String v = (String) o ; 
+                v = (v.length()<=this.size()) ? v : v.substring(0,size());
+                this.setFieldValue(row, v);
+            }
+        }
         setErrData(row, null);
         return false;
     }

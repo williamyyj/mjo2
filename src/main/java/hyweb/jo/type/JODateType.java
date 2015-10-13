@@ -11,9 +11,8 @@ import java.util.Date;
 /**
  * @author William
  */
-
 public class JODateType extends JOType<Date> {
-    
+
     @Override
     public String dt() {
         return dt_date;
@@ -49,6 +48,7 @@ public class JODateType extends JOType<Date> {
             try {
                 String text = o.toString().trim();
                 SimpleDateFormat sdf = new SimpleDateFormat(fmt);
+                sdf.setLenient(false);
                 return sdf.parse(text);
             } catch (ParseException ex) {
                 log.debug("Can't cast date : " + o);
@@ -87,14 +87,15 @@ public class JODateType extends JOType<Date> {
     }
 
     protected SimpleDateFormat sfmt() {
-        return new SimpleDateFormat(fmt_date);
+        SimpleDateFormat sdf = new SimpleDateFormat(fmt_date);
+        sdf.setLenient(false);
+        return sdf;
     }
 
     protected SimpleDateFormat lfmt() {
-        return new SimpleDateFormat(fmt_datetime);
+        SimpleDateFormat sdf = new SimpleDateFormat(fmt_datetime);
+        sdf.setLenient(false);
+        return sdf;
     }
 
-  
-
-   
 }

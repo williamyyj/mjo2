@@ -37,6 +37,7 @@ public class DSC3P0 implements IJODataSource<ComboPooledDataSource> {
                 ds.setMaxIdleTime(cfg.optInt("cp30.maxIdleTime", 300));
                 ds.setMaxStatements(cfg.optInt("cp30.maxStatements", 0));
                 ds.setIdleConnectionTestPeriod(cfg.optInt("cp30.idleConnectionTestPeriod", 300));
+                ds.setMaxIdleTimeExcessConnections(cfg.optInt("cp30.maxIdleTimeExcessConnections", 600));
             } catch (PropertyVetoException ex) {
                 JOLogger.error("Can't set c3p0.ComboPooledDataSource : ", ex);
             }

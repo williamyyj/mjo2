@@ -45,6 +45,7 @@ public class JOMSPage implements IJORows<JSONObject> {
         return 0;
     }
 
+    @Override
     public int pages() {
         int count = rowCount();
         int ret = count / num ;    

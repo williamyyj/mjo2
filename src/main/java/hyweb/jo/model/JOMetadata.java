@@ -4,7 +4,12 @@ import hyweb.jo.log.JOLogger;
 import hyweb.jo.model.field.JOTBField;
 import hyweb.jo.org.json.JSONArray;
 import hyweb.jo.org.json.JSONObject;
+import hyweb.jo.org.json.JSONTokener;
 import hyweb.jo.util.JOCache;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +20,7 @@ import java.util.Set;
  */
 public class JOMetadata extends HashMap<String, IJOField> {
 
-    private final static String prefix = "/dp/metadata";
+    private  String prefix = "/dp/metadata";
     private String base;
     private JSONObject cfg;
 
@@ -23,7 +28,7 @@ public class JOMetadata extends HashMap<String, IJOField> {
         super();
         try {
             this.base = base;
-            this.cfg = JOCache.load(base + prefix, id);
+            this.cfg = new JSONObject( JOCache.load(base + prefix, id).m());
             init_tb_field();
             init_import();
             init_fields(cfg.optJSONArray("meta"));
@@ -32,7 +37,7 @@ public class JOMetadata extends HashMap<String, IJOField> {
         }
     }
 
-    private void init_import() {
+    private void init_import() throws Exception {
         if (cfg.has("import")) {
             String[] items = cfg.optString("import").split(",");
             for (String item : items) {
@@ -41,8 +46,9 @@ public class JOMetadata extends HashMap<String, IJOField> {
         }
     }
 
-    private void init_import_item(String item) {
-        JSONObject child = JOCache.load(base + prefix + "/inc", item);
+    private void init_import_item(String item) throws Exception {
+        File f = new File(base + prefix + "/inc",item+".json");
+        JSONObject child = loadJSON(f) ; 
         if (child != null) {
             if ("meta".equals(child.opt("classId")) || child.has("meta")) {
                 init_item_meta(child);
@@ -61,6 +67,9 @@ public class JOMetadata extends HashMap<String, IJOField> {
         for(String n : names){
             if(!cfg.has(n) && n.charAt(0)!='$'){
                 cfg.put(n, child.opt(n));
+            } else {
+                System.out.println("===== meta "+cfg.opt(n));
+                System.out.println("===== act "+child.opt(n));
             }
         }
     }
@@ -142,6 +151,16 @@ public class JOMetadata extends HashMap<String, IJOField> {
             fld.cfg().put("args", args);
         }
         return fld;
+    }
+    
+      private JSONObject loadJSON(File f) throws Exception {
+        Reader reader = new InputStreamReader(new FileInputStream(f), "UTF-8");
+        try {
+            JSONTokener tk = new JSONTokener(reader);
+            return new JSONObject(tk);
+        } finally {
+            reader.close();
+        }
     }
 
 }

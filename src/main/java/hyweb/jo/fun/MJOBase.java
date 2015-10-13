@@ -50,6 +50,7 @@ public class MJOBase {
     }
 
     public static String act_act(JSONObject wp) {
+        //   act = act(wp).optString("act",null) ; 
         String act = wp.optJSONObject("$act").optString("act", null);
         if (act == null) {
             String classId = wp.optJSONObject("$act").optString("classId").toLowerCase();

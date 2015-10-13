@@ -10,6 +10,7 @@ import hyweb.jo.org.json.JSONObject;
  */
 public class FJORMWhitespace implements IJOFunction<JSONObject, JSONObject> {
 
+    @Override
     public JSONObject exec(JSONObject src) throws Exception {
         JSONObject ret = new JSONObject();
         if (src != null) {

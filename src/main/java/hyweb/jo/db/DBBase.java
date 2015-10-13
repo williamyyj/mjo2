@@ -48,7 +48,7 @@ public abstract class DBBase<M> implements IDB<M> {
         oid = (oid == null) ? "db" : oid;
         cfg = root.optJSONObject(oid);
         if (cfg == null) {
-            this.cfg = JOCache.load(base, root.optString(oid));
+            this.cfg = new JSONObject();
         }
         init_components();
     }

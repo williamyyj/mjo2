@@ -10,6 +10,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import hyweb.jo.IJOType;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
 
 
 /**
@@ -55,5 +58,20 @@ public class JODoubleType extends JOType<Double> {
             log.warn("Can't check value : " + o);
         }
         return dv;
+    }
+
+    public Double check(Object o, String fmt) {
+        if (o instanceof Number) {
+            return ((Number) o).doubleValue();
+        } else if (o instanceof String) {
+            try {
+                String text = o.toString().trim();
+                NumberFormat nf = new DecimalFormat(fmt);
+                return (Double) nf.parse(text);
+            } catch (ParseException ex) {
+                log.debug("Can't cast format [ "+fmt+"] : " + o);
+            }
+        }
+        return null;
     }
 }

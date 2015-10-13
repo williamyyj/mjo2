@@ -15,8 +15,10 @@ public class mjoc_row extends MJOBase implements IJOFunction<JSONObject, JSONObj
     public JSONObject exec(JSONObject wp) throws Exception {
         JSONObject mq = mq(wp);
         JSONObject row = (JSONObject) db(wp).action(mq);
-        List<IJOField> eFields = eval_fields(wp);
-        JOFunctional.exec2("meval", proc(wp), eFields, row, wp.opt("$$"));
+        if (row != null) {
+            List<IJOField> eFields = eval_fields(wp);
+            JOFunctional.exec2("meval", proc(wp), eFields, row, wp.opt("$$"));
+        }
         return row;
     }
 

@@ -10,9 +10,9 @@ import hyweb.jo.org.json.JSONObject;
 import hyweb.jo.type.JOLongType;
 
 /**
- *
  * @author William
  */
+
 @IAProxyClass(id="field.long")
 public class JOLongField extends JOBaseField<Long> {
 
@@ -20,6 +20,21 @@ public class JOLongField extends JOBaseField<Long> {
      public void __init__(JSONObject cfg) throws Exception  {
         super.__init__(cfg);
         type = new JOLongType();
+    }
+     
+         @Override
+    public boolean valid(JSONObject wp) throws Exception {
+        JSONObject row = wp.optJSONObject("$");
+        Object v = getFieldValue(row);
+        Long num = type.check(v, null);
+        if (num != null) {
+            setFieldValue(row, num);
+            if (super.valid(wp)) {
+                return true;
+            }
+        }
+        setErrData(row, null);
+        return false;
     }
     
 }

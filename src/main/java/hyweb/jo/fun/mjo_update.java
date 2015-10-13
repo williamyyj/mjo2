@@ -18,18 +18,19 @@ public class mjo_update extends MJOBase implements IJOFunction<Boolean, JSONObje
     @Override
     public Boolean exec(JSONObject wp) throws Exception {
         JOProcObject proc = MJOBase.proc(wp);
-
+        JSONObject row = wp.optJSONObject("$");
         List<IJOField> dbField = MJOBase.metadata(wp).getFieldsByScope("db");
-        JSONObject jq = new JSONObject(proc.params().m());
+        JSONObject jq = new JSONObject(row.m());
         jq.put(JOProcConst.act, "edit");
         jq.put(JOProcConst.cmd, JOFunctional.exec("model.FSQLUpdate", dbField));
         JSONObject mq = DBCmd.parser_cmd(proc.db(), jq);
+        JOLogger.debug(mq);
         try {
             proc.db().action(mq);
-            return true ; 
+            return true;
         } catch (Exception e) {
             JOLogger.error(mq);
-            return false ;
+            return false;
         }
     }
 

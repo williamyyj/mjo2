@@ -46,4 +46,5 @@ public class cmd_test extends JOTest {
             proc.release();
         }
     }
+
 }

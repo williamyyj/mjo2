@@ -6,6 +6,7 @@ import hyweb.jo.JOProcObject;
 import hyweb.jo.fun.MJOBase;
 import hyweb.jo.org.json.JSONObject;
 import hyweb.jo.util.JOFunctional;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import org.mvel2.MVEL;
@@ -86,6 +87,7 @@ public class JOBaseField<E> implements IJOField<E> {
         return cfg.optString("eval", null);
     }
 
+    @Override
     public JSONObject cfg() {
         return cfg;
     }
@@ -105,7 +107,7 @@ public class JOBaseField<E> implements IJOField<E> {
         Map<String, Object> m = new HashMap<String, Object>();
         JSONObject src = wp.optJSONObject("$");
         JSONObject ref = wp.optJSONObject("$$");
-        JOProcObject proc =  MJOBase.proc(wp);
+        JOProcObject proc = MJOBase.proc(wp);
         m.put("$", src.m());
         m.put("$$", ref.m());
         m.put("$f", JOFunctional.class);
@@ -113,10 +115,17 @@ public class JOBaseField<E> implements IJOField<E> {
         m.put("$vf", proc.opt("$vf"));
         m.put("$fld", this);
         m.put("$wp", wp);
-        return MVEL.eval(eval(), m, Boolean.class);
+        m.put("$now", new Date());
+        Object ret =  MVEL.eval(eval(), m);
+        //System.out.println("====== ret : " + ret);
+        if(ret instanceof Boolean){
+            return (Boolean)ret ;
+        } else {
+            return true ;
+        }
     }
-    
-       public String getFieldName() {
+
+    public String getFieldName() {
         if (args() != null && args().length() > 0) {
             return args();
         } else if (name() != null && name().length() > 0) {
@@ -127,15 +136,17 @@ public class JOBaseField<E> implements IJOField<E> {
         }
     }
 
-    @Override   
+    @Override
     public void setErrData(JSONObject row, String message) {
         JSONObject err = row.optJSONObject("$err");
         JSONObject msg = row.optJSONObject("$msg");
         err.put(id(), false);
-        if (message != null) {
-            msg.put(id(), message);
-        } else {
-            msg.put(id(),label());
+        if (!msg.has(id())) {
+            if (message != null) {
+                msg.put(id(), message);
+            } else {
+                msg.put(id(), label());
+            }
         }
     }
 
@@ -145,8 +156,13 @@ public class JOBaseField<E> implements IJOField<E> {
     }
 
     @Override
-    public  void setFieldValue(JSONObject row, Object value) {
+    public void setFieldValue(JSONObject row, Object value) {
         row.put(getFieldName(), value);
+    }
+
+    @Override
+    public String getFieldText(JSONObject row) {
+        return row.optString(getFieldName());
     }
 
 }

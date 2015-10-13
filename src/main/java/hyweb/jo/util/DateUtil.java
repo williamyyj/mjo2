@@ -6,6 +6,7 @@
 package hyweb.jo.util;
 
 import hyweb.jo.log.JOLogger;
+import hyweb.jo.org.json.JSONObject;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -32,5 +33,157 @@ public class DateUtil {
         cal.add(field, value);
         return cal.getTime();
     }
+    
+        public static boolean range(Date ts, Date te, Date curr) {
+        if (ts == null || te == null || curr == null) {
+            return false;
+        }
+        long t1 = ts.getTime();
+        long t2 = te.getTime();
+        long t = curr.getTime();
+        return (t1 < t && t < t2);
+    }
+
+    public static long diff(Date a, Date b) {
+        return (a.getTime() - b.getTime()) / 1000;
+    }
+
+    public static boolean op_lt(Date a, Date b) {
+        if (a == null || b == null) {
+            return false;
+        }
+        long t1 = a.getTime();
+        long t2 = b.getTime();
+        return (t1 < t2);
+    }
+
+    public static boolean op_gt(Date a, Date b) {
+        if (a == null || b == null) {
+            return false;
+        }
+        long t1 = a.getTime();
+        long t2 = b.getTime();
+        return (t1 > t2);
+    }
+
+    public static Date yesterday_min() {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, -1);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        return cal.getTime();
+    }
+
+    public static Date yesterday_max() {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, -1);
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.MINUTE, 59);
+        cal.set(Calendar.SECOND, 59);
+        return cal.getTime();
+    }
+
+    public static Date tomorrow() {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, 1);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        return cal.getTime();
+    }
+
+    public static Date schedule(JSONObject sch) {
+        Calendar cal = Calendar.getInstance();
+        Date d = cal.getTime();
+        String m = sch.optString("sch");
+        if ("m1".equals(m)) {
+            int sch1 = sch.optInt("sch1");
+            int month = cal.get(Calendar.MONTH);
+            System.out.println(month);
+            if (sch1 == 1 && (month % 2) != 0) {
+                cal.add(Calendar.MONTH, 1);
+            }
+            if (sch1 == 2 && (month % 2) != 1) {
+                cal.add(Calendar.MONTH, 1);
+            }
+            cal.set(Calendar.DAY_OF_MONTH, sch.optInt("sch2"));
+        } else if ("m2".equals(m)) {
+            cal.set(Calendar.DAY_OF_MONTH, sch.optInt("sch3"));
+        } else if ("m3".equals(m)) {
+            int week = cal.get(Calendar.WEEK_OF_YEAR);
+            System.out.println(week);
+            if ((week % 2) == 0) {
+                cal.add(Calendar.WEEK_OF_YEAR, 1);
+            }
+            cal.set(Calendar.DAY_OF_WEEK, sch.optInt("sch4"));
+        } else if ("m4".equals(m)) {
+            cal.set(Calendar.DAY_OF_WEEK, sch.optInt("sch5"));
+        }
+        cal.set(Calendar.HOUR_OF_DAY, sch.optInt("hour"));
+        cal.set(Calendar.MINUTE, sch.optInt("min"));
+        cal.set(Calendar.SECOND, 0);
+        return cal.getTime();
+    }
+
+    public static Date date_min(Date d) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(d);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        return cal.getTime();
+    }
+
+    public static Date date_max(Date d) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(d);
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.MINUTE, 59);
+        cal.set(Calendar.SECOND, 59);
+        return cal.getTime();
+    }
+
+    public static Date date_next(Date d) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(d);
+        cal.add(Calendar.DATE, 1);
+        return cal.getTime();
+    }
+
+    public static int year(Date d) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(d);
+        return cal.get(Calendar.YEAR);
+    }
+    
+    public static String convert(String fmt, String date) {
+        SimpleDateFormat tfmt = new SimpleDateFormat(fmt);
+        try {
+            if (date != null && date.length() == 14) {
+                SimpleDateFormat lfmt = new SimpleDateFormat("yyyyMMddHHmmss");
+                return tfmt.format(lfmt.parse(date));
+            } else if (date != null && date.length() == 8) {
+                SimpleDateFormat sfmt = new SimpleDateFormat("yyyyMMdd");
+                return tfmt.format(sfmt.parse(date));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+        return "";
+    }
+    
+     public static void main(String[] args) {
+        JSONObject sch = JOTools.loadString("{min:'40',sch3:9,sch2:8,sch1:1,sch:'m5',hour:18,sch5:7,sch4:1}");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date a = new Date();
+        Date b = DateUtil.schedule(sch);
+        System.out.println(sdf.format(a));
+        System.out.println(sdf.format(b));
+        System.out.println(DateUtil.diff(a, b));
+
+    }
+    
 
 }

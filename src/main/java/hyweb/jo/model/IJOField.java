@@ -46,6 +46,8 @@ public interface IJOField<E> extends IJOInit<JSONObject> {
     public boolean valid(JSONObject wp) throws Exception;
 
     public Object getFieldValue(JSONObject row);
+    
+    public String getFieldText(JSONObject row);
 
     public void setFieldValue(JSONObject row, Object value);
 

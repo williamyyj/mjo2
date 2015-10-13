@@ -70,6 +70,26 @@ public class TextUtils {
         jo.put(name, ret);
     }
 
+    public static void cast_qin(JSONObject jo, String name, String dt) {
+        JSONArray ja = jo.optJSONArray(name);
+        StringBuilder sb = new StringBuilder();
+        if (ja != null) {
+            for (int i = 0; i < ja.length(); i++) {
+                if("string".equals(dt)){
+                    sb.append('\'').append(ja.opt(i)).append('\'');
+                } else {
+                    sb.append(ja.opt(i));
+                }
+                sb.append(',');
+            }
+            if (sb.length() > 0) {
+                sb.setLength(sb.length() - 1);
+            }
+            System.out.println(sb);
+            jo.put(name, sb.toString());
+        }
+    }
+
     public static Object toDate(Object o) {
         SimpleDateFormat sdf = null;
         try {
@@ -228,18 +248,16 @@ public class TextUtils {
         cal.add(field, value);
         return new SimpleDateFormat(fmt).format(cal.getTime());
     }
-    
-    public final static String ja2string(JSONArray ja, String head){
+
+    public final static String ja2string(JSONArray ja, String head) {
         StringBuilder sb = new StringBuilder();
-        if(ja!=null){
+        if (ja != null) {
             sb.append(ja.opt(0));
-            for(int i=1;i<ja.length();i++){
+            for (int i = 1; i < ja.length(); i++) {
                 sb.append(head).append(ja.opt(i));
             }
         }
         return sb.toString();
     }
-    
-   
 
 }
