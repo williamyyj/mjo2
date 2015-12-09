@@ -87,15 +87,22 @@ public class JODateType extends JOType<Date> {
     }
 
     protected SimpleDateFormat sfmt() {
-        SimpleDateFormat sdf = new SimpleDateFormat(fmt_date);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         sdf.setLenient(false);
         return sdf;
     }
 
     protected SimpleDateFormat lfmt() {
-        SimpleDateFormat sdf = new SimpleDateFormat(fmt_datetime);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
         sdf.setLenient(false);
         return sdf;
+    }
+
+    @Override
+    public String sql_string(Object o, String ft) {
+        Date v = check(o,ft);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return (v != null) ? "'"+sdf.format(v)+"'" : "null";
     }
 
 }

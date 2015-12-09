@@ -59,7 +59,7 @@ public class JOMetadata extends HashMap<String, IJOField> {
     }
 
     private void init_item_meta(JSONObject child) {
-         init_fields(cfg.optJSONArray("meta"));
+         init_fields(child.optJSONArray("meta"));
     }
 
     private void init_item_cmd(JSONObject child) {
@@ -81,17 +81,20 @@ public class JOMetadata extends HashMap<String, IJOField> {
         this.put(tb_id, tb);
     }
 
-    private void init_fields(JSONArray metadata) {
-        if (metadata != null) {
-            for (int i = 0; i < metadata.length(); i++) {
-                JSONObject meta = metadata.optJSONObject(i);
+    private void init_fields(JSONArray meta) {
+        if (meta != null) {
+            for (int i = 0; i < meta.length(); i++) {
+                JSONObject item = meta.optJSONObject(i);
                 try {
-                    IJOField fld = JOFieldUtils.newInstance(meta);
+                    IJOField fld = JOFieldUtils.newInstance(item);
                     if (fld != null) {
-                        put(fld.id(), fld);
+                       IJOField old =  put(fld.id(), fld);
+                       if(old!=null){
+                             JOLogger.warn("dup field " + fld.id());
+                       }
                     }
                 } catch (Exception e) {
-                    JOLogger.error("Not field " + meta);
+                    JOLogger.error("not field " + item);
                 }
             }
         }

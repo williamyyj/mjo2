@@ -110,4 +110,10 @@ public class MJOBase {
         return null;
     }
 
+    public static List<IJOField> before(JSONObject wp) {
+        String before = wp.optJSONObject("$act").optString("before");
+        return metadata(wp).getFields(before);
+    }
+
+
 }

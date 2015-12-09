@@ -152,7 +152,8 @@ public class JOBaseField<E> implements IJOField<E> {
 
     @Override
     public Object getFieldValue(JSONObject row) {
-        return row.opt(getFieldName());
+        Object o =  row.opt(getFieldName());
+        return (o!=null) ? o :  row.opt(id()) ; 
     }
 
     @Override
@@ -163,6 +164,11 @@ public class JOBaseField<E> implements IJOField<E> {
     @Override
     public String getFieldText(JSONObject row) {
         return row.optString(getFieldName());
+    }
+
+    @Override
+    public E convert(Object o) {
+       return type.check(o);
     }
 
 }

@@ -4,6 +4,7 @@ import hyweb.jo.db.DB;
 import hyweb.jo.model.IJOField;
 import hyweb.jo.model.JOMetadata;
 import hyweb.jo.org.json.JSONObject;
+import java.io.File;
 import java.util.List;
 
 public class JOProcObject extends JSONObject {
@@ -13,7 +14,7 @@ public class JOProcObject extends JSONObject {
     public final static int p_request = 2;
     public final static int p_session = 3;
     public final static int p_app = 4;
-    
+
     public JOProcObject(String base) {
         put(JOProcConst.base, base);
     }
@@ -34,8 +35,8 @@ public class JOProcObject extends JSONObject {
      */
     public Object get(int fld, String name, Object dv) {
         switch (fld) {
-            case p_self :
-                    return (has(name))? get(name) : dv ; 
+            case p_self:
+                return (has(name)) ? get(name) : dv;
             case p_params:
                 return params().has(name) ? params().opt(name) : dv;
             case p_request:
@@ -50,8 +51,8 @@ public class JOProcObject extends JSONObject {
 
     public Object set(int fld, String name, Object value) {
         switch (fld) {
-            case p_self  : 
-                return put(name,value);
+            case p_self:
+                return put(name, value);
             case p_params:
                 return params().put(name, value);
             case p_request:
@@ -87,7 +88,7 @@ public class JOProcObject extends JSONObject {
     }
 
     public Object find(String name, Object dv) {
-        if(has(name)){
+        if (has(name)) {
             return opt(name);
         }
         Object o = get(p_params, name, null);
@@ -105,5 +106,18 @@ public class JOProcObject extends JSONObject {
         o = get(p_app, name, null);
         return (o != null) ? o : dv;
     }
-   
+
+    public String ap_root() {
+        String root = System.getProperty("ap_root", new File(".").toString());
+        return System.getProperty("catalina.base", root);
+    }
+
+    public String scope() {
+        return (String) get(p_app, JOProcConst.w_scope, "dev");
+    }
+
+    public String pid() {
+        return (String) get(p_app, JOProcConst.w_pid, "");
+    }
+
 }

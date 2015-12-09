@@ -35,6 +35,7 @@ public class db_insert implements IJOFunction<Boolean, Object[]> {
             proc.db().action(mq);
             return true;
         } catch (Exception e) {
+            e.printStackTrace();
             JOLogger.error(e);
             return false;
         }

@@ -66,5 +66,12 @@ public class JODoubleField extends JOBaseField<Double> {
         }
         return (v != null) ? v.toString() : "";
     }
+    
+    
+    @Override
+    public Double convert(Object o) {
+        JODoubleType dt = (JODoubleType) type;
+        return (ft() != null) ? dt.check(o, ft()) : dt.check(o);
+    }
 
 }

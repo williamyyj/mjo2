@@ -6,7 +6,6 @@ import hyweb.jo.org.json.JSONObject;
 import hyweb.jo.util.JOFunctional;
 import hyweb.jo.util.JOTools;
 import java.util.List;
-import org.junit.Test;
 
 /**
  *
@@ -14,7 +13,7 @@ import org.junit.Test;
  */
 public class mjo_test extends JOTest {
 
-    @Test
+
     public void test_mjoc_rows() throws Exception {
         String jo_src = " {\"passwd\":\"1qaz2wsx\",\"VerifyCode\":\"2102\",\"uname\":\"王10\",\"tel_ext\":\"1234\",\"cid\":\"1030125\",\"tel_num\":\"12345678\",\"baphiqid\":\"UP0000000010\",\"email\":\"williamyyj@gmail.com\",\"stype\":\"[\",\"mid\":\"0\",\"passwd1\":\"1qaz2wsx\",\"act\":\"add\",\"dataid\":\"10\",\"tel_area\":\"02\",\"cname\":\"海博生技股份有限公司\",\"mobile\":\"\"}";
         JSONObject jo = JOTools.loadString(jo_src);

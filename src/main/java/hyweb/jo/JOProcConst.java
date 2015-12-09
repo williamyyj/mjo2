@@ -14,6 +14,7 @@ import hyweb.jo.JOConst;
 public class JOProcConst extends JOConst {
 
     public final static String w_pid = " $w_pid";
+    public final static String w_scope = " $w_scope";
     public final static String w_app = "$w_app";
     public final static String w_session = "$w_session";
     public final static String w_req = "$w_request";

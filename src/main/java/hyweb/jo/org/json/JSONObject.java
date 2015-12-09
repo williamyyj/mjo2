@@ -711,7 +711,7 @@ public class JSONObject {
         while (keys.hasNext()) {
             ja.put(keys.next());
         }
-        return ja.length() == 0 ? null : ja;
+        return ja;
     }
 
     /**

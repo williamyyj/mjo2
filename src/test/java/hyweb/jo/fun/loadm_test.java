@@ -16,7 +16,7 @@ import org.junit.Test;
  */
 public class loadm_test {
 
-    @Test
+
     public void exec_text() throws Exception {
         String root = "D:\\will\\work\\nb\\mwork\\target\\mwork-1.0-SNAPSHOT";
         String upload_root = root + "\\public";

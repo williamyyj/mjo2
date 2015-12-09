@@ -11,7 +11,7 @@ import hyweb.jo.org.json.JSONObject;
 import hyweb.jo.util.JOFunctional;
 import hyweb.jo.util.JOTools;
 import java.util.List;
-import org.junit.Test;
+
 
 /**
  *
@@ -19,7 +19,7 @@ import org.junit.Test;
  */
 public class mjoc_test extends JOTest {
 
-    @Test
+
     public void test_mjoc_rows() throws Exception {
         String src = "{baphiqid:'UP0000208509',ftype1:'D2015'}";
         JSONObject params = JOTools.loadString(src);

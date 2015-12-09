@@ -9,7 +9,7 @@ import hyweb.jo.util.JOTools;
 import java.util.Calendar;
 import java.util.Date;
 import junit.framework.Assert;
-import org.junit.Test;
+
 
 /**
  *
@@ -17,7 +17,7 @@ import org.junit.Test;
  */
 public class v_dateTest extends JOTest {
 
-    @Test
+
     public void testExec() throws Exception {
         JOProcObject proc = new JOProcObject(base);
         String fld_src = " {\"id\":\"v_purchasedt\",\"dt\":\"date\",\"eval\":\"$f.rdate($fv,$$.?pyear,$$.?now) \",\"label\":\"銷售日期異常\",\"ft\":\"yyyy/MM/dd\"}";

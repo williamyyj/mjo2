@@ -23,19 +23,19 @@ public abstract class JOType<E> implements IJOType<E> {
     }
 
     @Override
-    public String sql_string(Object o) {
+    public String sql_string(Object o, String fmt) {
         E v = check(o);
         return (v != null) ? String.valueOf(v) : "null";
     }
 
     @Override
-    public String json_string(Object o) {
+    public String json_string(Object o, String fmt) {
         E v = check(o);
         return (v != null) ? String.valueOf(v) : "null";
     }
 
     @Override
-    public String xml_string(Object value) {
+    public String xml_string(Object value,  String fmt) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

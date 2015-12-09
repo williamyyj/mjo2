@@ -16,7 +16,7 @@ public class FMLoadComboTest {
      * Test of exec method, of class FMLoadCombo.
      * @throws java.lang.Exception
      */
-    @Test
+
     public void testExec() throws Exception {
         File base = new File("D:\\Dropbox\\resources\\prj\\baphiq");
         StringBuilder sb = new StringBuilder();

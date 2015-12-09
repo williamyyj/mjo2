@@ -16,4 +16,13 @@ public class JOStringField extends JOBaseField<String> {
         type = new JOStringType();
     }
 
+    @Override
+    public String convert(Object o) {
+        return (o != null) ? o.toString().trim() : null;
+        //if (text != null) {
+        //    return (text.length() <= this.size()) ? text : text.substring(0, size());
+        //}
+        //return text;
+    }
+
 }

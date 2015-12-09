@@ -46,8 +46,6 @@ public class JOHttp {
         uc.addRequestProperty("Accept-Language", "en-US,en;q=0.8");
         uc.addRequestProperty("User-Agent", "Mozilla");
         //uc.addRequestProperty("Referer", "google.com");
-        System.out.println("Request URL ... " + url);
-
         try {
            // uc.setInstanceFollowRedirects(true);
            // HttpURLConnection.setFollowRedirects(true);
@@ -112,16 +110,14 @@ public class JOHttp {
     }
 
     public JSONObject json(JSONObject jq, String enc) throws Exception {
-        return null;
+        return JOTools.loadString(text(jq,enc));
     }
-
-    public byte[] bytes(JSONObject jq) throws Exception {
-        return null;
-    }
-
+    
     public static String text(JSONObject jq,String enc) throws Exception {
         return new String(bytes(jq,enc),enc);
     }
+    
+
 
     public static void main(String[] args) throws Exception {
        // JSONObject jq = new JSONObject();

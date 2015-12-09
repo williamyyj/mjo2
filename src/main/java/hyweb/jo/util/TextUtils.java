@@ -260,4 +260,10 @@ public class TextUtils {
         return sb.toString();
     }
 
+    public static int  length(Object fv) {
+        return (fv!=null) ? fv.toString().length() : 0 ; 
+    }
+
+
+
 }

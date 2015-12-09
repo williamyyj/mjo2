@@ -36,10 +36,10 @@ public interface IJOType<E> {
 
     public E check(Object o, E dv);
 
-    public String sql_string(Object o);
+    public String sql_string(Object o, String fmt);
 
-    public String json_string(Object o);
+    public String json_string(Object o, String fmt);
 
-    public String xml_string(Object o);
+    public String xml_string(Object o, String fmt);
     
 }

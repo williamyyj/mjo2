@@ -21,7 +21,6 @@ public class FHttpGHeaderTest {
     /**
      * Test of exec method, of class FHttpGHeader.
      */
-    @Test
     public void testExec() throws Exception {
         System.out.println("exec");
         String url_string = "http://gaz.tycg.gov.tw/ty_gazFront/images/h1.jpg";

@@ -16,7 +16,7 @@ import org.junit.Test;
  */
 public class DBTest {
 
-    @Test
+
     public void db_test() throws Exception {
         String base = "D:\\Dropbox\\resources\\prj\\baphiq";
         DB db = new DB(base);

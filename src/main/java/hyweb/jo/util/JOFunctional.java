@@ -6,6 +6,8 @@ import hyweb.jo.IJOFunction;
 import hyweb.jo.JOProcObject;
 import hyweb.jo.fun.MJOBase;
 import hyweb.jo.org.json.JSONObject;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -125,5 +127,31 @@ public class JOFunctional {
         long v = d.getTime();
         return a.getTime() < v && v < b.getTime();
     }
+
+    public static String df(String fmt, Date d) {
+        SimpleDateFormat sdf = new SimpleDateFormat(fmt);
+        return sdf.format(d);
+    }
+
+    public static String daf(String fmt, Date d, int field, int value) {
+        SimpleDateFormat sdf = new SimpleDateFormat(fmt);
+        Calendar c = Calendar.getInstance();
+        c.setTime(d);
+        c.add(field, value);
+        return sdf.format(c.getTime());
+    }
+
+    public static String format(String fmt, Object ... args) {
+        return String.format(fmt, args);
+    }
     
+    public static String encode(String text){
+        try {
+            return  JOTools.encode(text);
+        } catch (Exception ex) {
+            return "";
+        }
+    }
+    
+
 }

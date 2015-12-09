@@ -5,11 +5,10 @@
  */
 package hyweb.jo.data;
 
-import static hyweb.jo.data.JOData.buf_size;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;

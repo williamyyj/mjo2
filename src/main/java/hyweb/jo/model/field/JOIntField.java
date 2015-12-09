@@ -38,6 +38,7 @@ public class JOIntField extends JOBaseField<Integer>{
         setErrData(row, null);
         return false;
     }
+ 
 
     
 }

@@ -4,12 +4,9 @@ import com.google.common.reflect.ClassPath;
 import hyweb.jo.annotation.IAProxyClass;
 import hyweb.jo.log.JOLogger;
 import hyweb.jo.org.json.JSONObject;
-import hyweb.jo.util.JOFunctional;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import org.mvel2.MVEL;
 
 public class JOFieldUtils {
 

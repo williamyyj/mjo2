@@ -92,6 +92,7 @@ public class PercentCodec extends Codec {
      * @param c character to encode
      * @return the encoded string representing c
      */
+    @Override
     public String encodeCharacter(char[] immune, Character c) {
         String cStr = String.valueOf(c.charValue());
         byte[] bytes;
@@ -117,6 +118,7 @@ public class PercentCodec extends Codec {
      * @param input encoded character using percent characters (such as URL
      * encoding)
      */
+    @Override
     public Character decodeCharacter(PushbackString input) {
         input.mark();
         Character first = input.next();

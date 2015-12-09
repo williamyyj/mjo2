@@ -9,8 +9,9 @@ import java.io.File;
 public class JOTest {
 
     public static String root = "D:\\will\\work\\nb\\mwork\\src\\main\\webapp";
-    public static String upload_root = root + "\\public";
     public static String base = root + "\\WEB-INF\\prj\\baphiq";
+    public static String ap_root = "D:\\will\\resources\\web\\tomcat7";
+    public static String res_root = "D:\\Users\\william\\Dropbox\\resources";
 
     static {
 

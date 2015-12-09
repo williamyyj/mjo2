@@ -14,7 +14,7 @@ import org.junit.Test;
 
 public class cmd_test extends JOTest {
 
-    @Test
+
     public void cmd_rows_text() throws Exception {
         JOProcObject proc = new JOProcObject(base);
         List<JSONObject> rows = null;

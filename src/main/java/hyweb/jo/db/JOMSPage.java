@@ -63,8 +63,7 @@ public class JOMSPage implements IJORows<JSONObject> {
         sb.append(" ) c ) t ");
         sb.append(" where rowid > ").append(+ (pageId-1) * num  );
         sb.append(" and rowid <= ").append((pageId)*num);
-        System.out.println(sb.toString());
-        
+        System.out.println(sb.toString());       
         return db.rows(sb.toString(), params);
     }
 

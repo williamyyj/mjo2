@@ -9,7 +9,6 @@ import hyweb.jo.IJOType;
 /**
  * @author William
  */
-
 public class JOStringType extends JOType<String> {
 
     @Override
@@ -41,7 +40,8 @@ public class JOStringType extends JOType<String> {
         return (o != null) ? o.toString() : dv;
     }
 
-    public String sql_value(Object o) {
+    @Override
+    public String sql_string(Object o, String ft) {
         if (o != null && !"null".equalsIgnoreCase((o.toString()))) {
             String ret = o.toString();
             ret = ret.replaceAll("'", "''");

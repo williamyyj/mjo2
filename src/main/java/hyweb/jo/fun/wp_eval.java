@@ -1,8 +1,10 @@
 package hyweb.jo.fun;
 
 import hyweb.jo.IJOFunction;
+import static hyweb.jo.fun.MJOBase.eval_fields;
 import hyweb.jo.log.JOLogger;
 import hyweb.jo.model.IJOField;
+import hyweb.jo.model.JOWPObject;
 import hyweb.jo.org.json.JSONObject;
 import hyweb.jo.util.JOFunctional;
 import java.util.Date;
@@ -15,15 +17,15 @@ import org.mvel2.MVEL;
  *
  * @author william
  */
-public class mjo_eval extends MJOBase implements IJOFunction<Object, JSONObject> {
+public class wp_eval implements IJOFunction<Boolean, JOWPObject> {
 
     @Override
-    public Object exec(JSONObject wp) throws Exception {
-        List<IJOField> eFields = eval_fields(wp);      
+    public Boolean exec(JOWPObject wp) throws Exception {
         Map<String, Object> m = eval_pool(wp);
         JSONObject reval = new JSONObject();
         m.put("$eval", reval.m());
-        for (IJOField fld : eFields) {
+        for (IJOField fld : wp.fields()) {
+            m.put("$fld", fld);
             try {
                 Object o = MVEL.eval(fld.eval(), m);
                 if (o instanceof Boolean) {
@@ -36,16 +38,19 @@ public class mjo_eval extends MJOBase implements IJOFunction<Object, JSONObject>
                 JOLogger.error("Can't eval : " + fld.id() + "\n" + m, e);
             }
         }        
-        return reval;
+        
+        
+        
+        return false;
     }
 
-    private Map<String, Object> eval_pool(JSONObject wp) {
+    private Map<String, Object> eval_pool(JOWPObject wp) {
         Map<String, Object> m = new HashMap<String, Object>();
-        m.put("$", wp.optJSONObject("$").m());
-        m.put("$$", wp.optJSONObject("$$").m());
-        m.put("$p", proc(wp).m());
-        m.put("$proc", proc(wp));
-        m.put("$db", db(wp));
+        m.put("$", wp.p().m());
+        m.put("$$", wp.pp());
+        m.put("$wp",wp);
+        m.put("$proc", wp.proc());
+        m.put("$db", wp.proc().db());
         m.put("$now", new Date());
         m.put("$f", JOFunctional.class);
         return m;
