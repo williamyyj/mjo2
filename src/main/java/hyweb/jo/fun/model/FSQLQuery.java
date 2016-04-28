@@ -14,7 +14,8 @@ public class FSQLQuery extends FSQLBase {
         IJOField fld = fields.get(0); // 一定是 table 欄位
         sql.append(" select ");
         proc_qf(sql, fields);
-        sql.append("\nfrom ").append(fld.eval());
+        String tb = (fld.eval()!=null) ? fld.eval() : fld.name();
+        sql.append("\nfrom ").append(tb);
         sql.append("\nwhere 1=1 ");
         proc_qc(sql, fields);
         return sql.toString();

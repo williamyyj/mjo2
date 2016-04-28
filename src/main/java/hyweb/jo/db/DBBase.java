@@ -1,10 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package hyweb.jo.db;
 
+import hyweb.jo.JOConfig;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -42,13 +38,16 @@ public abstract class DBBase<M> implements IDB<M> {
         this(base, null, null);
     }
 
-    public DBBase(String base, String fid, String oid) {
+    public DBBase(String base, String cfgId, String oid) {
         this.base = (base == null) ? System.getProperty("base") : base;
-        JSONObject root = (fid != null) ? JOCache.load(base, fid) : JOCache.load(base, "cfg");
+        JSONObject root = (cfgId != null) ? JOCache.load(base, cfgId) : JOCache.load(base, "cfg");
         oid = (oid == null) ? "db" : oid;
-        cfg = root.optJSONObject(oid);
+        cfg = root.optJSONObject(oid);  
         if (cfg == null) {
-            this.cfg = new JSONObject();
+            cfg = new JOConfig(base,oid).params();
+            if(cfg==null){
+                cfg = new JSONObject();
+            }
         }
         init_components();
     }
@@ -80,7 +79,7 @@ public abstract class DBBase<M> implements IDB<M> {
         JOTools.set_default(cfg, "@mrows", "model.FMRS2Rows");
         JOTools.set_default(cfg, "@mfill", "model.FMPSFill");
         JOTools.set_default(cfg, "@alias", "util.FldAlias");
-        JOTools.set_default(cfg, "@hort", "util.FldShort");
+        JOTools.set_default(cfg, "@short", "util.FldShort");
         JOTools.set_default(cfg, "ds", "hyweb.jo.db.DSC3P0");
     }
 

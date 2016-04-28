@@ -23,15 +23,17 @@ public class JODateType extends JOType<Date> {
         if (o instanceof Date) {
             return (Date) o;
         } else if (o instanceof String) {
-            String str = (String) o;
+            String str = ((String) o).replaceAll("[^0-9\\.]+", "");
+            
             try {
-                if (str.length() == 8) {
-                    return sfmt().parse(str);
-                } else if (str.length() == 14) {
-                    return lfmt().parse(str);
-                } else {
-                    log.debug("Can't cast date : " + o);
-                    return dv;
+                switch (str.length()) {
+                    case 8:
+                        return sfmt().parse(str);
+                    case 14:
+                        return lfmt().parse(str);
+                    default:
+                        log.debug("Can't cast date : " + o);
+                        return dv;
                 }
             } catch (Exception e) {
                 log.debug("Can't cast date : " + o);

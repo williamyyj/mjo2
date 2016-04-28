@@ -3,7 +3,10 @@ package hyweb.jo;
 import hyweb.jo.db.DB;
 import hyweb.jo.model.IJOField;
 import hyweb.jo.model.JOMetadata;
+import hyweb.jo.org.json.JSONArray;
 import hyweb.jo.org.json.JSONObject;
+import hyweb.jo.util.JOCache;
+import hyweb.jo.util.JOTools;
 import java.io.File;
 import java.util.List;
 
@@ -14,6 +17,7 @@ public class JOProcObject extends JSONObject {
     public final static int p_request = 2;
     public final static int p_session = 3;
     public final static int p_app = 4;
+    private JSONObject cfg;
 
     public JOProcObject(String base) {
         put(JOProcConst.base, base);
@@ -118,6 +122,26 @@ public class JOProcObject extends JSONObject {
 
     public String pid() {
         return (String) get(p_app, JOProcConst.w_pid, "");
+    }
+
+    public JSONObject cfg() {
+        if (cfg == null) {
+            cfg = JOCache.load(base(), "cfg");
+        }
+        return cfg;
+    }
+
+    public void add_params(String text) {
+        JSONObject jo = JOTools.loadString(text);
+        if (jo != null) {
+            JSONArray names = jo.names();
+            for (int i = 0; i < names.length(); i++) {
+                String name = names.optString(i);
+                this.params().put(name, jo.opt(name));
+            }
+        }
+        
+    
     }
 
 }

@@ -8,6 +8,7 @@ import static hyweb.jo.JOConst.*;
 import hyweb.jo.org.json.JSONArray;
 import hyweb.jo.org.json.JSONObject;
 import hyweb.jo.util.JOCache;
+import java.util.Stack;
 
 /**
  * @author William 整合DBJO ${base}/dp/xxxx.dao 統一使用 支援同文件資料靜態載入 ${ rem ,
@@ -22,35 +23,23 @@ public class DBCmd {
 
     public static JSONObject parser_fid(IDB db, String fid, String actId, JSONObject row) throws Exception {
         File f = new File(db.base() + "/" + dao_src, fid + ".dao");
-        JSONObject mq = new JSONObject();
+        JSONObject jq = new JSONObject(row.m());
         JSONObject dao_meta = JOCache.load(f);
         if (dao_meta != null) {
-            set_init_mq(mq, actId);
+            // set_init_mq(mq, actId);
             String cmd = DBCmdItem.get_command(dao_meta, actId);
             if (cmd == null) {
                 throw new RuntimeException("Can't find " + f + " in " + actId);
             }
-            Matcher match = p.matcher(cmd);
-            StringBuffer sql = new StringBuffer();
-            while (match.find()) {
-                String item = match.group(1);
-                match.appendReplacement(sql, ""); // 直接清空
-                if (!item.startsWith("rem")) {
-                    if (dao_meta.has(item)) {
-                        String cmd_item = DBCmdItem.get_command(dao_meta, item);
-                        sql.append(cmd_item);
-                    } else {
-                        DBCmdItem.process_item(db, sql, mq, row, item);
-                    }
-                }
-            }
-            match.appendTail(sql);
-            mq.put(param_sql, sql);
+            jq.put(JOConst.act, actId);
+            jq.put(JOConst.cmd, cmd);
+            return parser_cmd(db, jq);
         }
-        return mq;
+        return null;
     }
 
     public static JSONObject parser_cmd(IDB db, JSONObject jq) throws Exception {
+        Stack<StringBuffer> stack = new Stack<StringBuffer>();
         JSONObject mq = new JSONObject();
         String actId = jq.optString(JOConst.act);
         String cmd = jq.optString(JOConst.cmd);
@@ -60,7 +49,19 @@ public class DBCmd {
         while (match.find()) {
             String item = match.group(1);
             match.appendReplacement(sql, ""); // 直接清空
-            if (!item.startsWith("rem")) {
+            if ("or".equals(item)) {
+                stack.push(sql);
+                sql = new StringBuffer();
+            } else if ("end".equals(item)) {
+                if (sql.length() > 0) {
+                    String child = sql.toString().replaceFirst("and", "");
+                    child = child.replaceAll("and", "or");
+                    sql = stack.pop();
+                    sql.append(" and (").append(child).append(" )");
+                } else {
+                    sql = stack.pop();
+                }
+            } else if (!item.startsWith("rem")) {
                 DBCmdItem.process_item(db, sql, mq, jq, item);
             }
         }
@@ -70,7 +71,7 @@ public class DBCmd {
     }
 
     private static void set_init_mq(JSONObject mq, String actId) {
-        mq.put(param_fields,new JSONArray());
+        mq.put(param_fields, new JSONArray());
         int ps = actId.lastIndexOf("_");
         String act = (ps > 0) ? actId.substring(ps + 1) : actId;
         mq.put(JOConst.act, act);
@@ -84,8 +85,6 @@ public class DBCmd {
         String act_id = (params.has(JOConst.act)) ? params.optString(JOConst.act) : "row";
         return (JSONObject) action(db, fid, act_id, params);
     }
-    
-
 
     public static Object fun(IDB db, String fid, JSONObject jq) throws Exception {
         String act_id = jq.optString(JOConst.act);
@@ -96,6 +95,5 @@ public class DBCmd {
     public static Object action(IDB db, String fid, String act, JSONObject params) throws Exception {
         return db.action(parser_fid(db, fid, act, params));
     }
-
 
 }

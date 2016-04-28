@@ -103,6 +103,19 @@ public class ENDE {
         }
         return result;
     }
+    
+    public static String sha1(byte[] buf) {
+        String result = "";
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA1");
+            md.update(buf);
+            result = toHexString(md.digest());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+    
 
     private static String toHexString(byte[] in) {
         StringBuilder hexString = new StringBuilder();

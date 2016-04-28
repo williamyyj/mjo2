@@ -11,7 +11,7 @@ import java.sql.SQLException;
  */
 
 public interface IJODataSource<E> {
-    public void init(JSONObject cfg) ; 
+    public void init(JSONObject cfg); 
     public String id();
     public E getDataSource();
     public Connection getConnection()  throws SQLException ;

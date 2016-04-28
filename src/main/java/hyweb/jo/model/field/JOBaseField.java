@@ -25,11 +25,21 @@ public class JOBaseField<E> implements IJOField<E> {
         this.cfg = cfg;
     }
 
+    /**
+     * 資料庫欄位名
+     *
+     * @return
+     */
     @Override
     public String name() {
-        return cfg.optString("name");
+        return cfg.optString("name", cfg.optString("id"));
     }
 
+    /**
+     * 系統識別值 （唯一)
+     *
+     * @return
+     */
     @Override
     public String id() {
         return cfg.optString("id");
@@ -60,16 +70,27 @@ public class JOBaseField<E> implements IJOField<E> {
         return cfg.optString("description");
     }
 
+    /**
+     * DB : P -> pk , F-> FK , I -> index , N -> not null
+     *
+     * @return
+     */
     @Override
     public String ct() {
         return cfg.optString("ct", null);
     }
 
+    /**
+     * 格式資訊
+     *
+     * @return
+     */
     @Override
     public String ft() {
         return cfg.optString("ft", null);
     }
 
+    @Deprecated
     public String cast() {
         return cfg.optString("cast", null);
     }
@@ -102,6 +123,7 @@ public class JOBaseField<E> implements IJOField<E> {
         return cfg.optString("args", null);
     }
 
+    @Deprecated
     @Override
     public boolean valid(JSONObject wp) throws Exception {
         Map<String, Object> m = new HashMap<String, Object>();
@@ -116,29 +138,38 @@ public class JOBaseField<E> implements IJOField<E> {
         m.put("$fld", this);
         m.put("$wp", wp);
         m.put("$now", new Date());
-        Object ret =  MVEL.eval(eval(), m);
+        Object ret = MVEL.eval(eval(), m);
         //System.out.println("====== ret : " + ret);
-        if(ret instanceof Boolean){
-            return (Boolean)ret ;
+        if (ret instanceof Boolean) {
+            return (Boolean) ret;
         } else {
-            return true ;
+            return true;
         }
     }
 
+    /**
+     * 1. args 外部為主 2. name 以名稱為主 3. e_xxxx , v_xxxx , xxxxx
+     *
+     * @return
+     */
     public String getFieldName() {
+        String name = name();
+        String id = id();
         if (args() != null && args().length() > 0) {
+            //  inject  
             return args();
-        } else if (name() != null && name().length() > 0) {
-            return name();
+        } else if (!id.equals(name)) {
+            //  Fix   name : cfg.optString("name", cfg.optString("id")); 
+            return name;
         } else {
-            String[] items = id().split("_");
+            String[] items = id.split("\\_");
             return (items.length > 1) ? items[1] : items[0];
         }
     }
 
     @Override
     public void setErrData(JSONObject row, String message) {
-        JSONObject err = row.optJSONObject("$err");
+        JSONObject err = row.optJSONObject(IJOField.node_error);
         JSONObject msg = row.optJSONObject("$msg");
         err.put(id(), false);
         if (!msg.has(id())) {
@@ -152,15 +183,35 @@ public class JOBaseField<E> implements IJOField<E> {
 
     @Override
     public Object getFieldValue(JSONObject row) {
-        Object o =  row.opt(getFieldName());
-        return (o!=null) ? o :  row.opt(id()) ; 
+        String name = name();
+        String id = id();
+        Object o = row.opt(getFieldName());
+        if (o == null && !id.equals(name)) {
+            o = row.opt(name);
+        }
+        if (o == null) {
+            String[] items = id.split("\\_");
+            String alias = (items.length > 1) ? items[1] : items[0];
+            o = row.opt(alias);
+        }
+        return (o != null) ? o : row.opt(id());
     }
 
+    /**
+     *
+     * @param row 列資料
+     * @param value
+     */
     @Override
     public void setFieldValue(JSONObject row, Object value) {
         row.put(getFieldName(), value);
     }
 
+    /**
+     * 
+     * @param row
+     * @return
+     */
     @Override
     public String getFieldText(JSONObject row) {
         return row.optString(getFieldName());
@@ -168,7 +219,7 @@ public class JOBaseField<E> implements IJOField<E> {
 
     @Override
     public E convert(Object o) {
-       return type.check(o);
+        return type.check(o);
     }
 
 }

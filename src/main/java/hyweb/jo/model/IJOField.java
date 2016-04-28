@@ -12,6 +12,10 @@ import hyweb.jo.org.json.JSONObject;
  */
 public interface IJOField<E> extends IJOInit<JSONObject> {
 
+    public final static String node_form = "$frm";
+    public final static String node_error = "$err";
+
+
     public String name();
 
     public String id();
@@ -25,13 +29,14 @@ public interface IJOField<E> extends IJOInit<JSONObject> {
     public int size();
 
     /**
-     * P : 主鍵值 , M : 不能空 , Ｆ: 外部連結 Q：查詢欄位
+     * P : 主鍵值 , M : 不能空 , Ｆ: 外部連結 Q：查詢欄位 (移除） I : index
+     *
      * @return
      */
     public String ct();
 
     public String dt();
-    
+
     public String ft();
 
     public String eval();
@@ -41,17 +46,17 @@ public interface IJOField<E> extends IJOInit<JSONObject> {
     public JSONObject cfg();
 
     public IJOType<E> type();
-    
+
     public boolean valid(JSONObject wp) throws Exception;
 
     public Object getFieldValue(JSONObject row);
-    
+
     public String getFieldText(JSONObject row);
 
     public void setFieldValue(JSONObject row, Object value);
 
     public void setErrData(JSONObject row, String message);
-    
+
     public E convert(Object o);
 
 }

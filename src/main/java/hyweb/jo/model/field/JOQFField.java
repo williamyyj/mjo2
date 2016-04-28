@@ -7,7 +7,7 @@ import hyweb.jo.type.JOStringType;
 /**
  *
  * @author william
- * 查詢欄位
+ * 要查詢的欄位如果沒有會使用 "*"
  */
 @IAProxyClass(id = "field.qf")
 public class JOQFField extends JOBaseField<String>{

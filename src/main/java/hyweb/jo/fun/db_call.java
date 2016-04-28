@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * @author william 執行預儲
  */
-public class db_call extends fbase implements IJOFunction<Object, Object[]> {
+public class db_call extends fb implements IJOFunction<Object, Object[]> {
 
     @Override
     public Object exec(Object[] args) throws Exception {

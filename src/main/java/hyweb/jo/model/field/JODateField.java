@@ -51,6 +51,10 @@ public class JODateField extends JOBaseField<Date> {
     @Override
     public Date convert(Object o) {
         JODateType dt = (JODateType) type;
-        return (ft() != null) ? dt.check(o, ft()) : dt.check(o);
+        Date v = null;
+        if(ft()!=null){
+            v = dt.check(o,ft());
+        }
+        return (v!=null) ? v : dt.check(o);
     }
 }

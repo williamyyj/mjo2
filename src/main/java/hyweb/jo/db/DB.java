@@ -8,7 +8,6 @@ import hyweb.jo.org.json.JSONObject;
 import hyweb.jo.type.JOTypes;
 import hyweb.jo.util.JOFunctional;
 import hyweb.jo.util.JOTools;
-import java.util.Arrays;
 
 /**
  * @author William
@@ -21,6 +20,10 @@ public class DB extends DBBase<JSONObject> {
 
     public DB(String base, Connection conn) {
         super(base, conn);
+    }
+
+    public DB(String base, String oid) {
+        super(base, null, oid);
     }
 
     public DB(String base, String fid, String oid) {

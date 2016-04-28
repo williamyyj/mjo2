@@ -17,5 +17,6 @@ public class mssql_init implements IJOInit<JOTypes> {
         self.put(Types.DATE,new ms_date());
         self.put(Types.TIME,new ms_date());
         self.put(Types.TIMESTAMP,new ms_date());
+        self.put(Types.CLOB,new JOClobType());
     }
 }

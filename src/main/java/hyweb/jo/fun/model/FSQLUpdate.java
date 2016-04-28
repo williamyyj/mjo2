@@ -9,9 +9,10 @@ import java.util.List;
  */
 public class FSQLUpdate extends FSQLBase {
 
+    @Override
     public String exec(List<IJOField> fields) throws Exception {
         IJOField tb = fields.get(0);
-        if (!"tb".equals(tb.dt())) {
+        if (!"table".equals(tb.dt())) {
             throw new RuntimeException("JOField must tb field : " + tb);
         }
         StringBuilder sql = new StringBuilder();
@@ -27,7 +28,7 @@ public class FSQLUpdate extends FSQLBase {
      */
     private void proc_cols_name(StringBuilder sql, List<IJOField> fields) {
         for (IJOField fld : fields) {
-            if (!"P".equals(fld.ct()) && !"tb".equals(fld.dt())) {
+            if (!"P".equals(fld.ct()) && !"table".equals(fld.dt())) {
                 sql.append('\n').append("${$set")
                         .append(',').append(fld.name())
                         .append(',').append(fld.dt())

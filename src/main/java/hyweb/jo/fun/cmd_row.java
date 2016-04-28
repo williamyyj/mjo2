@@ -17,7 +17,7 @@ import java.util.List;
  *
  * @author william
  */
-public class cmd_row extends fbase implements IJOFunction<JSONObject, Object[]> {
+public class cmd_row extends fb implements IJOFunction<JSONObject, Object[]> {
 
     @Override
     public JSONObject exec(Object[] args) throws Exception {
@@ -33,7 +33,7 @@ public class cmd_row extends fbase implements IJOFunction<JSONObject, Object[]> 
         int ps = actId.lastIndexOf("_");
         String rt = (ps > 0) ? actId.substring(ps + 1) : actId;
         JSONObject mq = mq(proc, act, rt);
-        System.out.println(mq);
+        System.out.println("===== mq : "+mq);
         JSONObject row =(JSONObject) proc.db().action(mq);
         if (act.has("eval") && row != null) {
             List<IJOField> vFields = metadata.getFields(act.optString("eval"));

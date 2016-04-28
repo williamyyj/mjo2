@@ -22,8 +22,8 @@ public class JODecoder implements IJOFunction<String,String>{
     }
 
     public static String decoder(byte[] buf) throws Exception {
-        byte[] ret = LZFDecoder.decode(buf);
-        return new String(buf,"UTF-8");
+        byte[] ret = LZFDecoder.safeDecode(buf);
+        return new String(ret,"UTF-8");
     }
 
     public static String decoder(String text) throws Exception {

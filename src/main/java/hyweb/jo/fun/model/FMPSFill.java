@@ -3,6 +3,7 @@ package hyweb.jo.fun.model;
 
 
 import hyweb.jo.JOStatus;
+import hyweb.jo.log.JOLogger;
 import java.sql.ParameterMetaData;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

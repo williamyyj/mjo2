@@ -5,7 +5,8 @@
  */
 package hyweb.jo.data;
 
-
+import hyweb.jo.IJOFunction;
+import hyweb.jo.util.JOFunctional;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -41,10 +42,22 @@ public class JOFileUtils {
         return data;
     }
 
+    private static boolean isBOM(byte[] buf) {
+        return (buf != null && buf.length > 3
+          && (buf[0] & 0xFF) == 0xEF
+          && (buf[1] & 0xFF) == 0xBB
+          && (buf[2] & 0xFF) == 0xBF);
+    }
+
     public static String loadString(File f, String enc) throws IOException {
         FileInputStream fis = new FileInputStream(f);
         try {
-            return new String(loadData(fis), enc);
+            byte[] data = loadData(fis);
+            if (isBOM(data)) {
+                return new String(data, 3, data.length - 3, enc);
+            } else {
+                return new String(data, enc);
+            }
         } finally {
             fis.close();
         }
@@ -60,6 +73,20 @@ public class JOFileUtils {
             if (osw != null) {
                 osw.close();
             }
+        }
+    }
+
+    public static void save(InputStream in, File f) throws IOException, Exception {
+        FileOutputStream out = new FileOutputStream(f);
+        try {
+            byte[] buffer = new byte[4 * 1024];
+            int len = 0;
+            while ((len = in.read(buffer)) != -1) {
+                out.write(buffer, 0, len);
+            }
+        } finally {
+            in.close();
+            out.close();
         }
     }
 
@@ -98,6 +125,53 @@ public class JOFileUtils {
                 out.close();
             }
         }
+    }
+
+    public static void fgroup(String path) throws Exception {
+        File f = new File(path);
+        if(f.isDirectory()){
+            File[] list = f.listFiles();
+            for(File item : list){
+                System.out.println("===== proc "+item);
+                file_group(f,item);
+            }
+        }
+    }
+    
+   private static void  file_group(File p, File item) throws Exception{
+       byte[] buf = loadData(item);
+       String hash = (String) JOFunctional.exec("ende.md5_bytes", buf);
+       File tp = new File(p,hash);
+       if(!tp.exists()){
+           tp.mkdirs();
+       }
+       File target = new File(tp,item.getName());
+       copy(item,target);
+   }
+
+    public static byte[] loadData(File f) throws Exception {
+        byte[] data = null;
+        InputStream br = new FileInputStream(f);
+        byte[] tmp = new byte[8192];
+        int num = 0;
+        int len = 0;
+        try {
+            while ((num = br.read(tmp)) > 0) {
+                if (data == null) {
+                    data = new byte[num];
+                    System.arraycopy(tmp, 0, data, 0, num);
+                } else {
+                    byte[] old = data;
+                    data = new byte[old.length + num];
+                    System.arraycopy(old, 0, data, 0, old.length);
+                    System.arraycopy(tmp, 0, data, old.length, num);
+                }
+                len += num;
+            }
+        } finally {
+            br.close();
+        }
+        return data;
     }
 
 }

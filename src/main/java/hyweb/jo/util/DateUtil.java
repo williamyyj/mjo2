@@ -1,12 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package hyweb.jo.util;
 
 import hyweb.jo.log.JOLogger;
+import hyweb.jo.model.IJOField;
 import hyweb.jo.org.json.JSONObject;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -27,14 +25,36 @@ public class DateUtil {
         return null;
     }
 
+    public static Date to_date(String text) {
+        String sfmt = "yyyyMMdd";
+        String lfmt = "yyyyMMddHHmmss";
+        String fmt = "";
+        String str = text.replaceAll("[^0-9\\.]+", "");
+        int len = str.length();
+        switch (len) {
+            case 7:
+                return cdate(str);
+            case 8:
+                return to_date(sfmt, str);
+            case 14:
+                return to_date(lfmt, str);
+            default:
+                if (len > 14) {
+                    return to_date(lfmt, str.substring(0, 14));
+                }
+        }
+        return null;
+
+    }
+
     public static Date add_date(Date src, int field, int value) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(src);
         cal.add(field, value);
         return cal.getTime();
     }
-    
-        public static boolean range(Date ts, Date te, Date curr) {
+
+    public static boolean range(Date ts, Date te, Date curr) {
         if (ts == null || te == null || curr == null) {
             return false;
         }
@@ -46,6 +66,10 @@ public class DateUtil {
 
     public static long diff(Date a, Date b) {
         return (a.getTime() - b.getTime()) / 1000;
+    }
+
+    public static long diff(Object b) {
+        return diff(new Date(), (Date) b);
     }
 
     public static boolean op_lt(Date a, Date b) {
@@ -135,6 +159,17 @@ public class DateUtil {
         return cal.getTime();
     }
 
+    public static Date date_max(IJOField fld, JSONObject row) {
+        Object o = fld.getFieldValue(row);
+        if (o instanceof Date) {
+            return date_max((Date) o);
+        } else if (o instanceof String) {
+            Date d = to_date(fld.ft(), (String) o);
+            return date_max(d);
+        }
+        return null;
+    }
+
     public static Date date_max(Date d) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(d);
@@ -151,39 +186,127 @@ public class DateUtil {
         return cal.getTime();
     }
 
+    public static String date_next(String fmt, String text) throws Exception {
+        SimpleDateFormat sdf = new SimpleDateFormat(fmt);
+        Date d = sdf.parse(text);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(d);
+        cal.add(Calendar.DATE, 1);
+        return sdf.format(cal.getTime());
+    }
+
     public static int year(Date d) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(d);
         return cal.get(Calendar.YEAR);
     }
-    
-    public static String convert(String fmt, String date) {
+
+    public static int month(Date d) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(d);
+        return cal.get(Calendar.MONTH) + 1;
+    }
+
+    public static int date(Date d) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(d);
+        return cal.get(Calendar.DATE);
+    }
+
+    public static String convert(String fmt, String d) {
         SimpleDateFormat tfmt = new SimpleDateFormat(fmt);
+        String sfmt = "yyyyMMddHHmmss";
         try {
-            if (date != null && date.length() == 14) {
-                SimpleDateFormat lfmt = new SimpleDateFormat("yyyyMMddHHmmss");
-                return tfmt.format(lfmt.parse(date));
-            } else if (date != null && date.length() == 8) {
-                SimpleDateFormat sfmt = new SimpleDateFormat("yyyyMMdd");
-                return tfmt.format(sfmt.parse(date));
+            if (d != null && d.length() == 8) {
+                sfmt = "yyyyMMdd";
             }
+            return tfmt.format(to_date(sfmt, d));
         } catch (Exception e) {
             e.printStackTrace();
             return "";
         }
-        return "";
     }
-    
-     public static void main(String[] args) {
-        JSONObject sch = JOTools.loadString("{min:'40',sch3:9,sch2:8,sch1:1,sch:'m5',hour:18,sch5:7,sch4:1}");
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        Date a = new Date();
-        Date b = DateUtil.schedule(sch);
-        System.out.println(sdf.format(a));
-        System.out.println(sdf.format(b));
-        System.out.println(DateUtil.diff(a, b));
 
+    public static String convert(String fmt, Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat(fmt);
+        return sdf.format(date);
     }
-    
+
+    public static Date lastDayOfMonth(Date d) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(d);
+        cal.set(Calendar.DATE, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.MINUTE, 59);
+        cal.set(Calendar.SECOND, 59);
+        return cal.getTime();
+    }
+
+    public static Date firstDayOfMonth(Date d) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(d);
+        cal.set(Calendar.DATE, 1);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        return cal.getTime();
+    }
+
+    public static Date getFirstDayOfSeason(int offset) {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MONTH, offset * 3);
+        int month = cal.get(Calendar.MONTH);
+        int mm = 0;
+        switch (month) {
+            case 0:
+            case 1:
+            case 2:
+                mm = 0;
+                break;
+            case 3:
+            case 4:
+            case 5:
+                mm = 3;
+                break;
+            case 6:
+            case 7:
+            case 8:
+                mm = 6;
+                break;
+            case 9:
+            case 10:
+            case 11:
+                mm = 9;
+                break;
+        }
+        cal.set(Calendar.MONTH, mm);
+        cal.set(Calendar.DATE, 1);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+
+        return cal.getTime();
+    }
+
+    public static Date cdate(Object text) {
+        try {
+            NumberFormat nf = new DecimalFormat("0000000");
+            int dv = nf.parse(text.toString()).intValue();
+            int year = (dv / 10000 + 1911) * 10000 + (dv % 10000);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+            return sdf.parse(String.valueOf(year));
+        } catch (ParseException ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+    public static void main(String[] args) {
+        JSONObject sch = JOTools.loadString("{min:'40',sch3:9,sch2:8,sch1:1,sch:'m5',hour:18,sch5:7,sch4:1}");
+        System.out.println(DateUtil.schedule(sch));
+        System.out.println(DateUtil.getFirstDayOfSeason(0));
+        System.out.println(DateUtil.getFirstDayOfSeason(-1));
+        System.out.println(DateUtil.cdate("0990101"));
+    }
 
 }

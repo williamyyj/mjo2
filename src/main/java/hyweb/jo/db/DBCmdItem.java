@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package hyweb.jo.db;
 
 import java.util.HashMap;
@@ -32,7 +27,7 @@ public class DBCmdItem {
             op.put("$all", "like");   //   %xxxx%
             op.put("$range", "");  //     fld  betten a and b 
             op.put("$set", "="); // for update 
-            op.put("$rm", ""); // for clean ; 
+            op.put("$rm", "");  // 移除最後 ","   
         }
         return op;
     }
@@ -54,33 +49,33 @@ public class DBCmdItem {
         return null;
     }
 
-    public static void process_item(IDB dp, StringBuffer sb, JSONObject model, JSONObject row, String item) throws Exception {
+    public static void process_item(IDB dp, StringBuffer sb, JSONObject mq, JSONObject row, String item) throws Exception {
         String[] args = item.split(",");
         String name = args[0];
         if (op().containsKey(name)) {
-            process_op_item(dp, sb, model, row, args);
+            process_op_item(dp, sb, mq, row, args);
         } else {
-            process_var_item(dp, sb, model, row, args);
+            process_var_item(dp, sb, mq, row, args);
         }
 
     }
 
-    private static void process_op_item(IDB dp, StringBuffer sb, JSONObject model, JSONObject row, String[] args) {
+    private static void process_op_item(IDB dp, StringBuffer sb, JSONObject mq, JSONObject row, String[] args) {
         String name = args[0];
         if ("=".equals(name) || ">".equals(name) || ">=".equals(name)
                 || "<".equals(name) || "<=".equals(name)) {
-            process_op2(dp, sb, model, row, args);
+            process_op2(dp, sb, mq, row, args);
         } else if ("$like".equals(name)) {
-            process_like(dp, sb, model, row, args);
+            process_like(dp, sb, mq, row, args);
         } else if ("$all".equals(name)) {
-            process_all(dp, sb, model, row, args);
+            process_all(dp, sb, mq, row, args);
         } else if ("$range".equals(name)) {
-            process_range(dp, sb, model, row, args);
+            process_range(dp, sb, mq, row, args);
         } else if ("$set".equals(name)) {
-            process_set(dp, sb, model, row, args);
+            process_set(dp, sb, mq, row, args);
         } else if ("$rm".equals(name)) {
-            process_rm(dp, sb, model, row, args);
-        }
+            process_rm(dp, sb, mq, row, args);
+        } 
     }
 
     private static void set_field(JSONArray fields, IDB dp, JSONObject row, String name, String dt, String id, Object v) {
@@ -94,6 +89,7 @@ public class DBCmdItem {
 
     private static void process_var_item(IDB dp, StringBuffer sb, JSONObject model, JSONObject row, String[] args) {
         //    ${field,dt}  |   ${field,dt,alias} 
+        //System.out.println(Arrays.toString(args));
         String name = args[0];
         String dt = args[1];
         String alias = (args.length > 2) ? args[2] : null;
@@ -104,22 +100,28 @@ public class DBCmdItem {
     }
 
     private static Object get_value(IDB dp, JSONObject row, String name, String dt, String alias) {
+        //System.out.println("===== debug row " + row);
+        //System.out.println("===== debug name " + name);
+        //System.out.println("===== debug alias " + alias);
         IJOType<?> type = dp.types().type(dt);
-        Object value = type.check(row.opt(name));
-        if (value == null && alias != null) {
+        Object value = null;
+        if (row.has(name)) {
+            value = type.check(row.opt(name));
+        }
+        if (value == null && row.has(alias)) {
             value = type.check(row.opt(alias));
         }
         return value;
     }
 
-    private static void process_op2(IDB dp, StringBuffer sb, JSONObject model, JSONObject row, String[] args) {
+    private static void process_op2(IDB dp, StringBuffer sb, JSONObject mq, JSONObject row, String[] args) {
         String op_name = args[0];
         String field = args[1];
         String dt = args[2];
         String alias = (args.length > 3) ? args[3] : null;
         Object v = get_value(dp, row, field, dt, alias);
         if (v != null) {
-            JSONArray fields = model.optJSONArray(param_fields);
+            JSONArray fields = mq.optJSONArray(param_fields);
             set_field(fields, dp, row, field, dt, alias, v);
             sb.append(" and ").append(field).append(' ').append(op_name).append(" ?");
         }
@@ -172,7 +174,7 @@ public class DBCmdItem {
         JSONArray fields = model.optJSONArray(param_fields);
         Object v = get_value(dp, row, field, dt, alias);
         if (v != null) {
-            set_field(fields, dp, row, field, dt, alias,v);
+            set_field(fields, dp, row, field, dt, alias, v);
             sb.append(' ').append(field).append(" = ").append(" ? ,");
         }
     }
@@ -184,5 +186,9 @@ public class DBCmdItem {
             sb.setLength(ps - 1);
         }
     }
+
+
+
+
 
 }

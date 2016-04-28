@@ -3,15 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package hyweb.jo.model.field;
-
-import hyweb.jo.annotation.IAProxyClass;
+package hyweb.jo.fun.dao;
 
 /**
  *
  * @author william
  */
-@IAProxyClass(id = "field.vf")
-public class JOVFField {
+public class delete {
     
 }

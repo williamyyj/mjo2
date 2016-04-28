@@ -1,11 +1,10 @@
 package hyweb.jo.fun.valid;
 
 import hyweb.jo.IJOFunction;
-import hyweb.jo.util.JOFunctional;
-
 /**
  * @author william
  */
+
 public class cid implements IJOFunction<Boolean, String> {
 
     private final static int[] COMPANY_ID_LOGIC_MULTIPLIER = {1, 2, 1, 2, 1, 2, 4, 1};

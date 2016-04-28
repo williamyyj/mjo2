@@ -7,7 +7,7 @@ import hyweb.jo.type.JOStringType;
 /**
  * @author william 視表 or 資料表欄位
  */
-@IAProxyClass(id = "field.tb")
+@IAProxyClass(id = "field.table")
 public class JOTBField extends JOBaseField<String> {
 
     public JOTBField() {
@@ -16,7 +16,7 @@ public class JOTBField extends JOBaseField<String> {
 
     public JOTBField(String id, String name) {
         cfg = new JSONObject();
-        cfg.put("dt", "tb");
+        cfg.put("dt", "table");
         cfg.put("id", id);
         cfg.put("name", name);
         type = new JOStringType();

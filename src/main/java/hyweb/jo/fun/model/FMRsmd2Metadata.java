@@ -6,6 +6,7 @@
 package hyweb.jo.fun.model;
 
 import hyweb.jo.IJOType;
+import hyweb.jo.log.JOLogger;
 import hyweb.jo.org.json.JSONObject;
 import hyweb.jo.type.JOTypes;
 import hyweb.jo.util.JOFunction;

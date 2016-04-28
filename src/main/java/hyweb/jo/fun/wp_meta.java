@@ -9,6 +9,6 @@ package hyweb.jo.fun;
  *
  * @author william
  */
-public class db_delete {
+public class wp_meta {
     
 }

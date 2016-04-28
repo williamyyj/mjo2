@@ -13,7 +13,7 @@ import java.util.List;
  *
  * @author william
  */
-public class cmd_rows extends fbase implements IJOFunction<List<JSONObject>, Object[]> {
+public class cmd_rows extends fb implements IJOFunction<List<JSONObject>, Object[]> {
 
     @Override
     public List<JSONObject> exec(Object[] args) throws Exception {

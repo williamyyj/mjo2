@@ -11,6 +11,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.io.StringReader;
 import java.lang.reflect.Field;
 import java.util.List;
@@ -200,6 +201,35 @@ public class JOTools {
         return p;
     }
 
-   
+    public static JSONArray loadJA(String text) throws IOException {
+        return loadJA(new StringReader(text));
+    }
+
+    public static JSONArray loadJA(Reader reader) throws IOException {
+        try {
+            JSONTokener tk = new JSONTokener(reader);
+            return new JSONArray(tk);
+        } finally {
+            reader.close();
+        }
+    }
+    
+    
+    public static JSONObject loadJSON(String text) throws IOException {
+        return loadJSON(new StringReader(text));
+    }
+
+    public static JSONObject loadJSON(Reader reader) throws IOException {
+        try {
+            JSONTokener tk = new JSONTokener(reader);
+            return new JSONObject(tk);
+        } finally {
+            reader.close();
+        }
+    }
+
+
+
+    
 
 }

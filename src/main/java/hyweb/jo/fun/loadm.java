@@ -7,6 +7,7 @@ package hyweb.jo.fun;
 
 import hyweb.jo.IJOFunction;
 import hyweb.jo.JOProcObject;
+import hyweb.jo.db.DBCmd;
 import hyweb.jo.org.json.JSONObject;
 import hyweb.jo.util.FJO2Map;
 import hyweb.jo.util.JOCache;
@@ -31,9 +32,7 @@ public class loadm implements IJOFunction<Object, Object[]> {
         }
     }
 
-    private Object proc_db_map(JOProcObject proc,  JSONObject m, String rt) throws Exception {
-        return null;
-    }
+
 
     private Object proc_static_map(JSONObject m, String rt) throws Exception {
         JSONObject data = m.optJSONObject("$data");
@@ -42,6 +41,11 @@ public class loadm implements IJOFunction<Object, Object[]> {
         } else  {
             return FJO2Map.toMap(data);
         }
+    }
+
+    private Object proc_db_map(JOProcObject proc, JSONObject m, String rt) throws Exception {
+        return null;
+  
     }
 
 }

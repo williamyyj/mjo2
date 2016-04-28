@@ -37,7 +37,8 @@ public class JOStringType extends JOType<String> {
 
     @Override
     public String check(Object o, String dv) {
-        return (o != null) ? o.toString() : dv;
+        String ret = (o != null) ? o.toString() : dv;
+        return ("null".equalsIgnoreCase(ret)) ? "" : ret ; 
     }
 
     @Override

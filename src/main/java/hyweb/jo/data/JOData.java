@@ -1,9 +1,10 @@
 package hyweb.jo.data;
 
 import hyweb.jo.org.json.JSONObject;
-import hyweb.jo.org.json.JSONTokener;
 import hyweb.jo.org.json.XML;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class JOData {
 
@@ -36,6 +37,20 @@ public abstract class JOData {
     public String loadString(File f, String enc) throws Exception {
         byte[] buf = loadData(new FileInputStream(f));
         return (buf != null) ? new String(buf, enc) : null;
+    }
+    
+      public List<String> loadList(File f, String enc) throws Exception {
+          List<String> ret = new ArrayList<String>();
+          BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(f),enc));
+          try{
+              String line = null ; 
+              while((line=br.readLine())!=null){
+                  ret.add(line);
+              }
+          } finally{
+              br.close();
+          }
+          return ret ; 
     }
 
     public void saveText(String text, File f, String enc) throws Exception {

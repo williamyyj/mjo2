@@ -5,6 +5,8 @@ import com.google.common.cache.LoadingCache;
 import hyweb.jo.IJOFunction;
 import hyweb.jo.JOProcObject;
 import hyweb.jo.fun.MJOBase;
+import hyweb.jo.log.JOLogger;
+import hyweb.jo.model.IJOField;
 import hyweb.jo.org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -35,10 +37,10 @@ public class JOFunctional {
     private static LoadingCache<String, IJOFunction> cache() {
         if (_cache == null) {
             _cache = CacheBuilder
-                    .newBuilder()
-                    .maximumSize(1000) // 記憶體中最多保留 1000 筆資料
-                    .expireAfterWrite(120, TimeUnit.MINUTES) // 資料生命週期為寫入後 120 分鐘
-                    .build(new JOFunctionCacheLoader());
+              .newBuilder()
+              .maximumSize(1000) // 記憶體中最多保留 1000 筆資料
+              .expireAfterWrite(120, TimeUnit.MINUTES) // 資料生命週期為寫入後 120 分鐘
+              .build(new JOFunctionCacheLoader());
         }
         return _cache;
     }
@@ -106,6 +108,14 @@ public class JOFunctional {
         return ENDE.md5(buf);
     }
 
+    public static String sha1(String text) {
+        String ret = "";
+        if (text != null) {
+            return ENDE.sha1(text.getBytes());
+        }
+        return ret;
+    }
+
     public static Set<Object> load_set(JOProcObject proc, int field, String name, String sql, Object... params) throws Exception {
         List<JSONObject> rows = proc.db().rows(sql, params);
         Set<Object> ret = new HashSet<Object>();
@@ -141,17 +151,33 @@ public class JOFunctional {
         return sdf.format(c.getTime());
     }
 
-    public static String format(String fmt, Object ... args) {
+    public static Date cdate(String text) {
+        return new Date();
+    }
+
+    public static String format(String fmt, Object... args) {
         return String.format(fmt, args);
     }
-    
-    public static String encode(String text){
+
+    public static String encode(String text) {
         try {
-            return  JOTools.encode(text);
+            return JOTools.encode(text);
         } catch (Exception ex) {
             return "";
         }
     }
     
-
+    public static void dmax(JSONObject row, String id, IJOField fld){
+        Object fv = fld.getFieldValue(row);
+        JOLogger.debug("===== dmax : "+fv);
+        if(fv instanceof String){
+            Date d = DateUtil.to_date((String)fv);
+            if(d!=null){
+                d = DateUtil.date_max(d);
+                 JOLogger.debug("===== dmax : "+d);
+                row.put(id, d);
+            }
+        }
+    }
+    
 }

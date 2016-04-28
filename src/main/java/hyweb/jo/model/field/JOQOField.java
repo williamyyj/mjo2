@@ -7,7 +7,7 @@ import hyweb.jo.type.JOStringType;
 /**
  * @author william
  *    給分頁使用 決定排序 
- *   MS-SQL 分頁不用先使用 order by 
+ *   MS-SQL  要設定 order by 
  * 
  */    
 @IAProxyClass(id = "field.qo")

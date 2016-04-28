@@ -14,30 +14,26 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 
 /**
- *   @author William 目前支援 
- *   GET 直接使用URL 
- *   POST   使用$form 
+ * @author William 目前支援 GET 直接使用URL POST 使用$form
  */
-
 public class JOHttp {
 
     /*
      * 支援跨越網站
-    */
-    
-      static {
+     */
+    static {
         TrustManager[] trustManager = new TrustManager[]{new TrustEverythingTrustManager()};
         // Let us create the factory where we can set some parameters for the connection
         SSLContext sslContext = null;
         try {
-            sslContext = SSLContext.getInstance("SSL");
+            sslContext = SSLContext.getInstance("TLS");
             sslContext.init(null, trustManager, new java.security.SecureRandom());
             HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
         } catch (NoSuchAlgorithmException e) {
         } catch (KeyManagementException e) {
         }
     }
-    
+
     public static byte[] bytes(JSONObject jq, String enc) throws Exception {
         URL url = new URL(jq.optString("$url"));
         JSONObject form = jq.optJSONObject("$form");
@@ -47,8 +43,8 @@ public class JOHttp {
         uc.addRequestProperty("User-Agent", "Mozilla");
         //uc.addRequestProperty("Referer", "google.com");
         try {
-           // uc.setInstanceFollowRedirects(true);
-           // HttpURLConnection.setFollowRedirects(true);
+            // uc.setInstanceFollowRedirects(true);
+            // HttpURLConnection.setFollowRedirects(true);
             if (form != null && form.m().size() > 0) {
                 uc.setRequestMethod("POST");
                 uc.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
@@ -58,8 +54,8 @@ public class JOHttp {
                     Object v = param.getValue();
                     postData.append(k).append('=').append(URLEncoder.encode(String.valueOf(v), enc)).append('&');
                 }
-                if(postData.length()>0) {
-                    postData.setLength(postData.length()-1);
+                if (postData.length() > 0) {
+                    postData.setLength(postData.length() - 1);
                 }
                 byte[] postDataBytes = postData.toString().getBytes(enc);
                 uc.setRequestProperty("Content-Length", String.valueOf(postDataBytes.length));
@@ -70,8 +66,8 @@ public class JOHttp {
             boolean redirect = false;
             if (code != HttpURLConnection.HTTP_OK) {
                 if (code == HttpURLConnection.HTTP_MOVED_TEMP
-                    || code == HttpURLConnection.HTTP_MOVED_PERM
-                    || code == HttpURLConnection.HTTP_SEE_OTHER) {
+                        || code == HttpURLConnection.HTTP_MOVED_PERM
+                        || code == HttpURLConnection.HTTP_SEE_OTHER) {
                     redirect = true;
                 }
             }
@@ -104,27 +100,31 @@ public class JOHttp {
         }
 
     }
-    
+
     public JSONObject xml(JSONObject jq, String enc) throws Exception {
-        return XML.toJSONObject(text(jq,enc));
+        return XML.toJSONObject(text(jq, enc));
     }
 
     public JSONObject json(JSONObject jq, String enc) throws Exception {
-        return JOTools.loadString(text(jq,enc));
+        return JOTools.loadString(text(jq, enc));
     }
-    
-    public static String text(JSONObject jq,String enc) throws Exception {
-        return new String(bytes(jq,enc),enc);
-    }
-    
 
+    public static String text(JSONObject jq, String enc) throws Exception {
+        return new String(bytes(jq, enc), enc);
+    }
+
+    public static String text(String url, String enc) throws Exception {
+        JSONObject jq = new JSONObject();
+        jq.put("$url", url );
+        return text(jq,enc);
+    }
 
     public static void main(String[] args) throws Exception {
-       // JSONObject jq = new JSONObject();
-       // jq.put("$url", "http://tw.yahoo.com");
+        // JSONObject jq = new JSONObject();
+        // jq.put("$url", "http://tw.yahoo.com");
         //jq.put("$url", "http://tw.yahoo.com");
-       JSONObject jq =  JOTools.loadString("{ $url: 'http://pest.baphiq.gov.tw/BAPHIQ/wSite/pos/pos.do' }");
-        String content = JOHttp.text(jq,"UTF-8");
+       // JSONObject jq = JOTools.loadString("{ $url: 'http://pest.baphiq.gov.tw/BAPHIQ/wSite/pos/pos.do' }");
+        String content = JOHttp.text("https://posadmin.baphiq.gov.tw/mPosService/BaphiqSale?wsdl", "UTF-8");
         System.out.println(content);
     }
 

@@ -44,6 +44,17 @@ public class TextUtils {
         }
         jo.put(name, new String(buf));
     }
+    
+    public static  String mask_tail(String line , char mask){
+        StringBuilder sb = new StringBuilder();
+        if(line!=null && line.length()>0){
+          sb.append(line.charAt(0));
+          for(int i=1;i<line.length();i++){
+              sb.append(mask);
+          }
+        }
+        return sb.toString();
+    }
 
     public static void cast_date(JSONObject jo, String name) {
         try {
@@ -189,12 +200,19 @@ public class TextUtils {
         int i;
         for (i = 0; i < 8; i++) {
             z = (int) ((Math.random() * 7) % 3);
-            if (z == 1) { // 放數字
-                sb.append((int) ((Math.random() * 10) + 48));
-            } else if (z == 2) { // 放大寫英文
-                sb.append((char) (((Math.random() * 26) + 65)));
-            } else {// 放小寫英文
-                sb.append(((char) ((Math.random() * 26) + 97)));
+            switch (z) {
+                case 1:
+                    // 放數字
+                    sb.append((int) ((Math.random() * 10) + 48));
+                    break;
+                case 2:
+                    // 放大寫英文
+                    sb.append((char) (((Math.random() * 26) + 65)));
+                    break;
+                default:
+                    // 放小寫英文
+                    sb.append(((char) ((Math.random() * 26) + 97)));
+                    break;
             }
         }
         return sb.toString();
@@ -261,7 +279,7 @@ public class TextUtils {
     }
 
     public static int  length(Object fv) {
-        return (fv!=null) ? fv.toString().length() : 0 ; 
+        return (fv!=null) ? fv.toString().trim().length() : 0 ; 
     }
 
 

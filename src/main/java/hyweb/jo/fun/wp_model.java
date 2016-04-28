@@ -8,7 +8,8 @@ package hyweb.jo.fun;
 /**
  *
  * @author william
+ *      統一共用 
  */
-public class db_row {
+public class wp_model {
     
 }

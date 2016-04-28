@@ -15,7 +15,7 @@ public class F2SQLInsert implements IJOBiFunction<String,List<IJOField>,JSONObje
   @Override
     public String exec(List<IJOField> fields,JSONObject row) throws Exception {
         IJOField tb = fields.get(0);
-        if (!"tb".equals(tb.dt())) {
+        if (!"table".equals(tb.dt())) {
             throw new RuntimeException("JOField must tb field : " + tb);
         }
         StringBuilder sql = new StringBuilder();
@@ -30,7 +30,7 @@ public class F2SQLInsert implements IJOBiFunction<String,List<IJOField>,JSONObje
     private void proc_cols_name(StringBuilder sql, List<IJOField> fields) {
         sql.append(" (");
         for (IJOField field : fields) {
-            if (!"tb".equals(field.dt()) && !"auto".equals(field.ft())) {
+            if (!"table".equals(field.dt()) && !"auto".equals(field.ft())) {
                 sql.append(' ').append(field.name()).append(",");
             }
         }
@@ -40,7 +40,7 @@ public class F2SQLInsert implements IJOBiFunction<String,List<IJOField>,JSONObje
     private void proc_cols_value(StringBuilder sql, List<IJOField> fields,JSONObject row) {
         sql.append(" (");
         for (IJOField fld : fields) {
-            if (!"tb".equals(fld.dt()) && !"auto".equals(fld.ft())) {
+            if (!"table".equals(fld.dt()) && !"auto".equals(fld.ft())) {
                 Object o = fld.getFieldValue(row);
                 sql.append(fld.type().sql_string(o,fld.ft())).append(',');
             }

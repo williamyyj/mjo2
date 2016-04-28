@@ -1,34 +1,39 @@
 package hyweb.jo.model;
 
+import hyweb.jo.JOConst;
 import hyweb.jo.log.JOLogger;
 import hyweb.jo.model.field.JOTBField;
 import hyweb.jo.org.json.JSONArray;
 import hyweb.jo.org.json.JSONObject;
-import hyweb.jo.org.json.JSONTokener;
 import hyweb.jo.util.JOCache;
+import hyweb.jo.util.JOTools;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
 /**
- * @author william 支援 import tag
+ * @author william 支援 import tag meta 欄位定義檔 $rem_ 注解 $屬性 act 事件 $dbFields --->
+ * dao
  */
 public class JOMetadata extends HashMap<String, IJOField> {
 
-    private  String prefix = "/dp/metadata";
+    private final static String default_path = "/dp/metadata";
     private String base;
     private JSONObject cfg;
-
+    private String use_path;
     public JOMetadata(String base, String id) {
+        this(base,default_path,id);
+    }
+
+    public JOMetadata(String base, String path , String id) {
         super();
         try {
             this.base = base;
-            this.cfg = new JSONObject( JOCache.load(base + prefix, id).m());
+            this.use_path = path;
+            System.out.println(base+use_path+"/"+id);
+            this.cfg = new JSONObject(JOCache.load(base + use_path, id));
             init_tb_field();
             init_import();
             init_fields(cfg.optJSONArray("meta"));
@@ -47,29 +52,29 @@ public class JOMetadata extends HashMap<String, IJOField> {
     }
 
     private void init_import_item(String item) throws Exception {
-        File f = new File(base + prefix + "/inc",item+".json");
-        JSONObject child = loadJSON(f) ; 
+        File f = new File(base + use_path + "/inc", item + ".json");
+        JSONObject child = JOTools.load(f);
         if (child != null) {
             if ("meta".equals(child.opt("classId")) || child.has("meta")) {
                 init_item_meta(child);
-            } else  {
+            } else {
                 init_item_cmd(child);
             }
         }
     }
 
     private void init_item_meta(JSONObject child) {
-         init_fields(child.optJSONArray("meta"));
+        init_fields(child.optJSONArray("meta"));
     }
 
     private void init_item_cmd(JSONObject child) {
         Set<String> names = child.m().keySet();
-        for(String n : names){
-            if(!cfg.has(n) && n.charAt(0)!='$'){
+        for (String n : names) {
+            if (!cfg.has(n) && n.charAt(0) != '$') {
                 cfg.put(n, child.opt(n));
             } else {
-                System.out.println("===== meta "+cfg.opt(n));
-                System.out.println("===== act "+child.opt(n));
+                //System.out.println("===== meta " + cfg.opt(n));
+                //System.out.println("===== act " + child.opt(n));
             }
         }
     }
@@ -88,10 +93,10 @@ public class JOMetadata extends HashMap<String, IJOField> {
                 try {
                     IJOField fld = JOFieldUtils.newInstance(item);
                     if (fld != null) {
-                       IJOField old =  put(fld.id(), fld);
-                       if(old!=null){
-                             JOLogger.warn("dup field " + fld.id());
-                       }
+                        IJOField old = put(fld.id(), fld);
+                        if (old != null) {
+                            JOLogger.warn("dup field " + fld.id());
+                        }
                     }
                 } catch (Exception e) {
                     JOLogger.error("not field " + item);
@@ -99,8 +104,6 @@ public class JOMetadata extends HashMap<String, IJOField> {
             }
         }
     }
-
-
 
     public String name() {
         return cfg.optString("name");
@@ -110,6 +113,7 @@ public class JOMetadata extends HashMap<String, IJOField> {
         return this.cfg;
     }
 
+    @Deprecated
     public String[] scope(String id) {
         JSONArray scope = cfg.optJSONArray("scope");
         for (int i = 0; i < scope.length(); i++) {
@@ -121,6 +125,13 @@ public class JOMetadata extends HashMap<String, IJOField> {
         return null;
     }
 
+    /**
+     * @param id db .....
+     * @return Collection
+     * @deprecated
+     *
+     * metadata 文件統一使用 ·$dbFields 標示
+     */
     public List<IJOField> getFieldsByScope(String id) {
         String[] items = scope(id);
         List<IJOField> ret = new ArrayList<IJOField>();
@@ -134,8 +145,26 @@ public class JOMetadata extends HashMap<String, IJOField> {
     }
 
     public List<IJOField> getFields(String line) {
-        List<IJOField> ret = new ArrayList<IJOField>();
+        if ("db".equals(line) || "table".equals(line) || line == null || line.trim().length() == 0) {
+            line = cfg.optString(JOConst.meta_fields);
+        }
         String[] items = line.split(",");
+        return getFields(items);
+    }
+
+    /**
+     * 取得預設欄位
+     *
+     * @return
+     */
+    public List<IJOField> getFields() {
+        String line = cfg.optString(JOConst.meta_fields);
+        String[] items = line.split(",");
+        return getFields(items);
+    }
+
+    public List<IJOField> getFields(String[] items) {
+        List<IJOField> ret = new ArrayList<IJOField>();
         for (String item : items) {
             int ps = item.indexOf(':');
             String id = (ps > 0) ? item.substring(0, ps) : item;
@@ -147,23 +176,22 @@ public class JOMetadata extends HashMap<String, IJOField> {
         }
         return ret;
     }
-
+    
+  
     public IJOField getField(String id, String args) {
         IJOField fld = get(id);
         if (fld != null && args != null) {
-            fld.cfg().put("args", args);
+            try {
+                // fld.cfg().put("args", args);
+                JSONObject n_cfg = new JSONObject(fld.cfg());
+                n_cfg.put("args", args);
+                return JOFieldUtils.newInstance(n_cfg);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                return null;
+            }
         }
         return fld;
-    }
-    
-      private JSONObject loadJSON(File f) throws Exception {
-        Reader reader = new InputStreamReader(new FileInputStream(f), "UTF-8");
-        try {
-            JSONTokener tk = new JSONTokener(reader);
-            return new JSONObject(tk);
-        } finally {
-            reader.close();
-        }
     }
 
 }
