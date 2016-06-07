@@ -4,8 +4,11 @@ import hyweb.jo.model.IJOField;
 import hyweb.jo.IJOType;
 import hyweb.jo.JOProcObject;
 import hyweb.jo.fun.MJOBase;
+import hyweb.jo.log.JOLogger;
 import hyweb.jo.org.json.JSONObject;
 import hyweb.jo.util.JOFunctional;
+import hyweb.jo.util.TextUtils;
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -90,6 +93,15 @@ public class JOBaseField<E> implements IJOField<E> {
         return cfg.optString("ft", null);
     }
 
+    /**
+     *
+     * @return
+     */
+    @Override
+    public String gdt() {
+        return cfg.optString("gdt", null);
+    }
+
     @Deprecated
     public String cast() {
         return cfg.optString("cast", null);
@@ -123,6 +135,14 @@ public class JOBaseField<E> implements IJOField<E> {
         return cfg.optString("args", null);
     }
 
+    /**
+     * 目前給 農藥銷售紀錄 使用
+     *
+     * @param wp
+     * @return
+     * @throws Exception
+     * @deprecated
+     */
     @Deprecated
     @Override
     public boolean valid(JSONObject wp) throws Exception {
@@ -130,8 +150,8 @@ public class JOBaseField<E> implements IJOField<E> {
         JSONObject src = wp.optJSONObject("$");
         JSONObject ref = wp.optJSONObject("$$");
         JOProcObject proc = MJOBase.proc(wp);
-        m.put("$", src.m());
-        m.put("$$", ref.m());
+        m.put("$", src);
+        m.put("$$", ref);
         m.put("$f", JOFunctional.class);
         m.put("$fv", getFieldValue(src));
         m.put("$vf", proc.opt("$vf"));
@@ -139,7 +159,6 @@ public class JOBaseField<E> implements IJOField<E> {
         m.put("$wp", wp);
         m.put("$now", new Date());
         Object ret = MVEL.eval(eval(), m);
-        //System.out.println("====== ret : " + ret);
         if (ret instanceof Boolean) {
             return (Boolean) ret;
         } else {
@@ -152,6 +171,7 @@ public class JOBaseField<E> implements IJOField<E> {
      *
      * @return
      */
+    @Override
     public String getFieldName() {
         String name = name();
         String id = id();
@@ -175,6 +195,8 @@ public class JOBaseField<E> implements IJOField<E> {
         if (!msg.has(id())) {
             if (message != null) {
                 msg.put(id(), message);
+            } else if (cfg().has("msg")) {
+                msg.put(id(), cfg().opt("msg"));
             } else {
                 msg.put(id(), label());
             }
@@ -208,7 +230,7 @@ public class JOBaseField<E> implements IJOField<E> {
     }
 
     /**
-     * 
+     *
      * @param row
      * @return
      */

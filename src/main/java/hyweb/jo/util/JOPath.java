@@ -50,12 +50,22 @@ public class JOPath {
             JSONObject p = null;
             if (parent.has(key)) {
                 p = parent.optJSONObject(key);
-
             } else {
                 p = new JSONObject();
                 parent.put(key, p);
             }
             set(p, items, level + 1, o);
+        }
+    }
+    
+    public static void setJA(JSONObject jo, String path , Object o) {
+        Object item = path(jo,path);
+        if(item instanceof JSONArray){
+            ((JSONArray)item).put(o);
+        } else if ( item == null){
+            JSONArray ja = new JSONArray();
+            set(jo,path, ja);
+            ja.put(o);
         }
     }
     

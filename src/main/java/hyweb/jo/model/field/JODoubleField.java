@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package hyweb.jo.model.field;
 
 import hyweb.jo.annotation.IAProxyClass;
@@ -11,6 +6,7 @@ import hyweb.jo.org.json.JSONObject;
 import hyweb.jo.type.JODoubleType;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+
 
 /**
  *
@@ -28,8 +24,9 @@ public class JODoubleField extends JOBaseField<Double> {
     @Override
     public boolean valid(JSONObject wp) throws Exception {
         JSONObject row = wp.optJSONObject("$");
+        JSONObject ref = wp.optJSONObject("$$");
         Object v = getFieldValue(row);
-        Number num = check(v);
+        Double num = type.check(v, null);
         if (num != null) {
             setFieldValue(row, num);
             if (super.valid(wp)) {
@@ -37,6 +34,7 @@ public class JODoubleField extends JOBaseField<Double> {
             }
         }
         setErrData(row, null);
+        setFieldValue(row, num);
         return false;
     }
 
@@ -56,18 +54,17 @@ public class JODoubleField extends JOBaseField<Double> {
     public String getFieldText(JSONObject row) {
         JODoubleType dt = (JODoubleType) type;
         Object v = getFieldValue(row);
-        if (ft() != null) {       
+        if (ft() != null) {
             try {
                 NumberFormat nf = new DecimalFormat(ft());
                 return nf.format(v);
             } catch (Exception e) {
-                  JOLogger.warn(id()+" can't cast [ "+ft()+"+]:" + v);
+                JOLogger.warn(id() + " can't cast [ " + ft() + "+]:" + v);
             }
         }
         return (v != null) ? v.toString() : "";
     }
-    
-    
+
     @Override
     public Double convert(Object o) {
         JODoubleType dt = (JODoubleType) type;

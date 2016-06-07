@@ -9,13 +9,14 @@ import hyweb.jo.IJOFunction;
 import hyweb.jo.model.JOWPObject;
 import hyweb.jo.org.json.JSONArray;
 import hyweb.jo.org.json.JSONObject;
-import hyweb.jo.util.JOFunctional;
 import hyweb.jo.util.JOPath;
 import hyweb.jo.util.XMLUtils;
 import java.util.List;
 
 /**
- *
+ *  wp --->   text/xml 
+ * $xsd  資料結構
+ * $jp  json path 
  * @author william
  */
 public class wp_xml implements IJOFunction<Boolean, JOWPObject> {

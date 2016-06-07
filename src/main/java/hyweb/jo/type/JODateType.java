@@ -1,17 +1,23 @@
 package hyweb.jo.type;
 
+import hyweb.jo.util.DateUtil;
+import hyweb.jo.util.JODatetimeFormat;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+
 import java.util.Date;
 
 /**
  * @author William
  */
 public class JODateType extends JOType<Date> {
+
+    public final static Date MAX_VALUE = DateUtil.newInstance(1753, 1, 1, 0, 0, 0);
+    public final static Date MIN_VALUE = DateUtil.newInstance(9999, 12, 31, 23, 59, 59);
 
     @Override
     public String dt() {
@@ -23,22 +29,8 @@ public class JODateType extends JOType<Date> {
         if (o instanceof Date) {
             return (Date) o;
         } else if (o instanceof String) {
-            String str = ((String) o).replaceAll("[^0-9\\.]+", "");
-            
-            try {
-                switch (str.length()) {
-                    case 8:
-                        return sfmt().parse(str);
-                    case 14:
-                        return lfmt().parse(str);
-                    default:
-                        log.debug("Can't cast date : " + o);
-                        return dv;
-                }
-            } catch (Exception e) {
-                log.debug("Can't cast date : " + o);
-                return dv;
-            }
+            Date d = DateUtil.to_date((String) o);
+            return (d != null) ? d : dv;
         }
         return dv;
     }
@@ -49,11 +41,11 @@ public class JODateType extends JOType<Date> {
         } else if (o instanceof String) {
             try {
                 String text = o.toString().trim();
-                SimpleDateFormat sdf = new SimpleDateFormat(fmt);
-                sdf.setLenient(false);
-                return sdf.parse(text);
+                JODatetimeFormat df = new JODatetimeFormat(fmt);
+                return df.parse(text);
             } catch (ParseException ex) {
-                log.debug("Can't cast date : " + o);
+                log.debug("Can't cast date [" + fmt + "] :" + o);
+                return null;
             }
         }
         return null;
@@ -102,9 +94,9 @@ public class JODateType extends JOType<Date> {
 
     @Override
     public String sql_string(Object o, String ft) {
-        Date v = check(o,ft);
+        Date v = check(o, ft);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        return (v != null) ? "'"+sdf.format(v)+"'" : "null";
+        return (v != null) ? "'" + sdf.format(v) + "'" : "null";
     }
 
 }

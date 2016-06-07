@@ -5,10 +5,12 @@
  */
 package hyweb.jo.util;
 
+import hyweb.jo.model.IJOField;
 import hyweb.jo.org.json.JSONArray;
 import hyweb.jo.org.json.JSONObject;
 import hyweb.jo.org.json.JSONTokener;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -44,14 +46,14 @@ public class TextUtils {
         }
         jo.put(name, new String(buf));
     }
-    
-    public static  String mask_tail(String line , char mask){
+
+    public static String mask_tail(String line, char mask) {
         StringBuilder sb = new StringBuilder();
-        if(line!=null && line.length()>0){
-          sb.append(line.charAt(0));
-          for(int i=1;i<line.length();i++){
-              sb.append(mask);
-          }
+        if (line != null && line.length() > 0) {
+            sb.append(line.charAt(0));
+            for (int i = 1; i < line.length(); i++) {
+                sb.append(mask);
+            }
         }
         return sb.toString();
     }
@@ -86,7 +88,7 @@ public class TextUtils {
         StringBuilder sb = new StringBuilder();
         if (ja != null) {
             for (int i = 0; i < ja.length(); i++) {
-                if("string".equals(dt)){
+                if ("string".equals(dt)) {
                     sb.append('\'').append(ja.opt(i)).append('\'');
                 } else {
                     sb.append(ja.opt(i));
@@ -278,10 +280,31 @@ public class TextUtils {
         return sb.toString();
     }
 
-    public static int  length(Object fv) {
-        return (fv!=null) ? fv.toString().trim().length() : 0 ; 
+    public static int length(Object fv) {
+        return (fv != null) ? fv.toString().trim().length() : 0;
     }
 
+    public static void fixStringSize(IJOField fld, JSONObject row) throws UnsupportedEncodingException {
+        if (fld.size() > 0) {
+            Object v = fld.getFieldValue(row);
+            if (v != null) {
+                String text = v.toString();
+                int size = fld.size();
 
+                if (fld.cfg().optBoolean("char")) {
+                    byte[] buf = text.getBytes("UTF-8");
+                    int len = buf.length;
+                    len = (size > len) ? len : size;
+                    text = new String(buf,0,len,"UTF-8");
+                } else {
+                    int len = text.length();
+                    len = (size > len) ? len : size;
+                    text = text.substring(0, len);
+                }
+                row.put(fld.getFieldName(), text);
+            }
+
+        }
+    }
 
 }

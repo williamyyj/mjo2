@@ -15,7 +15,6 @@ public interface IJOField<E> extends IJOInit<JSONObject> {
     public final static String node_form = "$frm";
     public final static String node_error = "$err";
 
-
     public String name();
 
     public String id();
@@ -29,15 +28,32 @@ public interface IJOField<E> extends IJOInit<JSONObject> {
     public int size();
 
     /**
-     * P : 主鍵值 , M : 不能空 , Ｆ: 外部連結 Q：查詢欄位 (移除） I : index
+     * constranint type , P : 主鍵值 , M : 不能空 , Ｆ: 外部連結 Q：查詢欄位 (移除） I : index
      *
      * @return
      */
     public String ct();
 
+    /**
+     * data type 資料型別
+     *
+     * @return
+     */
     public String dt();
 
+    /**
+     * fromat type 格式化型別
+     *
+     * @return
+     */
     public String ft();
+
+    /**
+     * group type 同類型的資料型別 如 日期字串 日期 民國日期
+     *
+     * @return
+     */
+    public String gdt();
 
     public String eval();
 
@@ -47,11 +63,14 @@ public interface IJOField<E> extends IJOInit<JSONObject> {
 
     public IJOType<E> type();
 
+    @Deprecated
     public boolean valid(JSONObject wp) throws Exception;
-
+   
     public Object getFieldValue(JSONObject row);
 
     public String getFieldText(JSONObject row);
+
+    public String getFieldName();
 
     public void setFieldValue(JSONObject row, Object value);
 

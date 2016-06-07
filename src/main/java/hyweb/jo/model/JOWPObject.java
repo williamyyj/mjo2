@@ -4,6 +4,7 @@ import hyweb.jo.JOConst;
 import hyweb.jo.JOProcConst;
 import hyweb.jo.JOProcObject;
 import hyweb.jo.db.DBCmd;
+import hyweb.jo.log.JOLogger;
 import hyweb.jo.org.json.JSONArray;
 import hyweb.jo.org.json.JSONObject;
 import java.util.List;
@@ -51,7 +52,11 @@ public class JOWPObject extends JSONObject {
 
     private void init_act(String actId) {
         if (actId != null) {
-            act = metadata.cfg().optJSONObject(actId);
+            //  act = metadata.cfg().optJSONObject(actId)  ;   會有 act  cache 問題
+            act = new JSONObject(metadata.cfg().optJSONObject(actId));
+            if(act.isEmpty()){
+                JOLogger.info("Can't find "+ metadata.cfg().optString("id")+"."+actId );
+            }
         }
     }
 
@@ -153,6 +158,14 @@ public class JOWPObject extends JSONObject {
             return sb.toString();
         }
         return null;
+    }
+
+    public static JOWPObject newInstance(JOProcObject proc, String metaId, String actId, JSONObject params, JSONObject ref) {
+        return new JOWPObject(proc, metaId, actId, params, ref);
+    }
+
+    public static JOWPObject newInstance(JOWPObject wp,  String actId, JSONObject params, JSONObject ref) {
+        return new JOWPObject(wp.proc,wp.metadata, actId, params, ref);
     }
 
 }

@@ -9,6 +9,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  *
@@ -28,7 +29,15 @@ public class DateUtil {
     public static Date to_date(String text) {
         String sfmt = "yyyyMMdd";
         String lfmt = "yyyyMMddHHmmss";
-        String fmt = "";
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
+        if (text.contains("CST ")) {
+            try {
+                return sdf.parse(text);
+            } catch (ParseException ex) {
+                ex.printStackTrace();
+            }
+        }
+
         String str = text.replaceAll("[^0-9\\.]+", "");
         int len = str.length();
         switch (len) {
@@ -40,7 +49,7 @@ public class DateUtil {
                 return to_date(lfmt, str);
             default:
                 if (len > 14) {
-                    return to_date(lfmt, str.substring(0, 14));
+
                 }
         }
         return null;
@@ -70,6 +79,15 @@ public class DateUtil {
 
     public static long diff(Object b) {
         return diff(new Date(), (Date) b);
+    }
+
+    public static boolean op_gte(Date a, Date b) {
+        if (a == null || b == null) {
+            return false;
+        }
+        long t1 = a.getTime();
+        long t2 = b.getTime();
+        return (t1 <= t2);
     }
 
     public static boolean op_lt(Date a, Date b) {
@@ -284,7 +302,6 @@ public class DateUtil {
         cal.set(Calendar.HOUR_OF_DAY, 0);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
-
         return cal.getTime();
     }
 
@@ -301,12 +318,27 @@ public class DateUtil {
         return null;
     }
 
-    public static void main(String[] args) {
+    public static Date newInstance(int year, int month, int date) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(year, month, date);
+        return cal.getTime();
+    }
+
+    public static Date newInstance(int year, int month, int date, int hourOfDay, int minute, int second) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(year, month, date, hourOfDay, minute, second);
+        return cal.getTime();
+    }
+
+    public static void main(String[] args) throws ParseException {
         JSONObject sch = JOTools.loadString("{min:'40',sch3:9,sch2:8,sch1:1,sch:'m5',hour:18,sch5:7,sch4:1}");
         System.out.println(DateUtil.schedule(sch));
         System.out.println(DateUtil.getFirstDayOfSeason(0));
         System.out.println(DateUtil.getFirstDayOfSeason(-1));
         System.out.println(DateUtil.cdate("0990101"));
+        Date d = new Date();
+        String d_str = d.toString();
+
     }
 
 }

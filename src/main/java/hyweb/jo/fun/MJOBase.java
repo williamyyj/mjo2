@@ -1,5 +1,6 @@
 package hyweb.jo.fun;
 
+import hyweb.jo.IJOInit;
 import hyweb.jo.JOProcConst;
 import hyweb.jo.JOProcObject;
 import hyweb.jo.db.DB;
@@ -7,6 +8,7 @@ import hyweb.jo.db.DBCmd;
 import hyweb.jo.log.JOLogger;
 import hyweb.jo.model.IJOField;
 import hyweb.jo.model.JOMetadata;
+import hyweb.jo.model.JOValidFields;
 import hyweb.jo.org.json.JSONArray;
 import hyweb.jo.org.json.JSONObject;
 import hyweb.jo.util.TextUtils;
@@ -26,8 +28,8 @@ public class MJOBase {
         JSONObject row = (JSONObject) ((args.length > 3) ? args[3] : proc.params());
         JSONObject ref = (JSONObject) ((args.length > 4) ? args[4] : new JSONObject());
         JOMetadata metadata = proc.metadata(metaId);
-        JSONObject act = metadata.cfg().optJSONObject(actId);
-        if (act == null) {
+        JSONObject act = new JSONObject(metadata.cfg().optJSONObject(actId));
+        if (act.isEmpty()) {
             JOLogger.info("WP act  is null.");
         }
         p.put("$p", proc);
@@ -102,18 +104,13 @@ public class MJOBase {
 
     public static Object act_vf(JSONObject wp) {
         String vf = wp.optJSONObject("$act").optString("vf");
-        try {
-            return Class.forName(vf).newInstance();
-        } catch (Exception e) {
-            JOLogger.warn("Can't new instance " + vf);
-        }
-        return null;
+        JOProcObject proc = MJOBase.proc(wp);
+        return JOValidFields.vf(vf,proc.base());
     }
 
     public static List<IJOField> before(JSONObject wp) {
         String before = wp.optJSONObject("$act").optString("before");
         return metadata(wp).getFields(before);
     }
-
 
 }

@@ -12,6 +12,7 @@ import hyweb.jo.org.apache.log4j.Logger;
 /**
  *
  * @author William
+ * @param <E>
  */
 public abstract class JOType<E> implements IJOType<E> {
 

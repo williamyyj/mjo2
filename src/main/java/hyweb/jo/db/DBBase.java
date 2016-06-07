@@ -300,11 +300,11 @@ public abstract class DBBase<M> implements IDB<M> {
 
     @Override
     public String status() {
-        return info();
+        return "{  \"conn\":" + connCount + " \"mds\":" + mds  +"\"}";
     }
 
     public static String info() {
-        return "{  \"conn\":" + connCount + " \"mds\":" + mds + "}";
+        return  "{  \"conn\":" + connCount + " \"mds\":" + mds  +"\"}"; 
     }
 
 }

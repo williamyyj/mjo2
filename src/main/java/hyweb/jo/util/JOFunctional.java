@@ -138,6 +138,28 @@ public class JOFunctional {
         return a.getTime() < v && v < b.getTime();
     }
 
+    public static boolean rcdate(Object o, Date a, Date b) {
+        Date d = JOCDateFormat.check(o);
+        if (a == null || b == null || d == null) {
+            return false;
+        }
+        long v = d.getTime();
+        return a.getTime() < v && v < b.getTime();
+    }
+
+    public static Number num(Object v) {
+        if (v instanceof Number) {
+            return (Number) v;
+        } else if (v instanceof String) {
+            try {
+                return Integer.parseInt((String)v);
+            } catch (Exception e) {
+                return Integer.MIN_VALUE;
+            }
+        }
+        return  Integer.MIN_VALUE;
+    }
+
     public static String df(String fmt, Date d) {
         SimpleDateFormat sdf = new SimpleDateFormat(fmt);
         return sdf.format(d);
@@ -166,18 +188,16 @@ public class JOFunctional {
             return "";
         }
     }
-    
-    public static void dmax(JSONObject row, String id, IJOField fld){
+
+    public static void dmax(JSONObject row, String id, IJOField fld) {
         Object fv = fld.getFieldValue(row);
-        JOLogger.debug("===== dmax : "+fv);
-        if(fv instanceof String){
-            Date d = DateUtil.to_date((String)fv);
-            if(d!=null){
+        if (fv instanceof String) {
+            Date d = DateUtil.to_date((String) fv);
+            if (d != null) {
                 d = DateUtil.date_max(d);
-                 JOLogger.debug("===== dmax : "+d);
                 row.put(id, d);
             }
         }
     }
-    
+
 }

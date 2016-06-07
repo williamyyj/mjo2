@@ -39,8 +39,8 @@ public class MailBase {
             props.put("mail.smtps.auth", cfg.auth());
             // 限制檢查憑證
             //props.put("mail.smtps.ssl.checkserveridentity", "false");
-           // props.put("mail.smtps.ssl.trust", "*");
-            
+            // props.put("mail.smtps.ssl.trust", "*");
+
             //props.put("mail.smtp.socketFactory.port", cfg.socket_port());
             //props.put("mail.smtp.socketFactory.fallback", cfg.socket_fallback());
             //props.put("mail.smtp.socketFactory.class", cfg.socket_class());
@@ -101,7 +101,8 @@ public class MailBase {
         MailBase mb = new MailBase(cfg);
         IMailSender sender = new SendPlainImpl();
         IMailBean bean = new MailBean();
-        bean.setTOS("williamyyj@tpe.hyweb.com.tw");
+        bean.setCCS("williamyyj@tpe.hyweb.com.tw");
+        bean.setTOS("williamyyj@gmail.com");
         bean.setSubject("測試");
         bean.setText("測試信");
         mb.sendMessage(sender, bean);

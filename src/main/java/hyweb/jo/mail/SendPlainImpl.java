@@ -112,7 +112,11 @@ public class SendPlainImpl implements IMailSender, ConnectionListener, Transport
             trans.addConnectionListener(this);
             trans.addTransportListener(this);
             trans.connect();
-            trans.sendMessage(msg, bean.tos());
+            Address[] addrs = msg.getAllRecipients();
+            for(Address addr : addrs ){
+                System.out.println(addr);
+            }
+            trans.sendMessage(msg, msg.getAllRecipients());
             trans.close();
         } catch (NoSuchProviderException e) {
             e.printStackTrace();
@@ -162,6 +166,7 @@ public class SendPlainImpl implements IMailSender, ConnectionListener, Transport
 
     }
 
+    @Override
     public void messageDelivered(TransportEvent event) {
         System.out.print(">>> TransportListener.messageDelivered().");
         System.out.println(" Success Addresses:");
@@ -173,19 +178,21 @@ public class SendPlainImpl implements IMailSender, ConnectionListener, Transport
         }
     }
 
+    @Override
     public void messageNotDelivered(TransportEvent event) {
         System.out.print(">>> TransportListener.messageNotDelivered().");
         System.out.println(" Fail Addresses:");
         Address[] valid = event.getInvalidAddresses();
         if (valid != null) {
-            for (int i = 0; i < valid.length; i++) {
-                System.out.println("    " + valid[i]);
+            for (Address valid1 : valid) {
+                System.out.println("    " + valid1);
             }
             mb.setTOS("not delivered : " + valid[0]);
         }
 
     }
 
+    @Override
     public void messagePartiallyDelivered(TransportEvent event) {
         System.out.print(">>> TransportListener.messagePartiallyDelivered().");
         Address[] valid = event.getValidSentAddresses();
@@ -204,12 +211,15 @@ public class SendPlainImpl implements IMailSender, ConnectionListener, Transport
         }
     }
 
+    @Override
     public void closed(ConnectionEvent event) {
     }
 
+    @Override
     public void disconnected(ConnectionEvent arg0) {
     }
 
+    @Override
     public void opened(ConnectionEvent arg0) {
     }
 

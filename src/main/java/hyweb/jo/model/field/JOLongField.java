@@ -19,6 +19,7 @@ public class JOLongField extends JOBaseField<Long> {
     @Override
     public boolean valid(JSONObject wp) throws Exception {
         JSONObject row = wp.optJSONObject("$");
+        JSONObject ref = wp.optJSONObject("$$");
         Object v = getFieldValue(row);
         Long num = type.check(v, null);
         if (num != null) {
@@ -28,6 +29,7 @@ public class JOLongField extends JOBaseField<Long> {
             }
         }
         setErrData(row, null);
+        setFieldValue(row, num);
         return false;
     }
 

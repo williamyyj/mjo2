@@ -30,6 +30,7 @@ public class JODateField extends JOBaseField<Date> {
             }
         }
         setErrData(row, null);
+        setFieldValue(row, d);
         return false;
     }
 
@@ -52,9 +53,18 @@ public class JODateField extends JOBaseField<Date> {
     public Date convert(Object o) {
         JODateType dt = (JODateType) type;
         Date v = null;
-        if(ft()!=null){
-            v = dt.check(o,ft());
+        if (ft() != null) {
+            v = dt.check(o, ft());
         }
-        return (v!=null) ? v : dt.check(o);
+        return (v != null) ? v : dt.check(o);
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Override
+    public String gdt() {
+        return cfg.optString("gdt", "date");
     }
 }
