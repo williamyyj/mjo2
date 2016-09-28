@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package hyweb.jo.util;
 
 import hyweb.jo.model.IJOField;
@@ -20,6 +15,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -162,6 +158,18 @@ public class TextUtils {
         m.appendTail(sb);
         return sb.toString();
     }
+    
+      public static String render_value(Map<String,Object> model, String text) {
+        StringBuffer sb = new StringBuffer();
+        Matcher m = p.matcher(text);
+        while (m.find()) {
+            String re = (String) model.get(m.group(1));
+            re = (re == null) ? "" : re;
+            m.appendReplacement(sb, re);
+        }
+        m.appendTail(sb);
+        return sb.toString();
+    }
 
     public static void parser_attr(JSONObject jo, String text) throws Exception {
         Matcher m = p_attr.matcher(text);
@@ -295,7 +303,7 @@ public class TextUtils {
                     byte[] buf = text.getBytes("UTF-8");
                     int len = buf.length;
                     len = (size > len) ? len : size;
-                    text = new String(buf,0,len,"UTF-8");
+                    text = new String(buf, 0, len, "UTF-8");
                 } else {
                     int len = text.length();
                     len = (size > len) ? len : size;
@@ -305,6 +313,23 @@ public class TextUtils {
             }
 
         }
+    }
+
+    public static String fixStringSize(IJOField fld, String text) throws UnsupportedEncodingException {
+        if (fld.size() > 0  && text!=null) {
+                int size = fld.size();
+                if (fld.cfg().optBoolean("char")) {
+                    byte[] buf = text.getBytes("UTF-8");
+                    int len = buf.length;
+                    len = (size > len) ? len : size;
+                    text = new String(buf, 0, len, "UTF-8");
+                } else {
+                    int len = text.length();
+                    len = (size > len) ? len : size;
+                    text = text.substring(0, len);
+                }        
+        }
+        return text ;
     }
 
 }

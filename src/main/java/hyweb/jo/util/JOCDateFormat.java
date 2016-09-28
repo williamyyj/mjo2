@@ -5,11 +5,11 @@
  */
 package hyweb.jo.util;
 
+import hyweb.jo.log.JOLogger;
 import java.text.DecimalFormat;
 import java.text.MessageFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -28,7 +28,7 @@ public class JOCDateFormat {
             if (items.length == 3) {
                 return check_split_format(items);
             } else if (items.length == 1) {
-                // return check_num_format(items);
+                return check_num_format(items);
             }
         }
         return null;
@@ -69,39 +69,47 @@ public class JOCDateFormat {
         if (num > 9991231 || num < 10101) {
             return null;
         }
-        int year = (num / 10000 + 1911) * 10000 + (num % 10000);
+        int d = (num / 10000 + 1911) * 10000 + (num % 10000);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         sdf.setLenient(false);
         try {
-            return sdf.parse(String.valueOf(year));
+            return sdf.parse(String.valueOf(d));
         } catch (Exception e) {
+            JOLogger.debug("Can't convert cdate : " + line);
             return null;
         }
     }
 
-    public static String format(Date d) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(d);
-        int yy = cal.get(Calendar.YEAR) - 1911;
-        int mm = cal.get(Calendar.MONTH) + 1;
-        int dd = cal.get(Calendar.DATE);
-        int v = yy * 10000 + mm * 100 + dd;
-        NumberFormat nf = new DecimalFormat("0000000");
-        String row = nf.format(v);
-        MessageFormat mf = new MessageFormat("{0}/{1}/{2}");
-        String[] rows = {row.substring(0, 3),
-            row.substring(3, 5),
-            row.substring(5)};
-        return mf.format(rows);
+    public static String format(Object fv) {
+        if (fv instanceof Date) {
+            Date d = (Date) fv;
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(d);
+            int yy = cal.get(Calendar.YEAR) - 1911;
+            int mm = cal.get(Calendar.MONTH) + 1;
+            int dd = cal.get(Calendar.DATE);
+            int v = yy * 10000 + mm * 100 + dd;
+            NumberFormat nf = new DecimalFormat("0000000");
+            String row = nf.format(v);
+            MessageFormat mf = new MessageFormat("{0}/{1}/{2}");
+            String[] rows = {row.substring(0, 3),
+                row.substring(3, 5),
+                row.substring(5)};
+            return mf.format(rows);
+        } else {
+            return (fv != null) ? fv.toString() : "";
+        }
     }
+    
+    
 
     public static void main(String[] args) {
         System.out.println(JOCDateFormat.check("-1/01/01"));
         System.out.println(JOCDateFormat.check("105/2/29"));
         System.out.println(JOCDateFormat.check("105/0/32"));
         System.out.println(JOCDateFormat.check("105/13/32"));
-        Date d = JOCDateFormat.check("105/2/29");
-        System.out.println(JOCDateFormat.format(d));
+        System.out.println(JOCDateFormat.format(new Date()));
+        System.out.println(JOCDateFormat.format(12345));
     }
 
 }

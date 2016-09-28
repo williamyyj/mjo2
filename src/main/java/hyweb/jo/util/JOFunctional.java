@@ -3,10 +3,11 @@ package hyweb.jo.util;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.LoadingCache;
 import hyweb.jo.IJOFunction;
+import hyweb.jo.JOConst;
 import hyweb.jo.JOProcObject;
 import hyweb.jo.fun.MJOBase;
-import hyweb.jo.log.JOLogger;
 import hyweb.jo.model.IJOField;
+import hyweb.jo.model.JOWPObject;
 import hyweb.jo.org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -43,6 +44,11 @@ public class JOFunctional {
               .build(new JOFunctionCacheLoader());
         }
         return _cache;
+    }
+
+    public static Object exec(JOWPObject wp) throws Exception {
+        JSONObject act = wp.act();
+        return exec(act.optString(JOConst.classId), wp);
     }
 
     public static Object exec(String id, Object p) throws Exception {
@@ -147,17 +153,26 @@ public class JOFunctional {
         return a.getTime() < v && v < b.getTime();
     }
 
+    public static int cd_comp(Object d1, Object d2) {
+        Date a = JOCDateFormat.check(d1);
+        Date b = JOCDateFormat.check(d2);
+        if (a == null || b == null) {
+            return -2;
+        }
+       return a.compareTo(b);
+    }
+
     public static Number num(Object v) {
         if (v instanceof Number) {
             return (Number) v;
         } else if (v instanceof String) {
             try {
-                return Integer.parseInt((String)v);
+                return Integer.parseInt((String) v);
             } catch (Exception e) {
                 return Integer.MIN_VALUE;
             }
         }
-        return  Integer.MIN_VALUE;
+        return Integer.MIN_VALUE;
     }
 
     public static String df(String fmt, Date d) {
@@ -198,6 +213,11 @@ public class JOFunctional {
                 row.put(id, d);
             }
         }
+    }
+    
+    public static String replace(Object o , String regex , String replace){
+        
+        return (o!=null) ? ((String)o).replaceAll(regex,replace) :"";
     }
 
 }

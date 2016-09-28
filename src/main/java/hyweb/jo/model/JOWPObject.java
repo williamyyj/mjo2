@@ -17,6 +17,15 @@ public class JOWPObject extends JSONObject {
     private String scope;
     private Object vf;
 
+    /**
+     * 未使用metadata 模式
+     *
+     * @param proc
+     * @param params
+     * @param ref
+     * @deprecated 直接使用 JOProcConst.wp 取代 params JOProcConst.wref
+     */
+    @Deprecated
     public JOWPObject(JOProcObject proc, JSONObject params, JSONObject ref) {
         super();
         this.proc = proc;
@@ -54,8 +63,8 @@ public class JOWPObject extends JSONObject {
         if (actId != null) {
             //  act = metadata.cfg().optJSONObject(actId)  ;   會有 act  cache 問題
             act = new JSONObject(metadata.cfg().optJSONObject(actId));
-            if(act.isEmpty()){
-                JOLogger.info("Can't find "+ metadata.cfg().optString("id")+"."+actId );
+            if (act.isEmpty()) {
+                JOLogger.info("Can't find " + metadata.cfg().optString("id") + "." + actId);
             }
         }
     }
@@ -111,9 +120,17 @@ public class JOWPObject extends JSONObject {
         init_act(actId);
     }
 
+    /**
+     * 依 scope 取到 fields 預設 $eval
+     *
+     * @return
+     */
     public List<IJOField> fields() {
-        //  會隋設定scope 改變
         return metadata().getFields(ref_string(scope));
+    }
+
+    public List<IJOField> mdFields() {
+        return metadata().getFields(ref_string(JOConst.meta_fields));
     }
 
     @Deprecated
@@ -129,6 +146,18 @@ public class JOWPObject extends JSONObject {
     public JSONObject mq() throws Exception {
         JSONObject jq = new JSONObject(p().m());
         String cmd = ref_string(JOConst.cmd);
+        jq.put(JOProcConst.cmd, cmd);
+        jq.put(JOProcConst.act, act().optString(JOConst.act));
+        return DBCmd.parser_cmd(proc.db(), jq);
+    }
+
+    public JSONObject mq_orderby() throws Exception {
+        JSONObject jq = new JSONObject(p().m());
+        String cmd = ref_string(JOConst.cmd);
+        String orderby = ref_string(JOConst.orderby);
+        if(orderby!=null){
+            cmd = cmd +" order by " + orderby ; 
+        }
         jq.put(JOProcConst.cmd, cmd);
         jq.put(JOProcConst.act, act().optString(JOConst.act));
         return DBCmd.parser_cmd(proc.db(), jq);
@@ -164,8 +193,8 @@ public class JOWPObject extends JSONObject {
         return new JOWPObject(proc, metaId, actId, params, ref);
     }
 
-    public static JOWPObject newInstance(JOWPObject wp,  String actId, JSONObject params, JSONObject ref) {
-        return new JOWPObject(wp.proc,wp.metadata, actId, params, ref);
+    public static JOWPObject newInstance(JOWPObject wp, String actId, JSONObject params, JSONObject ref) {
+        return new JOWPObject(wp.proc, wp.metadata, actId, params, ref);
     }
 
 }

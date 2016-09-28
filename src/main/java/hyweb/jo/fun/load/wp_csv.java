@@ -5,6 +5,7 @@ import hyweb.jo.data.JOFileUtils;
 import hyweb.jo.model.IJOField;
 import hyweb.jo.model.JOWPObject;
 import hyweb.jo.org.json.JSONObject;
+import hyweb.jo.util.JOFunctional;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,9 @@ public class wp_csv implements IJOFunction<List<JSONObject>, JOWPObject> {
             String lineSplit = act.optString("lineSplit", "\n");
             String colSplit = act.optString("colSplit");
             String text = JOFileUtils.loadString(fp, enc);
+            if (text != null && text.length()>0) {
+                wp.p().put("fp_md5", JOFunctional.md5(text));
+            }
             List<IJOField> eFields = wp.metadata().getFields(act.optString("fields"));
             String[] items = text.split(lineSplit);
             for (String item : items) {

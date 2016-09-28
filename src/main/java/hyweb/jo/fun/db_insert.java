@@ -31,7 +31,6 @@ public class db_insert implements IJOFunction<Boolean, Object[]> {
             jq.put(JOProcConst.act, "add");
             jq.put(JOProcConst.cmd, JOFunctional.exec("model.FSQLInsert", fields));
             JSONObject mq = DBCmd.parser_cmd(proc.db(), jq);
-            JOLogger.debug(mq);
             proc.db().action(mq);
             return true;
         } catch (Exception e) {

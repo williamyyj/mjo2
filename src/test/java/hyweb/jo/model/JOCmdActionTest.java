@@ -20,7 +20,7 @@ import org.junit.Test;
 
 public class JOCmdActionTest extends JOTest {
 
-    @Test
+
     public void test_action() throws Exception {
         JOProcObject proc = new JOProcObject(base);
         //JSONObject p = JOTools.loadString("{user:thomas,password:111111}");

@@ -17,7 +17,6 @@ public class FJOPSFill implements IMProcess<JSONObject> {
 
     @Override
     public void proc(JSONObject m) throws Exception {
-        System.out.println(m);
         if (m.has(JOConst.param_fields)) {
             PreparedStatement ps = JOTools.obj(PreparedStatement.class, m, JOConst.param_ctrl);
             IDB db = JOTools.obj(IDB.class, m, JOConst.param_dp);

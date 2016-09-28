@@ -30,7 +30,8 @@ public class JOConst {
     public final static String ps = "$ps";  // Preparedstatment 
     public final static String conn = "$conn"; // Connection
 
-    public final static String wp = "$wp";
+    public final static String wp = "$wp"; //  ----->  改成 $
+    public final static String wpref = "$wref"; // -----> 改成 　＄＄
 
     public final static String act_add = "add";
     public final static String act_edit = "edit";
@@ -42,7 +43,6 @@ public class JOConst {
     public final static String act_all = "all";
     public final static String act_fun = "fun";
     public final static String act_batch = "batch";
-
     public final static String param_sql = "$p_sql";
     public final static String param_fields = "$p_fields";
     public final static String param_ctrl = "$p_ctrl";

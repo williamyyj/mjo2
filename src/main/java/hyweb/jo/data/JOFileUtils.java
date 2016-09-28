@@ -8,13 +8,17 @@ package hyweb.jo.data;
 import hyweb.jo.IJOFunction;
 import hyweb.jo.util.JOFunctional;
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -42,6 +46,29 @@ public class JOFileUtils {
         return data;
     }
 
+    public static char[] loadClob(File f, String enc) throws Exception {
+        char[] data = null;
+        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(f), enc));
+        char[] tmp = new char[4096];
+        int num = 0;
+        try {
+            while ((num = br.read(tmp)) > 0) {
+                if (data == null) {
+                    data = new char[num];
+                    System.arraycopy(tmp, 0, data, 0, num);
+                } else {
+                    char[] old = data;
+                    data = new char[old.length + num];
+                    System.arraycopy(old, 0, data, 0, old.length);
+                    System.arraycopy(tmp, 0, data, old.length, num);
+                }
+            }
+        } finally {
+            br.close();
+        }
+        return data;
+    }
+
     private static boolean isBOM(byte[] buf) {
         return (buf != null && buf.length > 3
           && (buf[0] & 0xFF) == 0xEF
@@ -61,6 +88,20 @@ public class JOFileUtils {
         } finally {
             fis.close();
         }
+    }
+
+    public static List<String> loadList(File f, String enc) throws Exception {
+        List<String> ret = new ArrayList<String>();
+        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(f), enc));
+        try {
+            String line = null;
+            while ((line = br.readLine()) != null) {
+                ret.add(line);
+            }
+        } finally {
+            br.close();
+        }
+        return ret;
     }
 
     public static void saveString(File f, String enc, String text) throws IOException {
@@ -129,25 +170,25 @@ public class JOFileUtils {
 
     public static void fgroup(String path) throws Exception {
         File f = new File(path);
-        if(f.isDirectory()){
+        if (f.isDirectory()) {
             File[] list = f.listFiles();
-            for(File item : list){
-                System.out.println("===== proc "+item);
-                file_group(f,item);
+            for (File item : list) {
+                System.out.println("===== proc " + item);
+                file_group(f, item);
             }
         }
     }
-    
-   private static void  file_group(File p, File item) throws Exception{
-       byte[] buf = loadData(item);
-       String hash = (String) JOFunctional.exec("ende.md5_bytes", buf);
-       File tp = new File(p,hash);
-       if(!tp.exists()){
-           tp.mkdirs();
-       }
-       File target = new File(tp,item.getName());
-       copy(item,target);
-   }
+
+    private static void file_group(File p, File item) throws Exception {
+        byte[] buf = loadData(item);
+        String hash = (String) JOFunctional.exec("ende.md5_bytes", buf);
+        File tp = new File(p, hash);
+        if (!tp.exists()) {
+            tp.mkdirs();
+        }
+        File target = new File(tp, item.getName());
+        copy(item, target);
+    }
 
     public static byte[] loadData(File f) throws Exception {
         byte[] data = null;
@@ -172,6 +213,13 @@ public class JOFileUtils {
             br.close();
         }
         return data;
+    }
+
+    public static void safe_dir(String path) {
+        File f = new File(path);
+        if (!f.exists()) {
+            f.mkdirs();
+        }
     }
 
 }

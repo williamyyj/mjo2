@@ -1,10 +1,8 @@
 package hyweb.jo.model.field;
 
 import hyweb.jo.annotation.IAProxyClass;
-import hyweb.jo.log.JOLogger;
 import hyweb.jo.org.json.JSONObject;
 import hyweb.jo.type.JOStringType;
-import hyweb.jo.util.TextUtils;
 
 /**
  *

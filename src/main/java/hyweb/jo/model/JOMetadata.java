@@ -125,13 +125,15 @@ public class JOMetadata extends HashMap<String, IJOField> {
         return null;
     }
 
+    
+
     /**
-     * @param id db .....
-     * @return Collection
+     *   metadata 文件統一使用 ·$dbFields 標示
+     * @param id
+     * @return
      * @deprecated
-     *
-     * metadata 文件統一使用 ·$dbFields 標示
      */
+    @Deprecated
     public List<IJOField> getFieldsByScope(String id) {
         String[] items = scope(id);
         List<IJOField> ret = new ArrayList<IJOField>();

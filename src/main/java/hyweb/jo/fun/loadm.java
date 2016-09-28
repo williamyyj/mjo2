@@ -18,6 +18,11 @@ import hyweb.jo.util.JOCache;
  */
 public class loadm implements IJOFunction<Object, Object[]> {
 
+    /**
+     * @param  args   proc , mapId , return type 
+     * @return  json (map)
+     * @throws Exception 
+     */
     @Override
     public Object exec(Object[] args) throws Exception {
         JOProcObject proc = (JOProcObject) args[0];
@@ -43,9 +48,8 @@ public class loadm implements IJOFunction<Object, Object[]> {
         }
     }
 
-    private Object proc_db_map(JOProcObject proc, JSONObject m, String rt) throws Exception {
-        return null;
-  
+    private Object proc_db_map(JOProcObject proc, JSONObject m, String rt) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

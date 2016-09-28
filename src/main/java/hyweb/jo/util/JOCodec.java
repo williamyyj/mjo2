@@ -62,6 +62,13 @@ public class JOCodec {
         return js.encode(IMMUNE_JAVASCRIPT, input);
     }
 
+    public static String decodeFormJavaScript(String input) throws Exception {
+        if (input == null) {
+            return null;
+        }
+        return js.decode(input);
+    }
+
     public static String encodeForXPath(String input) {
         if (input == null) {
             return null;
@@ -96,11 +103,15 @@ public class JOCodec {
         }
         return URLDecoder.decode(input, enc);
     }
-    
+
     public static void main(String[] args) throws Exception {
         Pattern p = Pattern.compile("<[^>]*>");
         String test = "請輸入課程--><sCrIpT>alert(66244)</sCrIpT>";
         String ret = test.replaceAll("<[^>]*>", "");
+        System.out.println(ret);
+
+        String attr = "%22onmouseover%3D%22%5Bwindow%5B%27location%27%5D%3D%27%5Cx6a%5Cx61%5Cx76%5Cx61%5Cx73%5Cx63%5Cx72%5Cx69%5Cx70%5Cx74%5Cx3a%5Cx61%5Cx6c%5Cx65%5Cx72%5Cx74%5Cx28/acer/%5Cx29%27%5D%22";
+        ret = JOCodec.encodeForHTMLAttribute(attr);
         System.out.println(ret);
 
     }

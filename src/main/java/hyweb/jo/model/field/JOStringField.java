@@ -6,7 +6,6 @@ import hyweb.jo.type.JOStringType;
 import hyweb.jo.util.TextUtils;
 import java.io.UnsupportedEncodingException;
 
-
 /**
  * @author William
  */
@@ -21,11 +20,15 @@ public class JOStringField extends JOBaseField<String> {
 
     @Override
     public String convert(Object o) {
-        return (o != null) ? o.toString().trim() : null;
-        //if (text != null) {
-        //    return (text.length() <= this.size()) ? text : text.substring(0, size());
-        //}
-        //return text;
+        String line = (o != null) ? o.toString().trim() : null;
+        if (o instanceof String && size() > 0) {
+            try {
+                return TextUtils.fixStringSize(this, line);
+            } catch (UnsupportedEncodingException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return line;
     }
 
     @Override

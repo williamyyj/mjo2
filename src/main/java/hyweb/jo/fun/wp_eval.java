@@ -3,6 +3,7 @@ package hyweb.jo.fun;
 import hyweb.jo.IJOFunction;
 import hyweb.jo.log.JOLogger;
 import hyweb.jo.model.IJOField;
+import hyweb.jo.model.JOValidFields;
 import hyweb.jo.model.JOWPObject;
 import hyweb.jo.org.json.JSONObject;
 import hyweb.jo.util.DateUtil;
@@ -13,8 +14,7 @@ import java.util.Map;
 import org.mvel2.MVEL;
 
 /**
- * @author william
- *   直接使用  valid 和 cala 功能
+ * @author william 直接使用 valid 和 cala 功能
  */
 public class wp_eval implements IJOFunction<Boolean, JOWPObject> {
 
@@ -38,7 +38,7 @@ public class wp_eval implements IJOFunction<Boolean, JOWPObject> {
                 JOLogger.error("Can't eval : " + fld.id() + "\n" + m, e);
             }
         }
-        
+
         return true;
     }
 
@@ -46,12 +46,15 @@ public class wp_eval implements IJOFunction<Boolean, JOWPObject> {
         Map<String, Object> m = new HashMap<String, Object>();
         m.put("$", wp.p().m());
         m.put("$$", wp.pp());
-        m.put("$wp",wp);
+        m.put("$wp", wp);
         m.put("$proc", wp.proc());
         m.put("$db", wp.proc().db());
         m.put("$now", new Date());
         m.put("$f", JOFunctional.class);
         m.put("$du", DateUtil.class);
+        if (wp.act().has("vf")) {
+            m.put("$vf", JOValidFields.vf(wp.act().optString("vf"), wp.proc().base()));
+        }
         return m;
     }
 

@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
@@ -213,8 +214,7 @@ public class JOTools {
             reader.close();
         }
     }
-    
-    
+
     public static JSONObject loadJSON(String text) throws IOException {
         return loadJSON(new StringReader(text));
     }
@@ -228,8 +228,13 @@ public class JOTools {
         }
     }
 
-
-
-    
+    public static String md5(JSONObject row, String... names) throws Exception {
+        StringBuilder sb = new StringBuilder();
+        for (String n : names) {
+            sb.append(row.optString(n));
+        }
+        byte[] buf = sb.toString().getBytes("UTF-8");
+        return ENDE.md5(buf);
+    }
 
 }

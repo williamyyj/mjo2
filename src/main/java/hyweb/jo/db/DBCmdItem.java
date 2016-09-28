@@ -7,6 +7,7 @@ import hyweb.jo.IJOType;
 import hyweb.jo.org.json.JSONArray;
 import hyweb.jo.org.json.JSONObject;
 
+
 /**
  * @author William 動態SQL用
  *
@@ -28,6 +29,7 @@ public class DBCmdItem {
             op.put("$range", "");  //     fld  betten a and b 
             op.put("$set", "="); // for update 
             op.put("$rm", "");  // 移除最後 ","   
+            op.put("@","");  //    for table query or const 
         }
         return op;
     }
@@ -52,7 +54,10 @@ public class DBCmdItem {
     public static void process_item(IDB dp, StringBuffer sb, JSONObject mq, JSONObject row, String item) throws Exception {
         String[] args = item.split(",");
         String name = args[0];
-        if (op().containsKey(name)) {
+        
+         if (name.charAt(0)=='@'){
+            process_const(dp, sb, mq, row, args);
+        } else if (op().containsKey(name)) {
             process_op_item(dp, sb, mq, row, args);
         } else {
             process_var_item(dp, sb, mq, row, args);
@@ -108,9 +113,10 @@ public class DBCmdItem {
         if (row.has(name)) {
             value = type.check(row.opt(name));
         }
-        if (value == null && row.has(alias)) {
+        if (value == null &&  alias!=null && row.has(alias)) {
             value = type.check(row.opt(alias));
         }
+        //JOLogger.debug("==== check value --> "+row.has(name) +","+ name+","+dt+","+alias+":["+value+"]");
         return value;
     }
 
@@ -184,6 +190,15 @@ public class DBCmdItem {
         int ps = sb.lastIndexOf(",");
         if (ps > 0) {
             sb.setLength(ps - 1);
+        }
+    }
+
+    private static void process_const(IDB dp, StringBuffer sb, JSONObject model, JSONObject row, String[] args) {
+       // 這是必填 or 有預設值
+        String id = args[0];
+        String v =  row.optString(id,null);
+        if(v!=null){
+            sb.append(v);
         }
     }
 

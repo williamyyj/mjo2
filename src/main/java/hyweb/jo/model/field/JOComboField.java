@@ -6,6 +6,7 @@
 package hyweb.jo.model.field;
 
 import hyweb.jo.annotation.IAProxyClass;
+import hyweb.jo.log.JOLogger;
 import hyweb.jo.org.json.JSONObject;
 import hyweb.jo.type.JOStringType;
 
@@ -36,9 +37,11 @@ public class JOComboField extends JOBaseField<String> {
 
     @Override
     public String getFieldText(JSONObject row) {
+         JOLogger.debug("===== "+ this.id() +"--->" + row );
         Object v = row.opt(getFieldName());
         if (v != null) {
             JSONObject m = cfg().optJSONObject("$m");
+            JOLogger.debug("===== "+ v+" ---> "+ m.optString(v.toString()) );
             return  m.optString(v.toString());
         }
         return "";

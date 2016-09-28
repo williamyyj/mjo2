@@ -42,10 +42,10 @@ public abstract class DBBase<M> implements IDB<M> {
         this.base = (base == null) ? System.getProperty("base") : base;
         JSONObject root = (cfgId != null) ? JOCache.load(base, cfgId) : JOCache.load(base, "cfg");
         oid = (oid == null) ? "db" : oid;
-        cfg = root.optJSONObject(oid);  
+        cfg = root.optJSONObject(oid);
         if (cfg == null) {
-            cfg = new JOConfig(base,oid).params();
-            if(cfg==null){
+            cfg = new JOConfig(base, oid).params();
+            if (cfg == null) {
                 cfg = new JSONObject();
             }
         }
@@ -120,14 +120,14 @@ public abstract class DBBase<M> implements IDB<M> {
         return mds;
     }
 
-    protected void __release(ResultSet rs) throws SQLException {
+    protected static void __release(ResultSet rs) throws SQLException {
         if (rs != null) {
             rs.close();
             rs = null;
         }
     }
 
-    protected void __release(PreparedStatement ps) throws SQLException {
+    protected static void __release(PreparedStatement ps) throws SQLException {
         if (ps != null) {
             ps.close();
             ps = null;
@@ -153,6 +153,7 @@ public abstract class DBBase<M> implements IDB<M> {
         }
     }
 
+    @Override
     public JSONObject cfg() {
         return cfg;
     }
@@ -300,11 +301,11 @@ public abstract class DBBase<M> implements IDB<M> {
 
     @Override
     public String status() {
-        return "{  \"conn\":" + connCount + " \"mds\":" + mds  +"\"}";
+        return "{  \"conn\":" + connCount + " \"mds\":" + mds + "\"}";
     }
 
     public static String info() {
-        return  "{  \"conn\":" + connCount + " \"mds\":" + mds  +"\"}"; 
+        return "{  \"conn\":" + connCount + " \"mds\":" + mds + "\"}";
     }
 
 }

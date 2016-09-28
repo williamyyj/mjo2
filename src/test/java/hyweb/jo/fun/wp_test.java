@@ -54,17 +54,41 @@ public class wp_test extends JOTest {
         }
     }
 
-    @Test
     public void wp_page_test() throws Exception {
-       String jo_src = "{\"ct1\":\"2015/12/09\",\"status\":\"\",\"ct2\":\"2016/03/08\",\"button2\":\"送　　出\",\"mid\":\"5\",\"ftype\":\"\",\"act\":\"query\",\"baphiqid\":\"UP000000000016541333\"}";
+        String jo_src = "{\"ct1\":\"2015/12/09\",\"status\":\"\",\"ct2\":\"2016/03/08\",\"button2\":\"送　　出\",\"mid\":\"5\",\"ftype\":\"\",\"act\":\"query\",\"baphiqid\":\"UP000000000016541333\"}";
         JSONObject jo = JOTools.loadString(jo_src);
         JOProcObject proc = new JOProcObject(base);
         try {
-            JOWPObject wp = new JOWPObject (proc, "ws_file", "query", jo,null);
+            JOWPObject wp = new JOWPObject(proc, "ws_file", "query", jo, null);
             List<JSONObject> rows = (List<JSONObject>) JOFunctional.exec("wp_page", wp);
-            for(JSONObject row : rows){
+            for (JSONObject row : rows) {
                 System.out.println(row);
             }
+        } finally {
+            proc.release();
+        }
+    }
+
+    @Test
+    public void doc_csv_test() throws Exception {
+        JOProcObject proc = new JOProcObject(base);
+
+        try {
+            JSONObject p = new JSONObject();
+            
+            p.put("barcode", "4711242000432");
+            //p.put("makedt", "2016-01-01");
+            //p.put("makeid","20160101");
+            JOWPObject wp1 = new JOWPObject(proc, "rpt_num_track", "export_barcode", p, null);
+            JOFunctional.exec("docs.wp_csv", wp1);
+            JOWPObject wp2 = new JOWPObject(proc, "rpt_num_track", "export", p, null);
+            JOFunctional.exec("docs.wp_csv", wp2);
+
+            List<String> data = (List<String>) proc.opt("$csv");
+            for (String line : data) {
+                System.out.println(line);
+            }
+
         } finally {
             proc.release();
         }

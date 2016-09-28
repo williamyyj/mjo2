@@ -1,7 +1,6 @@
 package hyweb.jo.fun;
 
 import hyweb.jo.JOConst;
-import hyweb.jo.log.JOLogger;
 import hyweb.jo.model.IJOField;
 import hyweb.jo.model.JOWPObject;
 import hyweb.jo.org.json.JSONObject;

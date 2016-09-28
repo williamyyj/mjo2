@@ -47,10 +47,6 @@ public class DateUtil {
                 return to_date(sfmt, str);
             case 14:
                 return to_date(lfmt, str);
-            default:
-                if (len > 14) {
-
-                }
         }
         return null;
 
@@ -271,7 +267,12 @@ public class DateUtil {
     }
 
     public static Date getFirstDayOfSeason(int offset) {
+        return getFirstDayOfSeason(new Date(), offset);
+    }
+
+    public static Date getFirstDayOfSeason(Date current, int offset) {
         Calendar cal = Calendar.getInstance();
+        cal.setTime(current);
         cal.add(Calendar.MONTH, offset * 3);
         int month = cal.get(Calendar.MONTH);
         int mm = 0;
@@ -305,28 +306,97 @@ public class DateUtil {
         return cal.getTime();
     }
 
+    public static Date getFirstDayOfMonth2(int offset) {
+        return getFirstDayOfSeason(new Date(), offset);
+    }
+
+    public static Date getFirstDayOfMonth2(Date current, int offset) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(current);
+        cal.add(Calendar.MONTH, offset * 2);
+        int month = cal.get(Calendar.MONTH);
+        int mm = 0;
+        switch (month) {
+            case 0:
+            case 1:
+                mm = 0;
+                break;
+            case 2:
+            case 3:
+                mm = 2;
+                break;
+            case 4:
+            case 5:
+                mm = 4;
+                break;
+            case 6:
+            case 7:
+                mm = 6;
+                break;
+            case 8:
+            case 9:
+                mm = 8;
+                break;
+            case 10:
+            case 11:
+                mm = 10;
+                break;
+        }
+        cal.set(Calendar.MONTH, mm);
+        cal.set(Calendar.DATE, 1);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        return cal.getTime();
+    }
+
+    public static Date nextMonth(Date d, int day) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(d);
+        cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) + 1);
+        cal.set(Calendar.DATE, day);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        return cal.getTime();
+    }
+
     public static Date cdate(Object text) {
         try {
             NumberFormat nf = new DecimalFormat("0000000");
             int dv = nf.parse(text.toString()).intValue();
             int year = (dv / 10000 + 1911) * 10000 + (dv % 10000);
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+            sdf.setLenient(false);
             return sdf.parse(String.valueOf(year));
         } catch (ParseException ex) {
-            ex.printStackTrace();
+            JOLogger.debug("Can't convet cdate : " + text);
+            return null;
         }
-        return null;
+
     }
 
     public static Date newInstance(int year, int month, int date) {
-        Calendar cal = Calendar.getInstance();
-        cal.set(year, month, date);
-        return cal.getTime();
+        return newInstance(year, month, date, 0, 0, 0);
     }
 
     public static Date newInstance(int year, int month, int date, int hourOfDay, int minute, int second) {
         Calendar cal = Calendar.getInstance();
         cal.set(year, month, date, hourOfDay, minute, second);
+        return cal.getTime();
+    }
+
+    public static Date offset(int fld, Date d, int offset) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(d);
+        cal.set(fld, cal.get(fld) + offset);
+        return cal.getTime();
+    }
+
+    public static Date monthOfDate(Date d, int i) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(d);
+        cal.set(Calendar.DATE, i);
         return cal.getTime();
     }
 

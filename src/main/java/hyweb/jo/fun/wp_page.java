@@ -7,10 +7,12 @@ import hyweb.jo.JOProcConst;
 import hyweb.jo.JOProcObject;
 import hyweb.jo.db.DB;
 import hyweb.jo.fun.util.FJORMWhitespace;
+import hyweb.jo.log.JOLogger;
 import hyweb.jo.model.JOWPObject;
 import hyweb.jo.org.json.JSONObject;
 import hyweb.jo.util.JOFunctional;
 import hyweb.jo.util.JOTools;
+import hyweb.jo.util.TextUtils;
 import java.util.List;
 
 /**
@@ -21,7 +23,9 @@ public class wp_page implements IJOFunction<List<JSONObject>, JOWPObject> {
     @Override
     public List<JSONObject> exec(JOWPObject wp) throws Exception {
         JOProcObject proc = wp.proc();
-        wp.put("$", new FJORMWhitespace().exec(wp.p())); // 清空 空白參數  
+        //JOLogger.debug("===== before "+wp.p());
+        wp.reset(new FJORMWhitespace().exec(wp.p()));
+        //JOLogger.debug("===== after   "+wp.p());
         JSONObject jq = wp.p();
         int page = jq.optInt("page", 1);  // 
         int numPage = jq.optInt("numPage", 10);
@@ -35,9 +39,9 @@ public class wp_page implements IJOFunction<List<JSONObject>, JOWPObject> {
         proc.set(JOProcObject.p_request, "numPage", numPage);
         op.remove("page");  //移除查詢字串
         op.remove("numPage"); //移除查詢字串
-        //JOLogger.debug("===== op : "+op);
+        JOLogger.debug("===== mq : "+mq.toString(4));
         proc.set(JOProcObject.p_request, "ejo", JOTools.encode(op.toString())); // 查詢參數
-        List<JSONObject> data = rows(proc.db(), mq, numPage, page, orderby);
+        List<JSONObject> data = rows(proc.db(), mq, jq , numPage, page, orderby);
         proc.put("$data", data);
         JOFunctional.exec("wp_after", wp);
         return data;
@@ -48,12 +52,13 @@ public class wp_page implements IJOFunction<List<JSONObject>, JOWPObject> {
         JOFunctional.exec("wp_before", wp);
     }
 
-    private List<JSONObject> rows(DB db, JSONObject mq, int num, int pageId, String orderby) throws Exception {
+    private List<JSONObject> rows(DB db, JSONObject mq, JSONObject jq,  int num, int pageId, String orderby) throws Exception {
         String sql = mq.optString(param_sql);
         Object[] params = JOTools.to_marray(mq, param_fields, "value");
+        String order_by = TextUtils.render_value(jq, orderby);
         StringBuilder sb = new StringBuilder();
         sb.append(" select t.* from ");
-        sb.append(" ( select ROW_NUMBER() OVER (ORDER BY ").append(orderby).append(" )  rowid , ");
+        sb.append(" ( select ROW_NUMBER() OVER (ORDER BY ").append(order_by).append(" )  rowid , ");
         sb.append("  c.* from ( ");
         sb.append(sql);
         sb.append(" ) c ) t ");

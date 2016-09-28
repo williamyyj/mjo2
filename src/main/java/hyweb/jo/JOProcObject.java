@@ -139,9 +139,7 @@ public class JOProcObject extends JSONObject {
                 String name = names.optString(i);
                 this.params().put(name, jo.opt(name));
             }
-        }
-        
-    
+        } 
     }
 
 }
