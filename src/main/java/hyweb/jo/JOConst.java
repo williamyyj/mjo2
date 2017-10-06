@@ -32,6 +32,9 @@ public class JOConst {
 
     public final static String wp = "$wp"; //  ----->  改成 $
     public final static String wpref = "$wref"; // -----> 改成 　＄＄
+    public final static String fp = "$fp";
+
+    
 
     public final static String act_add = "add";
     public final static String act_edit = "edit";
@@ -53,4 +56,5 @@ public class JOConst {
         path = (path!=null) ? path :  System.getProperty("upload") ;
         return  (path==null) ? prefix : path+ prefix ;
     }
+    
 }

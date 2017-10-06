@@ -26,14 +26,14 @@ public class JOCache {
     public static LoadingCache<String, IJOCacheItem> cache() {
         if (_cache == null) {
             _cache = CacheBuilder.newBuilder()
-                    .maximumSize(1000) // 記憶體中最多保留 1000 筆資料
-                    .expireAfterAccess(30, TimeUnit.MINUTES)
-                    .build(new CacheLoader<String, IJOCacheItem>() {
-                        @Override
-                        public IJOCacheItem load(String k) throws Exception {
-                            throw new RuntimeException("Using get(key, new  Callable<>{} ... ");
-                        }
-                    });
+              .maximumSize(1000) // 記憶體中最多保留 1000 筆資料
+              .expireAfterAccess(30, TimeUnit.MINUTES)
+              .build(new CacheLoader<String, IJOCacheItem>() {
+                  @Override
+                  public IJOCacheItem load(String k) throws Exception {
+                      throw new RuntimeException("Using get(key, new  Callable<>{} ... ");
+                  }
+              });
         }
         return _cache;
     }
@@ -45,7 +45,6 @@ public class JOCache {
                 IJOCacheItem<JSONObject> item = cache().get(fname, new JOCacheFileItem(fname));
                 return item.load();
             } catch (Exception ex) {
-                JOLogger.error("Can't load jo " + f);
                 ex.printStackTrace();
             }
         }
@@ -57,8 +56,8 @@ public class JOCache {
             File bf = new File(base);
             StringBuilder sb = new StringBuilder();
             sb.append("combo").append("::")
-                    .append(bf.toURI()).append("::")
-                    .append(comboId);
+              .append(bf.toURI()).append("::")
+              .append(comboId);
             String urn = sb.toString();
             IJOCacheItem<List<JSONObject>> item = cache().get(urn, new JOCacheCombo(urn));
             return item.load();
@@ -79,13 +78,14 @@ public class JOCache {
 
     public static JSONObject load(String base, String id) {
         File f = new File(base, id + ".json");
-        try {
-            JSONObject ret = load(f);
-            ret.put("$parent", f.getParent());
-            return ret;
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            JOLogger.error("Can't load json [" + f + "]");
+        if (f.exists()) {
+            try {
+                JSONObject ret = load(f);
+                ret.put("$parent", f.getParent());
+                return ret;
+            } catch (Exception ex) {
+                JOLogger.error("Can't load "+f+" \r\n"+ex.getMessage());
+            }
         }
         return null;
     }
@@ -104,8 +104,13 @@ public class JOCache {
         return loadJSON(new InputStreamReader(new FileInputStream(f), "UTF-8"));
     }
 
-    public static JSONObject loadJSON(String text) throws IOException {
-        return loadJSON(new StringReader(text));
+    public static JSONObject loadJSON(String text) {
+        try {
+            return loadJSON(new StringReader(text));
+        } catch (IOException ex) {
+            JOLogger.info("Not json format : " + text);
+            return new JSONObject();
+        }
     }
 
     public static JSONObject loadJSON(Reader reader) throws IOException {

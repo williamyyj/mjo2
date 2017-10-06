@@ -47,5 +47,7 @@ public class WPDao {
         JSONObject mq = DBCmd.parser_cmd(wp.proc().db(), jq);
         return wp.proc().db().action(mq);
     }
+    
+    
 
 }

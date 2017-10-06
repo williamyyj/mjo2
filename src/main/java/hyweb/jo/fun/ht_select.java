@@ -26,7 +26,7 @@ public class ht_select implements IJOFunction<String, Object[]> {
 
     private String exec(JOProcObject proc, JSONObject combo, JSONObject params) throws Exception {
         StringBuilder sb = new StringBuilder();
-        init_default(sb, combo , params);
+        init_default(sb, combo, params);
         init_cmd(sb, proc, combo, params);
         return sb.toString();
     }
@@ -56,12 +56,16 @@ public class ht_select implements IJOFunction<String, Object[]> {
     }
 
     private void select_item(StringBuilder sb, JSONObject row, String dv) {
-        String v = row.optString("value");
-        String l = row.optString("label");
-        if (v.equals(dv)) {
-            sb.append(String.format("<option value='%s' selected>%s</option>\r\n", v, l));
+        String value = row.optString("value");
+        String display = row.optString("label");
+        select_item(sb,value,display,dv);
+    }
+
+    private void select_item(StringBuilder sb, String value, String display, String dv) {
+        if (value.equals(dv)) {
+            sb.append(String.format("<option value=\"%s\" selected>%s</option>\r\n", value, display));
         } else {
-            sb.append(String.format("<option value='%s'>%s</option>\r\n", v, l));
+            sb.append(String.format("<option value=\"%s\">%s</option>\r\n", value, display));
         }
     }
 

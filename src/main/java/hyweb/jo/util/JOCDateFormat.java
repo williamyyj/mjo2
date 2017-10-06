@@ -10,6 +10,7 @@ import java.text.DecimalFormat;
 import java.text.MessageFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -58,6 +59,7 @@ public class JOCDateFormat {
             sdf.setLenient(false);
             return sdf.parse(String.valueOf(num));
         } catch (Exception e) {
+            JOLogger.debug("Can't convert cdate : " + Arrays.toString(items));
             return null;
         }
 
@@ -100,16 +102,14 @@ public class JOCDateFormat {
             return (fv != null) ? fv.toString() : "";
         }
     }
-    
-    
 
     public static void main(String[] args) {
         System.out.println(JOCDateFormat.check("-1/01/01"));
-        System.out.println(JOCDateFormat.check("105/2/29"));
+        System.out.println(JOCDateFormat.check("106/2/29"));
         System.out.println(JOCDateFormat.check("105/0/32"));
         System.out.println(JOCDateFormat.check("105/13/32"));
         System.out.println(JOCDateFormat.format(new Date()));
-        System.out.println(JOCDateFormat.format(12345));
+        System.out.println(JOCDateFormat.format("106/02/29"));
     }
 
 }

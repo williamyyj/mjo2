@@ -31,6 +31,10 @@ public class JODateType extends JOType<Date> {
         } else if (o instanceof String) {
             Date d = DateUtil.to_date((String) o);
             return (d != null) ? d : dv;
+        } else if (o != null) {
+            String text = o.toString();
+            Date d = DateUtil.to_date(text);
+            return (d != null) ? d : dv;
         }
         return dv;
     }
@@ -38,15 +42,9 @@ public class JODateType extends JOType<Date> {
     public Date check(Object o, String fmt) {
         if (o instanceof Date) {
             return ((Date) o);
-        } else if (o instanceof String) {
-            try {
-                String text = o.toString().trim();
-                JODatetimeFormat df = new JODatetimeFormat(fmt);
-                return df.parse(text);
-            } catch (ParseException ex) {
-                log.debug("Can't cast date [" + fmt + "] :" + o);
-                return null;
-            }
+        } else if (o != null) {
+           String text = o.toString().trim();
+            return DateUtil.to_date(text);
         }
         return null;
     }

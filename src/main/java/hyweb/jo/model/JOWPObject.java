@@ -9,6 +9,11 @@ import hyweb.jo.org.json.JSONArray;
 import hyweb.jo.org.json.JSONObject;
 import java.util.List;
 
+/**
+ * @deprecated 請改用 JOWorkData
+ * @author william
+ */
+@Deprecated
 public class JOWPObject extends JSONObject {
 
     private JOProcObject proc;
@@ -155,8 +160,8 @@ public class JOWPObject extends JSONObject {
         JSONObject jq = new JSONObject(p().m());
         String cmd = ref_string(JOConst.cmd);
         String orderby = ref_string(JOConst.orderby);
-        if(orderby!=null){
-            cmd = cmd +" order by " + orderby ; 
+        if (orderby != null) {
+            cmd = cmd + " order by " + orderby;
         }
         jq.put(JOProcConst.cmd, cmd);
         jq.put(JOProcConst.act, act().optString(JOConst.act));
@@ -164,6 +169,9 @@ public class JOWPObject extends JSONObject {
     }
 
     public Object ref(String id) {
+        if (act == null) {
+            return null;
+        }
         Object o = act.opt(id);
         if (o != null) {
             return o;
@@ -196,5 +204,6 @@ public class JOWPObject extends JSONObject {
     public static JOWPObject newInstance(JOWPObject wp, String actId, JSONObject params, JSONObject ref) {
         return new JOWPObject(wp.proc, wp.metadata, actId, params, ref);
     }
+
 
 }

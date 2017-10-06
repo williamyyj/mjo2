@@ -5,7 +5,7 @@ import hyweb.jo.log.JOLogger;
 import hyweb.jo.model.IJOField;
 import hyweb.jo.model.JOWPObject;
 import hyweb.jo.org.json.JSONObject;
-import org.mvel2.MVEL;
+
 
 /**
  *

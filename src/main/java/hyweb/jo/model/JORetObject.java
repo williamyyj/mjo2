@@ -1,15 +1,16 @@
 package hyweb.jo.model;
 
+import hyweb.jo.JOProcObject;
 import hyweb.jo.org.json.JSONObject;
 import java.util.List;
 
 /**
- *  回傳值
+ *  回傳值  停用改用JOWorkObject
  * @author william
  */
 public class JORetObject extends JSONObject {
     
-    public Object getObject(){
+    public Object getObject(JOProcObject proc){
         return opt("$data");
     }
     

@@ -23,19 +23,21 @@ public class JOMetadata extends HashMap<String, IJOField> {
     private String base;
     private JSONObject cfg;
     private String use_path;
+
     public JOMetadata(String base, String id) {
-        this(base,default_path,id);
+        this(base, default_path, id);
     }
 
-    public JOMetadata(String base, String path , String id) {
+    public JOMetadata(String base, String path, String id) {
         super();
         try {
             this.base = base;
             this.use_path = path;
-            System.out.println(base+use_path+"/"+id);
+            //System.out.println(base + use_path + "/" + id);
             this.cfg = new JSONObject(JOCache.load(base + use_path, id));
             init_tb_field();
             init_import();
+            init_imp_meta(cfg.optString("@imp_meta"));
             init_fields(cfg.optJSONArray("meta"));
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -47,6 +49,16 @@ public class JOMetadata extends HashMap<String, IJOField> {
             String[] items = cfg.optString("import").split(",");
             for (String item : items) {
                 init_import_item(item);
+            }
+        }
+    }
+
+    private void init_imp_meta(String item) throws Exception {
+        File f = new File(base + use_path, item.replaceAll("\\.", "/") + ".json");
+        if (f.exists()) {
+            JSONObject child = JOTools.load(f);
+            if (child.has("meta")) {
+                init_item_meta(child);
             }
         }
     }
@@ -94,9 +106,6 @@ public class JOMetadata extends HashMap<String, IJOField> {
                     IJOField fld = JOFieldUtils.newInstance(item);
                     if (fld != null) {
                         IJOField old = put(fld.id(), fld);
-                        if (old != null) {
-                            JOLogger.warn("dup field " + fld.id());
-                        }
                     }
                 } catch (Exception e) {
                     JOLogger.error("not field " + item);
@@ -125,10 +134,9 @@ public class JOMetadata extends HashMap<String, IJOField> {
         return null;
     }
 
-    
-
     /**
-     *   metadata 文件統一使用 ·$dbFields 標示
+     * metadata 文件統一使用 ·$dbFields 標示
+     *
      * @param id
      * @return
      * @deprecated
@@ -178,8 +186,7 @@ public class JOMetadata extends HashMap<String, IJOField> {
         }
         return ret;
     }
-    
-  
+
     public IJOField getField(String id, String args) {
         IJOField fld = get(id);
         if (fld != null && args != null) {

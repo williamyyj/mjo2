@@ -85,10 +85,12 @@ public class JODatetimeFormat {
         try {
             JODatetimeFormat df = new JODatetimeFormat("eeeMMdd");
             JODateType dt = new JODateType();
-        
+
             // System.out.println(d);
             System.out.println(df.format("105010112"));
 
+            df = new JODatetimeFormat("yyyyMMddHHmmss");
+            System.out.println(df.parse("20160830092557"));
         } catch (Exception e) {
             e.printStackTrace();
         }

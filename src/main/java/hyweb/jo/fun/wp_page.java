@@ -39,11 +39,12 @@ public class wp_page implements IJOFunction<List<JSONObject>, JOWPObject> {
         proc.set(JOProcObject.p_request, "numPage", numPage);
         op.remove("page");  //移除查詢字串
         op.remove("numPage"); //移除查詢字串
-        JOLogger.debug("===== mq : "+mq.toString(4));
+        JOLogger.debug("===== mq : " + mq.toString(4));
         proc.set(JOProcObject.p_request, "ejo", JOTools.encode(op.toString())); // 查詢參數
-        List<JSONObject> data = rows(proc.db(), mq, jq , numPage, page, orderby);
-        proc.put("$data", data);
+        List<JSONObject> data = rows(proc.db(), mq, jq, numPage, page, orderby);
         JOFunctional.exec("wp_after", wp);
+        String rid = wp.act().optString("rid", "$data");
+        proc.put(rid, data);
         return data;
     }
 
@@ -52,7 +53,7 @@ public class wp_page implements IJOFunction<List<JSONObject>, JOWPObject> {
         JOFunctional.exec("wp_before", wp);
     }
 
-    private List<JSONObject> rows(DB db, JSONObject mq, JSONObject jq,  int num, int pageId, String orderby) throws Exception {
+    private List<JSONObject> rows(DB db, JSONObject mq, JSONObject jq, int num, int pageId, String orderby) throws Exception {
         String sql = mq.optString(param_sql);
         Object[] params = JOTools.to_marray(mq, param_fields, "value");
         String order_by = TextUtils.render_value(jq, orderby);
@@ -64,6 +65,8 @@ public class wp_page implements IJOFunction<List<JSONObject>, JOWPObject> {
         sb.append(" ) c ) t ");
         sb.append(" where rowid > ").append(+(pageId - 1) * num);
         sb.append(" and rowid <= ").append((pageId) * num);
+        JOLogger.debug("===== page sql --> \r\n" + sql);
+        JOLogger.debug("===== page params --> \r\n" + mq.opt(param_fields));
         return db.rows(sb.toString(), params);
     }
 
@@ -72,6 +75,8 @@ public class wp_page implements IJOFunction<List<JSONObject>, JOWPObject> {
             String sql = mq.optString(param_sql);
             sql = "select count(*) from ( " + sql + " ) t ";
             Object[] values = JOTools.to_marray(mq, param_fields, "value");
+            JOLogger.debug("===== count sql --> \r\n" + sql);
+            JOLogger.debug("===== count params --> \r\n" + mq.opt(param_fields));
             return (Integer) db.fun(sql, values);
         } catch (Exception e) {
             e.printStackTrace();

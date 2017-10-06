@@ -66,7 +66,6 @@ public class wp_batch_add implements IJOFunction<int[], JOWPObject> {
         jq.put(JOProcConst.cmd, cmd);
         jq.put(JOProcConst.act, "add");
         JSONObject mq = DBCmd.parser_cmd(wp.proc().db(), jq);
-        System.out.println(mq.optString(JOConst.param_sql));
         return wp.proc().db().connection().prepareStatement(mq.optString(JOConst.param_sql));
     }
 

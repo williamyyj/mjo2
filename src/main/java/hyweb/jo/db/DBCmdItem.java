@@ -6,7 +6,7 @@ import static hyweb.jo.JOConst.*;
 import hyweb.jo.IJOType;
 import hyweb.jo.org.json.JSONArray;
 import hyweb.jo.org.json.JSONObject;
-
+import hyweb.jo.util.JOTools;
 
 /**
  * @author William 動態SQL用
@@ -29,7 +29,8 @@ public class DBCmdItem {
             op.put("$range", "");  //     fld  betten a and b 
             op.put("$set", "="); // for update 
             op.put("$rm", "");  // 移除最後 ","   
-            op.put("@","");  //    for table query or const 
+            op.put("@", "");  //    for table query or const 
+            op.put("$expr", "$expr");
         }
         return op;
     }
@@ -52,13 +53,21 @@ public class DBCmdItem {
     }
 
     public static void process_item(IDB dp, StringBuffer sb, JSONObject mq, JSONObject row, String item) throws Exception {
-        String[] args = item.split(",");
+        String line = item.trim();
+        String[] args = null;
+        if (line.charAt(0) == '[') {
+            JSONArray arr = JOTools.loadJA(line);
+            args = arr.toArray(new String[0]);
+        } else {
+            args = item.split(",");
+        }
         String name = args[0];
-        
-         if (name.charAt(0)=='@'){
+        if (name.charAt(0) == '@') {
             process_const(dp, sb, mq, row, args);
         } else if (op().containsKey(name)) {
             process_op_item(dp, sb, mq, row, args);
+        } else if (item.startsWith("expr")) {
+            process_expr(dp, sb, mq, row, item);
         } else {
             process_var_item(dp, sb, mq, row, args);
         }
@@ -68,7 +77,7 @@ public class DBCmdItem {
     private static void process_op_item(IDB dp, StringBuffer sb, JSONObject mq, JSONObject row, String[] args) {
         String name = args[0];
         if ("=".equals(name) || ">".equals(name) || ">=".equals(name)
-                || "<".equals(name) || "<=".equals(name)) {
+          || "<".equals(name) || "<=".equals(name)) {
             process_op2(dp, sb, mq, row, args);
         } else if ("$like".equals(name)) {
             process_like(dp, sb, mq, row, args);
@@ -80,7 +89,7 @@ public class DBCmdItem {
             process_set(dp, sb, mq, row, args);
         } else if ("$rm".equals(name)) {
             process_rm(dp, sb, mq, row, args);
-        } 
+        }
     }
 
     private static void set_field(JSONArray fields, IDB dp, JSONObject row, String name, String dt, String id, Object v) {
@@ -113,10 +122,10 @@ public class DBCmdItem {
         if (row.has(name)) {
             value = type.check(row.opt(name));
         }
-        if (value == null &&  alias!=null && row.has(alias)) {
+        if (value == null && alias != null && row.has(alias)) {
             value = type.check(row.opt(alias));
         }
-        //JOLogger.debug("==== check value --> "+row.has(name) +","+ name+","+dt+","+alias+":["+value+"]");
+        
         return value;
     }
 
@@ -130,6 +139,20 @@ public class DBCmdItem {
             JSONArray fields = mq.optJSONArray(param_fields);
             set_field(fields, dp, row, field, dt, alias, v);
             sb.append(" and ").append(field).append(' ').append(op_name).append(" ?");
+        }
+    }
+
+    private static void process_expr(IDB dp, StringBuffer sb, JSONObject mq, JSONObject row, String item) {
+        String[] args = item.split(":");
+        String op_name = args[0];
+        String name = args[1];
+        String dt = args[2];
+        String expr = args[3];
+        Object v = get_value(dp, row, name, dt, name);
+        if (v != null) {
+            JSONArray fields = mq.optJSONArray(param_fields);
+            set_field(fields, dp, row, name, dt, name, v);
+            sb.append(" and ").append(expr);
         }
     }
 
@@ -194,16 +217,12 @@ public class DBCmdItem {
     }
 
     private static void process_const(IDB dp, StringBuffer sb, JSONObject model, JSONObject row, String[] args) {
-       // 這是必填 or 有預設值
+        // 這是必填 or 有預設值
         String id = args[0];
-        String v =  row.optString(id,null);
-        if(v!=null){
+        String v = row.optString(id, null);
+        if (v != null) {
             sb.append(v);
         }
     }
-
-
-
-
 
 }

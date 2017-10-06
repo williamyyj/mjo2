@@ -18,6 +18,13 @@ public class JOUtils {
         }
     }
 
+    public static void rename(JSONObject jo, String n_old, String n_new) {
+        if (jo.has(n_old)) {
+            Object o = jo.remove(n_old);
+            jo.put(n_new, o);
+        }
+    }
+
     public static JSONObject mix(JSONObject child, JSONObject parent) {
         // 保留 child 的值單層不 recursive 
         if (parent == null && child != null) {
@@ -41,13 +48,26 @@ public class JOUtils {
     }
 
     public static JSONObject get(JSONArray ja, String name, String value) {
-        for (int i = 0; i < ja.length(); i++) {
-            JSONObject row = ja.optJSONObject(i);
-            if (row != null) {
-                if (value.equalsIgnoreCase(row.optString("name"))) {
-                    return row;
+        if (ja != null) {
+            for (int i = 0; i < ja.length(); i++) {
+                JSONObject row = ja.optJSONObject(i);
+                if (row != null) {
+                    if (value.equalsIgnoreCase(row.optString("name"))) {
+                        return row;
+                    }
                 }
             }
+        }
+        return null;
+    }
+
+    public static JSONObject line(Object line) {
+        if (line instanceof JSONObject) {
+            return (JSONObject) line;
+        } else if (line instanceof String) {
+            String text = (String) line;
+            text = (text.charAt(0) == '{' ? text : "{" + text + "}");
+            return JOTools.toJSONObject(text);
         }
         return null;
     }

@@ -1,6 +1,7 @@
 package hyweb.jo;
 
 import hyweb.jo.db.DB;
+import hyweb.jo.ff.JOFF;
 import hyweb.jo.model.IJOField;
 import hyweb.jo.model.JOMetadata;
 import hyweb.jo.org.json.JSONArray;
@@ -10,6 +11,11 @@ import hyweb.jo.util.JOTools;
 import java.io.File;
 import java.util.List;
 
+/**
+ * $fp 表單參數 （分頁及表單參數)
+ *
+ * @author william
+ */
 public class JOProcObject extends JSONObject {
 
     public final static int p_self = 0;
@@ -18,6 +24,10 @@ public class JOProcObject extends JSONObject {
     public final static int p_session = 3;
     public final static int p_app = 4;
     private JSONObject cfg;
+    private JOWorkMeta wMeta;
+    private JOWorkData wData; // 資料 in -->  out 
+    private JOWorkStatus wStatus;  // 異常及物件狀態
+    private JOWorkFF wFF;
 
     public JOProcObject(String base) {
         put(JOProcConst.base, base);
@@ -76,13 +86,26 @@ public class JOProcObject extends JSONObject {
         return (DB) opt(JOProcConst.db);
     }
 
+    /**
+     * @param mid
+     * @param scope
+     * @return
+     * @deprecated 請改用 JOMetaUtils
+     */
+    @Deprecated
     public List<IJOField> getFields(String mid, String scope) {
         JOMetadata metadata = new JOMetadata(base(), mid);
         return metadata.getFieldsByScope(scope);
     }
 
+    /**
+     * @param mid
+     * @return
+     * @deprecated 請改用 JOMetaUtils
+     */
+    @Deprecated
     public JOMetadata metadata(String mid) {
-        return new JOMetadata(base(), mid);
+        return wMeta().metadata(mid);
     }
 
     public void release() {
@@ -139,7 +162,39 @@ public class JOProcObject extends JSONObject {
                 String name = names.optString(i);
                 this.params().put(name, jo.opt(name));
             }
-        } 
+        }
+    }
+
+    public JOWorkData wData() {
+        if (wData == null) {
+            wData = new JOWorkData(this);
+        }
+        return wData;
+    }
+
+    public JOWorkFF wFF() {
+        if (wFF == null) {
+            wFF = new JOWorkFF(this);
+        }
+        return wFF;
+    }
+
+    public JOWorkStatus wStatus() {
+        if (wStatus == null) {
+            wStatus = new JOWorkStatus(this);
+        }
+        return wStatus;
+    }
+
+    public JOWorkMeta wMeta() {
+        if (wMeta == null) {
+            wMeta = new JOWorkMeta(this);
+        }
+        return wMeta;
+    }
+
+    public Object ff(String ffId, JSONObject row, String id) {
+        return JOFF.ff(this, ffId).as(row, id);
     }
 
 }

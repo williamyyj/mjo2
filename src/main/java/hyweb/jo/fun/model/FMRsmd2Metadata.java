@@ -1,12 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package hyweb.jo.fun.model;
 
 import hyweb.jo.IJOType;
-import hyweb.jo.log.JOLogger;
 import hyweb.jo.org.json.JSONObject;
 import hyweb.jo.type.JOTypes;
 import hyweb.jo.util.JOFunction;
@@ -34,6 +28,7 @@ public class FMRsmd2Metadata extends JOFunction<List<JSONObject>> {
             String name = rsmd.getColumnName(idx);
             int dt = rsmd.getColumnType(idx);
             IJOType type = types.type(dt);
+            //System.out.println("===== rsmd : "+name+":::"+type.dt()+":::"+dt);
             meta.put("name", name);
             meta.put("dt", type.dt());
             meta.put("type", type);

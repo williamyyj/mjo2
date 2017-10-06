@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package hyweb.jo.fun;
 
 import hyweb.jo.JOProcObject;
@@ -13,7 +8,7 @@ import hyweb.jo.org.json.JSONObject;
 import hyweb.jo.util.JOFunctional;
 import hyweb.jo.util.JOTools;
 import java.util.List;
-import org.junit.Test;
+
 
 /**
  *
@@ -69,29 +64,8 @@ public class wp_test extends JOTest {
         }
     }
 
-    @Test
     public void doc_csv_test() throws Exception {
-        JOProcObject proc = new JOProcObject(base);
-
-        try {
-            JSONObject p = new JSONObject();
-            
-            p.put("barcode", "4711242000432");
-            //p.put("makedt", "2016-01-01");
-            //p.put("makeid","20160101");
-            JOWPObject wp1 = new JOWPObject(proc, "rpt_num_track", "export_barcode", p, null);
-            JOFunctional.exec("docs.wp_csv", wp1);
-            JOWPObject wp2 = new JOWPObject(proc, "rpt_num_track", "export", p, null);
-            JOFunctional.exec("docs.wp_csv", wp2);
-
-            List<String> data = (List<String>) proc.opt("$csv");
-            for (String line : data) {
-                System.out.println(line);
-            }
-
-        } finally {
-            proc.release();
-        }
+   
     }
 
 }

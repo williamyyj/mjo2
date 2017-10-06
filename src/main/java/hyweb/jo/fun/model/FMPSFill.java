@@ -1,7 +1,5 @@
 package hyweb.jo.fun.model;
 
-
-
 import hyweb.jo.JOStatus;
 import java.sql.ParameterMetaData;
 import java.sql.PreparedStatement;
@@ -20,7 +18,7 @@ import hyweb.jo.util.JOFunction;
 public class FMPSFill extends JOFunction<JOStatus> {
 
     private volatile boolean pmdKnownBroken = false;
-    
+
     @Override
     public JOStatus exec(Object[] args) throws Exception {
         JOStatus status = new JOStatus();
@@ -29,7 +27,7 @@ public class FMPSFill extends JOFunction<JOStatus> {
         ParameterMetaData pmd = null;
 
         // nothing to do here
-        if (params==null ) {
+        if (params == null) {
             return status;
         }
 
@@ -40,12 +38,12 @@ public class FMPSFill extends JOFunction<JOStatus> {
 
             if (stmtCount != paramsCount) {
                 throw new SQLException("Wrong number of parameters: expected "
-                    + stmtCount + ", was given " + paramsCount);
+                  + stmtCount + ", was given " + paramsCount);
             }
         }
 
         for (int i = 0; i < params.length; i++) {
-          
+
             if (params[i] != null) {
                 Object value = params[i];
                 if (value instanceof Date) {
@@ -63,8 +61,11 @@ public class FMPSFill extends JOFunction<JOStatus> {
                 int sqlType = Types.VARCHAR;
                 if (!pmdKnownBroken) {
                     try {
+                        //System.out.println("===== chk type name : " + pmd.getParameterTypeName(i + 1));
+                        //System.out.println("===== chk type code : " + pmd.getParameterType(i + 1));
                         sqlType = pmd.getParameterType(i + 1);
                     } catch (SQLException e) {
+                        e.printStackTrace();
                         pmdKnownBroken = true;
                     }
                 }
@@ -72,6 +73,10 @@ public class FMPSFill extends JOFunction<JOStatus> {
             }
         }
         return null;
+    }
+
+    private void fill_pmd(PreparedStatement ps, ParameterMetaData pmd, Object[] params) {
+
     }
 
 }

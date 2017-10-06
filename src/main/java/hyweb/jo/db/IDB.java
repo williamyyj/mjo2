@@ -6,8 +6,7 @@ import java.util.List;
 import hyweb.jo.type.JOTypes;
 import hyweb.jo.IJOResource;
 import hyweb.jo.org.json.JSONObject;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+
 
 /**
  * @author william

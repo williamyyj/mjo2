@@ -4,6 +4,7 @@ import com.google.common.reflect.ClassPath;
 import hyweb.jo.annotation.IAProxyClass;
 import hyweb.jo.log.JOLogger;
 import hyweb.jo.org.json.JSONObject;
+import hyweb.jo.util.JOPackages;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +25,7 @@ public class JOFieldUtils {
     private static Map<String, Class> cache() {
         if (_cache == null) {
             _cache = new HashMap<String, Class>(32);
-            scanPackage(_cache, "hyweb.jo.model.field");
+            JOPackages.scanPackage(_cache, "hyweb.jo.model.field");
         }
         return _cache;
     }

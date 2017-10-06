@@ -16,14 +16,15 @@ public class FSQLInsert extends FSQLBase {
         proc_cols_name(sql, fields);
         sql.append("\r\n values ");
         proc_cols_value(sql, fields);
-
+        proc_scope(sql,fields.get(1));
+        System.out.println(sql);
         return sql.toString();
     }
 
     private void proc_cols_name(StringBuilder sql, List<IJOField> fields) {
         sql.append(" (");
         for (IJOField field : fields) {
-            if (!"table".equals(field.dt()) && !"auto".equals(field.ft())) {
+            if (!"table".equals(field.dt())  && !"auto".equals(field.ft())) {
                 sql.append(' ').append(field.name()).append(",");
             }
         }
@@ -42,6 +43,13 @@ public class FSQLInsert extends FSQLBase {
             }
         }
         sql.setCharAt(sql.length() - 1, ')');
+    }
+
+    private void proc_scope(StringBuilder sql, IJOField fld) {
+        String jdbc = fld.cfg().optString("jdbc");
+        if(jdbc.contains("identity")){
+            sql.append(";SELECT SCOPE_IDENTITY()");
+        }
     }
 
 }

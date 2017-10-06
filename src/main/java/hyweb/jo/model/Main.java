@@ -11,7 +11,7 @@ public class Main {
     public static void main(String[] args) {
 
         Callback[] callbacks
-                = new Callback[]{new JOModelInterceptor(), NoOp.INSTANCE};
+          = new Callback[]{new JOFieldInterceptor(), NoOp.INSTANCE};
 
         Enhancer enhancer = new Enhancer();
 
@@ -39,16 +39,15 @@ public class Main {
         }
     }
 
-   
 }
 
- class MyClass {
- 
-	public void method() {
-		System.out.println("MyClass.method()");
-	}
- 
-	public void method2() {
-		System.out.println("MyClass.method2()");
-	}
+class MyClass {
+
+    public void method() {
+        System.out.println("MyClass.method()");
+    }
+
+    public void method2() {
+        System.out.println("MyClass.method2()");
+    }
 }

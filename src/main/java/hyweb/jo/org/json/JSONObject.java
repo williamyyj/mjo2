@@ -23,9 +23,10 @@ package hyweb.jo.org.json;
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  SOFTWARE.
  */
-
+import hyweb.jo.log.JOLogger;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -39,6 +40,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class JSONObject extends HashMap<String, Object> {
 
@@ -182,7 +185,9 @@ public class JSONObject extends HashMap<String, Object> {
         if (map != null) {
             for (Map.Entry<?, ?> e : map.entrySet()) {
                 final Object value = e.getValue();
-                if (value != null) {
+                if (value instanceof byte[]) {
+                    super.put(String.valueOf(e.getKey()), value);
+                } else if (value != null) {
                     super.put(String.valueOf(e.getKey()), wrap(value));
                 }
             }
@@ -262,7 +267,7 @@ public class JSONObject extends HashMap<String, Object> {
     public JSONObject(String baseName, Locale locale) throws JSONException {
         super();
         ResourceBundle bundle = ResourceBundle.getBundle(baseName, locale,
-                Thread.currentThread().getContextClassLoader());
+          Thread.currentThread().getContextClassLoader());
 
 // Iterate through the keys in the bundle.
         Enumeration<String> keys = bundle.getKeys();
@@ -312,8 +317,8 @@ public class JSONObject extends HashMap<String, Object> {
         Object object = this.opt(key);
         if (object == null) {
             this.put(key,
-                    value instanceof JSONArray ? new JSONArray().put(value)
-                            : value);
+              value instanceof JSONArray ? new JSONArray().put(value)
+                : value);
         } else if (object instanceof JSONArray) {
             ((JSONArray) object).put(value);
         } else {
@@ -343,7 +348,7 @@ public class JSONObject extends HashMap<String, Object> {
             this.put(key, ((JSONArray) object).put(value));
         } else {
             throw new JSONException("JSONObject[" + key
-                    + "] is not a JSONArray.");
+              + "] is not a JSONArray.");
         }
         return this;
     }
@@ -363,7 +368,7 @@ public class JSONObject extends HashMap<String, Object> {
 // Shave off trailing zeros and decimal point, if possible.
         String string = Double.toString(d);
         if (string.indexOf('.') > 0 && string.indexOf('e') < 0
-                && string.indexOf('E') < 0) {
+          && string.indexOf('E') < 0) {
             while (string.endsWith("0")) {
                 string = string.substring(0, string.length() - 1);
             }
@@ -385,7 +390,7 @@ public class JSONObject extends HashMap<String, Object> {
         if (key == null) {
             throw new JSONException("Null key.");
         }
-        Object object = this.opt(key);
+        Object object = super.get(key);
         if (object == null) {
             throw new JSONException("JSONObject[" + quote(key) + "] not found.");
         }
@@ -403,16 +408,16 @@ public class JSONObject extends HashMap<String, Object> {
     public boolean getBoolean(String key) throws JSONException {
         Object object = this.get(key);
         if (object.equals(Boolean.FALSE)
-                || (object instanceof String && ((String) object)
-                .equalsIgnoreCase("false"))) {
+          || (object instanceof String && ((String) object)
+          .equalsIgnoreCase("false"))) {
             return false;
         } else if (object.equals(Boolean.TRUE)
-                || (object instanceof String && ((String) object)
-                .equalsIgnoreCase("true"))) {
+          || (object instanceof String && ((String) object)
+          .equalsIgnoreCase("true"))) {
             return true;
         }
         throw new JSONException("JSONObject[" + quote(key)
-                + "] is not a Boolean.");
+          + "] is not a Boolean.");
     }
 
     /**
@@ -427,10 +432,10 @@ public class JSONObject extends HashMap<String, Object> {
         Object object = this.get(key);
         try {
             return object instanceof Number ? ((Number) object).doubleValue()
-                    : Double.parseDouble((String) object);
+              : Double.parseDouble((String) object);
         } catch (Exception e) {
             throw new JSONException("JSONObject[" + quote(key)
-                    + "] is not a number.");
+              + "] is not a number.");
         }
     }
 
@@ -446,10 +451,10 @@ public class JSONObject extends HashMap<String, Object> {
         Object object = this.get(key);
         try {
             return object instanceof Number ? ((Number) object).intValue()
-                    : Integer.parseInt((String) object);
+              : Integer.parseInt((String) object);
         } catch (Exception e) {
             throw new JSONException("JSONObject[" + quote(key)
-                    + "] is not an int.");
+              + "] is not an int.");
         }
     }
 
@@ -467,7 +472,7 @@ public class JSONObject extends HashMap<String, Object> {
             return (JSONArray) object;
         }
         throw new JSONException("JSONObject[" + quote(key)
-                + "] is not a JSONArray.");
+          + "] is not a JSONArray.");
     }
 
     /**
@@ -484,7 +489,7 @@ public class JSONObject extends HashMap<String, Object> {
             return (JSONObject) object;
         }
         throw new JSONException("JSONObject[" + quote(key)
-                + "] is not a JSONObject.");
+          + "] is not a JSONObject.");
     }
 
     /**
@@ -499,10 +504,10 @@ public class JSONObject extends HashMap<String, Object> {
         Object object = this.get(key);
         try {
             return object instanceof Number ? ((Number) object).longValue()
-                    : Long.parseLong((String) object);
+              : Long.parseLong((String) object);
         } catch (Exception e) {
             throw new JSONException("JSONObject[" + quote(key)
-                    + "] is not a long.");
+              + "] is not a long.");
         }
     }
 
@@ -663,7 +668,7 @@ public class JSONObject extends HashMap<String, Object> {
 // Shave off trailing zeros and decimal point, if possible.
         String string = number.toString();
         if (string.indexOf('.') > 0 && string.indexOf('e') < 0
-                && string.indexOf('E') < 0) {
+          && string.indexOf('E') < 0) {
             while (string.endsWith("0")) {
                 string = string.substring(0, string.length() - 1);
             }
@@ -849,18 +854,27 @@ public class JSONObject extends HashMap<String, Object> {
      * @return A string which is the value.
      */
     public String optString(String key, String defaultValue) {
-        Object object = this.opt(key);
-        return NULL.equals(object) ? defaultValue : object.toString();
+        Object o = this.opt(key);
+        if (o instanceof byte[]) {
+            try {
+                return new String((byte[])o,"UTF-8");
+            } catch (UnsupportedEncodingException ex) {
+                JOLogger.info("Can't cast bytes to String ");
+                return defaultValue ;
+            }
+        } else {
+            return NULL.equals(o) ? defaultValue : o.toString();
+        }
     }
 
     private void populateMap(Object bean) {
-       
+
         Class klass = bean.getClass();
 // If klass is a System class then set includeSuperClass to false.
         boolean includeSuperClass = klass.getClassLoader() != null;
 
         Method[] methods = includeSuperClass ? klass.getMethods() : klass
-                .getDeclaredMethods();
+          .getDeclaredMethods();
         for (int i = 0; i < methods.length; i += 1) {
             try {
                 Method method = methods[i];
@@ -869,7 +883,7 @@ public class JSONObject extends HashMap<String, Object> {
                     String key = "";
                     if (name.startsWith("get")) {
                         if ("getClass".equals(name)
-                                || "getDeclaringClass".equals(name)) {
+                          || "getDeclaringClass".equals(name)) {
                             key = "";
                         } else {
                             key = name.substring(3);
@@ -878,13 +892,13 @@ public class JSONObject extends HashMap<String, Object> {
                         key = name.substring(2);
                     }
                     if (key.length() > 0
-                            && Character.isUpperCase(key.charAt(0))
-                            && method.getParameterTypes().length == 0) {
+                      && Character.isUpperCase(key.charAt(0))
+                      && method.getParameterTypes().length == 0) {
                         if (key.length() == 1) {
                             key = key.toLowerCase();
                         } else if (!Character.isUpperCase(key.charAt(1))) {
                             key = key.substring(0, 1).toLowerCase()
-                                    + key.substring(1);
+                              + key.substring(1);
                         }
 
                         Object result = method.invoke(bean, (Object[]) null);
@@ -1119,7 +1133,7 @@ public class JSONObject extends HashMap<String, Object> {
                     break;
                 default:
                     if (c < ' ' || (c >= '\u0080' && c < '\u00a0')
-                            || (c >= '\u2000' && c < '\u2100')) {
+                      || (c >= '\u2000' && c < '\u2100')) {
                         w.write("\\u");
                         hhhh = Integer.toHexString(c);
                         w.write("0000", 0, 4 - hhhh.length());
@@ -1209,7 +1223,7 @@ public class JSONObject extends HashMap<String, Object> {
         if ((b >= '0' && b <= '9') || b == '-') {
             try {
                 if (string.indexOf('.') > -1 || string.indexOf('e') > -1
-                        || string.indexOf('E') > -1) {
+                  || string.indexOf('E') > -1) {
                     d = Double.valueOf(string);
                     if (!d.isInfinite() && !d.isNaN()) {
                         return d;
@@ -1241,12 +1255,12 @@ public class JSONObject extends HashMap<String, Object> {
             if (o instanceof Double) {
                 if (((Double) o).isInfinite() || ((Double) o).isNaN()) {
                     throw new JSONException(
-                            "JSON does not allow non-finite numbers.");
+                      "JSON does not allow non-finite numbers.");
                 }
             } else if (o instanceof Float) {
                 if (((Float) o).isInfinite() || ((Float) o).isNaN()) {
                     throw new JSONException(
-                            "JSON does not allow non-finite numbers.");
+                      "JSON does not allow non-finite numbers.");
                 }
             }
         }
@@ -1353,7 +1367,7 @@ public class JSONObject extends HashMap<String, Object> {
             return numberToString((Number) value);
         }
         if (value instanceof Boolean || value instanceof JSONObject
-                || value instanceof JSONArray) {
+          || value instanceof JSONArray) {
             return value.toString();
         }
         if (value instanceof Map) {
@@ -1380,28 +1394,25 @@ public class JSONObject extends HashMap<String, Object> {
      * @return The wrapped value
      */
     public static Object wrap(Object object) {
-   
+
         try {
             if (object == null) {
                 return NULL;
             }
-            
+
             if (object instanceof JSONObject || object instanceof JSONArray
-                    || NULL.equals(object) || object instanceof JSONString
-                    || object instanceof Byte || object instanceof Character
-                    || object instanceof Short || object instanceof Integer
-                    || object instanceof Long || object instanceof Boolean
-                    || object instanceof Float || object instanceof Double
-                    || object instanceof String || object instanceof java.util.Date) {
+              || NULL.equals(object) || object instanceof JSONString
+              || object instanceof Byte || object instanceof Character
+              || object instanceof Short || object instanceof Integer
+              || object instanceof Long || object instanceof Boolean
+              || object instanceof Float || object instanceof Double
+              || object instanceof String || object instanceof java.util.Date) {
                 return object;
             }
 
-            
-            
-            if (object instanceof Collection ) {
+            if (object instanceof Collection) {
                 return new JSONArray((Collection<Object>) object);
             }
-            
 
             if (object.getClass().isArray()) {
                 return new JSONArray(object);
@@ -1411,10 +1422,10 @@ public class JSONObject extends HashMap<String, Object> {
             }
             Package objectPackage = object.getClass().getPackage();
             String objectPackageName = objectPackage != null ? objectPackage
-                    .getName() : "";
+              .getName() : "";
             if (objectPackageName.startsWith("java.")
-                    || objectPackageName.startsWith("javax.")
-                    || object.getClass().getClassLoader() == null) {
+              || objectPackageName.startsWith("javax.")
+              || object.getClass().getClassLoader() == null) {
                 return object.toString();
             }
             return new JSONObject(object);
@@ -1447,7 +1458,7 @@ public class JSONObject extends HashMap<String, Object> {
             new JSONObject((Map<String, Object>) value).write(writer, indentFactor, indent);
         } else if (value instanceof Collection) {
             new JSONArray((Collection<Object>) value).write(writer, indentFactor,
-                    indent);
+              indent);
         } else if (value.getClass().isArray()) {
             new JSONArray(value).write(writer, indentFactor, indent);
         } else if (value instanceof Number) {
@@ -1484,7 +1495,7 @@ public class JSONObject extends HashMap<String, Object> {
      * @throws JSONException
      */
     Writer write(Writer writer, int indentFactor, int indent)
-            throws JSONException {
+      throws JSONException {
         try {
             if (!optBoolean("_indent", true)) {
                 this.remove("_indent");
@@ -1543,8 +1554,8 @@ public class JSONObject extends HashMap<String, Object> {
     public Map<String, Object> getM() {
         return this;
     }
-    
-    public Object remove(String key){
+
+    public Object remove(String key) {
         return super.remove(key);
     }
 

@@ -170,6 +170,7 @@ public class DateUtil {
         cal.set(Calendar.HOUR_OF_DAY, 0);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
         return cal.getTime();
     }
 
@@ -241,9 +242,12 @@ public class DateUtil {
         }
     }
 
-    public static String convert(String fmt, Date date) {
-        SimpleDateFormat sdf = new SimpleDateFormat(fmt);
-        return sdf.format(date);
+    public static String convert(String fmt, Date d) {
+        if (d instanceof Date ) {
+            SimpleDateFormat sdf = new SimpleDateFormat(fmt);
+            return sdf.format(d);
+        }
+        return "";
     }
 
     public static Date lastDayOfMonth(Date d) {

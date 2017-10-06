@@ -1,14 +1,39 @@
 package hyweb.jo.util;
 
-
 import hyweb.jo.org.json.JSONArray;
 import hyweb.jo.org.json.JSONObject;
-
 
 /**
  * @author William
  */
 public class JOPath {
+
+    public static Object path(JSONObject jo, String jopath) {
+        String[] path = jopath.split(":");
+        return path(jo, path);
+    }
+
+    public static JSONObject asJSON(JSONObject jo, String jopath) {
+        Object ret = path(jo, jopath);
+        if (ret instanceof JSONObject) {
+            return (JSONObject) ret;
+        }        
+        return null;
+    }
+
+
+
+    public static JSONArray asArray(JSONObject jo, String jopath) {
+        Object ret = path(jo, jopath);
+        if (ret instanceof JSONArray) {
+            return (JSONArray) ret;
+        } else if (ret instanceof JSONObject) {
+            JSONArray arr = new JSONArray();
+            arr.add(ret);
+            return arr;
+        }
+        return null;
+    }
 
     private static Object opt(Object m, String k) {
         if (m instanceof JSONObject) {
@@ -17,13 +42,6 @@ public class JOPath {
             return ((JSONArray) m).get(Integer.parseInt(k.trim()));
         }
         return null;
-    }
-
-    
-    
-    public static Object path(JSONObject jo, String jopath) {
-        String[] path = jopath.split(":");
-        return path(jo, path);
     }
 
     private static Object path(JSONObject jo, String[] path) {
@@ -57,18 +75,16 @@ public class JOPath {
             set(p, items, level + 1, o);
         }
     }
-    
-    public static void setJA(JSONObject jo, String path , Object o) {
-        Object item = path(jo,path);
-        if(item instanceof JSONArray){
-            ((JSONArray)item).put(o);
-        } else if ( item == null){
+
+    public static void setJA(JSONObject jo, String path, Object o) {
+        Object item = path(jo, path);
+        if (item instanceof JSONArray) {
+            ((JSONArray) item).put(o);
+        } else if (item == null) {
             JSONArray ja = new JSONArray();
-            set(jo,path, ja);
+            set(jo, path, ja);
             ja.put(o);
         }
     }
-    
-  
 
 }

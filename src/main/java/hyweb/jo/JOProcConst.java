@@ -1,6 +1,5 @@
 package hyweb.jo;
 
-
 /**
  *
  * @author William
@@ -17,6 +16,5 @@ public class JOProcConst extends JOConst {
     public final static String w_proc = "$w_proc";
     public final static String w_status = "$w_status";
     public final static String w_exception = "$w_exception";
-    public final static String w_upload = "$upload" ;
-    
+    public final static String w_upload = "$upload";
 }

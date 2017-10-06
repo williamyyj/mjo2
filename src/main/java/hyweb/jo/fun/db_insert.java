@@ -13,6 +13,7 @@ import hyweb.jo.org.json.JSONObject;
 import hyweb.jo.util.JOFunctional;
 import hyweb.jo.JOProcConst;
 import hyweb.jo.JOProcObject;
+import hyweb.jo.util.JOPath;
 import java.util.List;
 
 /**
@@ -31,7 +32,8 @@ public class db_insert implements IJOFunction<Boolean, Object[]> {
             jq.put(JOProcConst.act, "add");
             jq.put(JOProcConst.cmd, JOFunctional.exec("model.FSQLInsert", fields));
             JSONObject mq = DBCmd.parser_cmd(proc.db(), jq);
-            proc.db().action(mq);
+            Object lastInsertId = proc.db().action(mq);
+            JOPath.set(proc,"$check:lastInsertId",lastInsertId);
             return true;
         } catch (Exception e) {
             e.printStackTrace();

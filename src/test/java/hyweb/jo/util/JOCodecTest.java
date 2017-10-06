@@ -20,6 +20,8 @@ public class JOCodecTest {
         ret = JOCodec.encodeForJavaScript("這是一個測驗");
         System.out.println(ret);
         System.out.println(JOCodec.encodeForHTML("\""));
+        String uri = "/mPosCService/__data__/2016/20161214000000pestCropRelation.zip";
+        System.out.println(uri.replace("/mPosCService/__data__/", "D:\\ftproot"));
     }
 
 }

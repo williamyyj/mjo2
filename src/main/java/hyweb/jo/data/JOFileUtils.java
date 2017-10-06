@@ -5,7 +5,6 @@
  */
 package hyweb.jo.data;
 
-import hyweb.jo.IJOFunction;
 import hyweb.jo.util.JOFunctional;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -26,7 +25,7 @@ import java.util.List;
  */
 public class JOFileUtils {
 
-    private static byte[] loadData(InputStream is) throws IOException {
+    public static byte[] loadData(InputStream is) throws IOException {
         BufferedInputStream bis = null;
         byte[] data = null;
         byte[] tmp = new byte[1024];
@@ -216,10 +215,16 @@ public class JOFileUtils {
     }
 
     public static void safe_dir(String path) {
-        File f = new File(path);
+        safe_dir(new File(path));
+    }
+
+    public static void safe_dir(File f) {
+        
         if (!f.exists()) {
             f.mkdirs();
         }
     }
+
+   
 
 }

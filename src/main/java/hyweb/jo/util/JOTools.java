@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
@@ -28,12 +27,7 @@ public class JOTools {
     }
 
     public static synchronized JSONObject loadString(String text) {
-        try {
-            return JOCache.loadJSON(text);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-        return null;
+        return JOCache.loadJSON(text);
     }
 
     public static synchronized JSONObject load(File f) {
@@ -235,6 +229,10 @@ public class JOTools {
         }
         byte[] buf = sb.toString().getBytes("UTF-8");
         return ENDE.md5(buf);
+    }
+
+    public static String loadJSON(Object f) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

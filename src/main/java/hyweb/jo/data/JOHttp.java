@@ -124,7 +124,7 @@ public class JOHttp {
         // jq.put("$url", "http://tw.yahoo.com");
         //jq.put("$url", "http://tw.yahoo.com");
        // JSONObject jq = JOTools.loadString("{ $url: 'http://pest.baphiq.gov.tw/BAPHIQ/wSite/pos/pos.do' }");
-        String content = JOHttp.text("https://posadmin.baphiq.gov.tw/mPosService/BaphiqSale?wsdl", "UTF-8");
+        String content = JOHttp.text("http://readopac.ncl.edu.tw/cgi/ref/refdata?id=A16029960", "UTF-8");
         System.out.println(content);
     }
 

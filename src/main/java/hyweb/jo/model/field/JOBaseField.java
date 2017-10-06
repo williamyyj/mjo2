@@ -4,11 +4,8 @@ import hyweb.jo.model.IJOField;
 import hyweb.jo.IJOType;
 import hyweb.jo.JOProcObject;
 import hyweb.jo.fun.MJOBase;
-import hyweb.jo.log.JOLogger;
 import hyweb.jo.org.json.JSONObject;
 import hyweb.jo.util.JOFunctional;
-import hyweb.jo.util.TextUtils;
-import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -47,7 +44,7 @@ public class JOBaseField<E> implements IJOField<E> {
     public String id() {
         return cfg.optString("id");
     }
-
+    
     @Override
     public String dt() {
         return cfg.optString("dt");
@@ -213,8 +210,8 @@ public class JOBaseField<E> implements IJOField<E> {
         }
         if (o == null) {
             String[] items = id.split("\\_");
-            String alias = (items.length > 1) ? items[1] : items[0];
-            o = row.opt(alias);
+            String n = (items.length > 1) ? items[1] : items[0];
+            o = row.opt(n);
         }
         return (o != null) ? o : row.opt(id());
     }

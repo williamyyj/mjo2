@@ -18,7 +18,7 @@ public interface IJOField<E> extends IJOInit<JSONObject> {
     public String name();
 
     public String id();
-
+    
     public String label();
 
     public String label(String lang);

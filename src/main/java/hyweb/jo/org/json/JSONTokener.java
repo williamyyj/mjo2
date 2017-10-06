@@ -278,7 +278,9 @@ public class JSONTokener {
                     sb.append('\r');
                     break;
                 case 'u':
-                    sb.append((char)Integer.parseInt(this.next(4), 16));
+                    String hex = this.next(4);
+                    System.out.println(hex);
+                    sb.append((char)Integer.parseInt(hex, 16));
                     break;
                 case '"':
                 case '\'':

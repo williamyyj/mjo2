@@ -160,7 +160,7 @@ public class JSONArray extends ArrayList<Object> {
             }
         } else {
             throw new JSONException(
-                    "JSONArray initial value should be a string or collection or array.");
+              "JSONArray initial value should be a string or collection or array.");
         }
     }
 
@@ -191,12 +191,12 @@ public class JSONArray extends ArrayList<Object> {
     public boolean getBoolean(int index) throws JSONException {
         Object object = this.get(index);
         if (object.equals(Boolean.FALSE)
-                || (object instanceof String && ((String) object)
-                .equalsIgnoreCase("false"))) {
+          || (object instanceof String && ((String) object)
+          .equalsIgnoreCase("false"))) {
             return false;
         } else if (object.equals(Boolean.TRUE)
-                || (object instanceof String && ((String) object)
-                .equalsIgnoreCase("true"))) {
+          || (object instanceof String && ((String) object)
+          .equalsIgnoreCase("true"))) {
             return true;
         }
         throw new JSONException("JSONArray[" + index + "] is not a boolean.");
@@ -214,7 +214,7 @@ public class JSONArray extends ArrayList<Object> {
         Object object = this.get(index);
         try {
             return object instanceof Number ? ((Number) object).doubleValue()
-                    : Double.parseDouble((String) object);
+              : Double.parseDouble((String) object);
         } catch (Exception e) {
             throw new JSONException("JSONArray[" + index + "] is not a number.");
         }
@@ -232,7 +232,7 @@ public class JSONArray extends ArrayList<Object> {
         Object object = this.get(index);
         try {
             return object instanceof Number ? ((Number) object).intValue()
-                    : Integer.parseInt((String) object);
+              : Integer.parseInt((String) object);
         } catch (Exception e) {
             throw new JSONException("JSONArray[" + index + "] is not a number.");
         }
@@ -282,7 +282,7 @@ public class JSONArray extends ArrayList<Object> {
         Object object = this.get(index);
         try {
             return object instanceof Number ? ((Number) object).longValue()
-                    : Long.parseLong((String) object);
+              : Long.parseLong((String) object);
         } catch (Exception e) {
             throw new JSONException("JSONArray[" + index + "] is not a number.");
         }
@@ -518,7 +518,7 @@ public class JSONArray extends ArrayList<Object> {
     public String optString(int index, String defaultValue) {
         Object object = this.opt(index);
         return JSONObject.NULL.equals(object) ? defaultValue : object
-                .toString();
+          .toString();
     }
 
     /**
@@ -592,7 +592,11 @@ public class JSONArray extends ArrayList<Object> {
      * @return this.
      */
     public JSONArray put(Map<String, Object> value) {
-        super.add(new JSONObject(value));
+        if (value instanceof JSONObject) {
+            super.add(value);
+        } else {
+            super.add(new JSONObject(value));
+        }
         return this;
     }
 
@@ -853,7 +857,7 @@ public class JSONArray extends ArrayList<Object> {
      * @throws JSONException
      */
     Writer write(Writer writer, int indentFactor, int indent)
-            throws JSONException {
+      throws JSONException {
         try {
             boolean commanate = false;
             int length = this.length();
@@ -861,7 +865,7 @@ public class JSONArray extends ArrayList<Object> {
 
             if (length == 1) {
                 JSONObject.writeValue(writer, super.get(0),
-                        indentFactor, indent);
+                  indentFactor, indent);
             } else if (length != 0) {
                 final int newindent = indent + indentFactor;
 
@@ -874,7 +878,7 @@ public class JSONArray extends ArrayList<Object> {
                     }
                     JSONObject.indent(writer, newindent);
                     JSONObject.writeValue(writer, super.get(i),
-                            indentFactor, newindent);
+                      indentFactor, newindent);
                     commanate = true;
                 }
                 if (indentFactor > 0) {

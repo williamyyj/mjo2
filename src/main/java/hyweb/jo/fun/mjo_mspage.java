@@ -35,7 +35,7 @@ public class mjo_mspage extends MJOMSPage {
         jq.put(JOProcConst.cmd, cmd);
         jq.put(JOProcConst.act, "rows");
         JSONObject mq = DBCmd.parser_cmd(MJOBase.db(wp), jq);
-        System.out.println(mq.toString(4));
+        //System.out.println(mq.toString(4));
         int rowCount = rowCount(MJOBase.proc(wp).db(), mq);
         proc.set(JOProcObject.p_request, "total", rowCount);
         proc.set(JOProcObject.p_request, "page", page);
@@ -44,7 +44,7 @@ public class mjo_mspage extends MJOMSPage {
         p.remove("numPage");
         String ejo = JOTools.encode(p.toString());
         proc.set(JOProcObject.p_request, "ejo", ejo);
-        System.out.println(mq);
+        //System.out.println(mq);
         List<JSONObject> rows = rows(proc.db(), mq, numPage, page, order);
         List<IJOField> eFields = MJOBase.eval_fields(wp);
         for (JSONObject row : rows) {

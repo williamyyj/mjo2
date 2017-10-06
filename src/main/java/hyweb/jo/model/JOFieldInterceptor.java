@@ -8,14 +8,14 @@ import net.sf.cglib.proxy.MethodProxy;
  *
  * @author william
  */
-public class JOModelInterceptor implements MethodInterceptor {
+public class JOFieldInterceptor implements MethodInterceptor {
     
     
     @Override
     public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable {
        System.out.println("===== before method : "+ method);
        Object ret = proxy.invokeSuper(obj, args);
-       System.out.println("===== before method : "+ method);
+       System.out.println("===== after method : "+ method);
        return ret ;
     }
     
