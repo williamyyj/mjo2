@@ -3,12 +3,17 @@ package hyweb.jo.ht;
 import hyweb.jo.JOProcObject;
 import hyweb.jo.org.json.JSONObject;
 
+
 /**
  *
  * @author william
  */
 public class HTMappingCell extends HTCell {
 
+    public HTMappingCell(JSONObject cfg){
+        super(cfg);
+    }
+    
     public HTMappingCell(String line) {
         super(line);
     }

@@ -46,7 +46,7 @@ public class JOStringType extends JOType<String> {
         if (o != null && !"null".equalsIgnoreCase((o.toString()))) {
             String ret = o.toString();
             ret = ret.replaceAll("'", "''");
-            return "'" + ret + "'";
+            return "N'" + ret + "'";
         }
         return "NULL";
     }

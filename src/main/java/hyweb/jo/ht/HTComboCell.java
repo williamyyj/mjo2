@@ -5,6 +5,7 @@ import hyweb.jo.org.json.JSONArray;
 import hyweb.jo.org.json.JSONObject;
 import hyweb.jo.util.JOCache;
 import hyweb.jo.util.JOFunctional;
+import hyweb.jo.util.JOPath;
 import java.util.List;
 
 /**
@@ -52,7 +53,14 @@ public class HTComboCell extends HTCell {
         JSONArray ops = combo.optJSONArray("option");
         if (ops != null) {
             for (int i = 0; i < ops.length(); i++) {
-                select_item(sb, ops.optJSONObject(i), dv);
+                JSONObject item = ops.optJSONObject(i);
+                select_item(sb, item, dv);
+
+                if (i == 0) {
+                    JOPath.set(cfg, "$m:$default", item.opt("label"));
+                } else {
+                    JOPath.set(cfg, "$m:" + item.optString("value"), item.opt("label"));
+                }
             }
         }
     }
@@ -64,6 +72,7 @@ public class HTComboCell extends HTCell {
             rows = (List<JSONObject>) JOFunctional.exec2("fb_rows", proc, combo, params);
             for (JSONObject row : rows) {
                 select_item(sb, row, dv);
+                JOPath.set(cfg, "$m:" + row.optString("value"), row.opt("label"));
             }
         } catch (Exception e) {
             e.printStackTrace();

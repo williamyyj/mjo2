@@ -22,5 +22,14 @@ public class mapping  extends JOFFBase<String> {
         }
         return "";
     }
+
+    @Override
+    public String cast(Object fv) {
+         if(fv !=null){
+            String key = fv.toString().trim();
+            return cfg.optString(key);
+        }
+        return "";
+    }
     
 }

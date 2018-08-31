@@ -23,7 +23,9 @@ public class wp_tmlMail implements IJOFunction<Boolean, JOWPObject> {
         Map<String, IJOFF> mff = JOFF.init_ff(wp.proc(), wp.metadata());
         mff.put("safe", new ff_safe());
         row.put("$ff", mff);
-        row.put("data", JOFunctional.exec(act.optString("$funId"), wp));
+        Object data = JOFunctional.exec(act.optString("$funId"), wp);
+        data = (data==null) ? wp.p() : data ;
+        row.put("data", data);
         MVELTemplate tmpl = new MVELTemplate(wp.proc().base(), act.optString("$tml"));
         String context = tmpl.processTemplate(row);
         row.put("context", context);

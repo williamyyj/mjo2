@@ -1,5 +1,6 @@
 package hyweb.jo.util;
 
+import hyweb.jo.log.JOLogger;
 import hyweb.jo.org.json.JSONArray;
 import hyweb.jo.org.json.JSONObject;
 import java.util.Iterator;
@@ -70,6 +71,24 @@ public class JOUtils {
             return JOTools.toJSONObject(text);
         }
         return null;
+    }
+
+    public static String md5(JSONObject row, String[] items) {
+        try {
+
+            StringBuilder sb = new StringBuilder();
+            for (String item : items) {
+                sb.append(row.optString(item)).append(":::");
+            }
+            JOLogger.debug(sb);
+            return ENDE.md5(sb.toString().getBytes("UTF-8"));
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static String md5(JSONObject row, String line) {
+        return md5(row,line.split("[,|:]"));
     }
 
 }

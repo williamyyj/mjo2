@@ -17,6 +17,7 @@ public interface IJOType<E> {
     public final static String dt_double = "double";
     public final static String dt_date = "date";
     public final static String dt_string = "string";
+    public final static String dt_nvarchar = "nvarchar";
     public final static String dt_blob = "blob";
     public final static String dt_clob = "clob";
     public final static String dt_array = "array";
@@ -41,5 +42,5 @@ public interface IJOType<E> {
     public String json_string(Object o, String fmt);
 
     public String xml_string(Object o, String fmt);
-    
+
 }

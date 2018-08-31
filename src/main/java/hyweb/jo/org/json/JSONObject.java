@@ -31,7 +31,10 @@ import java.io.Writer;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -409,11 +412,11 @@ public class JSONObject extends HashMap<String, Object> {
         Object object = this.get(key);
         if (object.equals(Boolean.FALSE)
           || (object instanceof String && ((String) object)
-          .equalsIgnoreCase("false"))) {
+            .equalsIgnoreCase("false"))) {
             return false;
         } else if (object.equals(Boolean.TRUE)
           || (object instanceof String && ((String) object)
-          .equalsIgnoreCase("true"))) {
+            .equalsIgnoreCase("true"))) {
             return true;
         }
         throw new JSONException("JSONObject[" + quote(key)
@@ -857,10 +860,10 @@ public class JSONObject extends HashMap<String, Object> {
         Object o = this.opt(key);
         if (o instanceof byte[]) {
             try {
-                return new String((byte[])o,"UTF-8");
+                return new String((byte[]) o, "UTF-8");
             } catch (UnsupportedEncodingException ex) {
                 JOLogger.info("Can't cast bytes to String ");
-                return defaultValue ;
+                return defaultValue;
             }
         } else {
             return NULL.equals(o) ? defaultValue : o.toString();
@@ -945,6 +948,7 @@ public class JSONObject extends HashMap<String, Object> {
         super.put(key, bytes);
         return this;
     }
+    
 
     /**
      * Put a key/double pair in the JSONObject.
@@ -1497,13 +1501,20 @@ public class JSONObject extends HashMap<String, Object> {
     Writer write(Writer writer, int indentFactor, int indent)
       throws JSONException {
         try {
-            if (!optBoolean("_indent", true)) {
-                this.remove("_indent");
+            if (!optBoolean("__indent__", true)) {
+                this.remove("__indent__");
                 return write(writer, 0, 0);
             }
             boolean commanate = false;
             final int length = this.length();
             Iterator<String> keys = this.keys();
+            ArrayList<String> list = new ArrayList<String>(this.keySet());
+            Collections.sort(list, new Comparator<String>() {
+                @Override
+                public int compare(String o1, String o2) {
+                    return "id".equals(o1)  || "id".equals(o2) ? -1 : o1.compareTo(o2);
+                }
+            });
             writer.write('{');
 
             if (length == 1) {
@@ -1516,8 +1527,9 @@ public class JSONObject extends HashMap<String, Object> {
                 writeValue(writer, get(key), indentFactor, indent);
             } else if (length != 0) {
                 final int newindent = indent + indentFactor;
-                while (keys.hasNext()) {
-                    Object key = keys.next();
+                for(String key : list){
+               // while (keys.hasNext()) {
+                   // Object key = keys.next();
                     if (commanate) {
                         writer.write(',');
                     }
@@ -1525,7 +1537,7 @@ public class JSONObject extends HashMap<String, Object> {
                         writer.write('\n');
                     }
                     indent(writer, newindent);
-                    writer.write(quote(key.toString()));
+                    writer.write(quote(key));
                     writer.write(':');
                     if (indentFactor > 0) {
                         writer.write(' ');
@@ -1558,5 +1570,6 @@ public class JSONObject extends HashMap<String, Object> {
     public Object remove(String key) {
         return super.remove(key);
     }
+    
 
 }

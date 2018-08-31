@@ -1,6 +1,7 @@
 package hyweb.jo;
 
 import hyweb.jo.db.DB;
+import hyweb.jo.ff.IJOFF;
 import hyweb.jo.ff.JOFF;
 import hyweb.jo.model.IJOField;
 import hyweb.jo.model.JOMetadata;
@@ -12,7 +13,7 @@ import java.io.File;
 import java.util.List;
 
 /**
- * $fp 表單參數 （分頁及表單參數)
+ * $fp 表單參數 (表單參數)
  *
  * @author william
  */
@@ -31,7 +32,13 @@ public class JOProcObject extends JSONObject {
 
     public JOProcObject(String base) {
         put(JOProcConst.base, base);
+        if (base != null && base.length() > 0) {
+            String upload = cfg().optString("uploadPath") + cfg().optString("pid");
+            put(JOProcConst.w_upload, upload);
+        }
     }
+
+ 
 
     public String base() {
         return optString(JOProcConst.base);
@@ -101,7 +108,7 @@ public class JOProcObject extends JSONObject {
     /**
      * @param mid
      * @return
-     * @deprecated 請改用 JOMetaUtils
+     * @deprecated 請改用 wMeta() ( JOWorkMeta） 
      */
     @Deprecated
     public JOMetadata metadata(String mid) {
@@ -172,13 +179,6 @@ public class JOProcObject extends JSONObject {
         return wData;
     }
 
-    public JOWorkFF wFF() {
-        if (wFF == null) {
-            wFF = new JOWorkFF(this);
-        }
-        return wFF;
-    }
-
     public JOWorkStatus wStatus() {
         if (wStatus == null) {
             wStatus = new JOWorkStatus(this);
@@ -193,8 +193,9 @@ public class JOProcObject extends JSONObject {
         return wMeta;
     }
 
-    public Object ff(String ffId, JSONObject row, String id) {
-        return JOFF.ff(this, ffId).as(row, id);
+    public Object ff(String id, Object fv) {
+        IJOFF ff = (IJOFF) get(JOProcObject.p_request, JOFF.pffId(id), null);
+        return (ff != null) ? ff.cast(fv) : "";
     }
 
 }

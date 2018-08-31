@@ -27,18 +27,19 @@ public class wp_email implements IJOFunction<Boolean, JOWPObject> {
             MailBase mb = new MailBase(new MailCfg(pp));
             IMailSender sender = new SendHtmlImpl();
             bean.setTOS(p.optString("email"));
-            bean.setCCS(pp.optString("cc"));
+            String cc = p.optString("ccmail"); // 增加處理客制
+            cc = cc.length()>0 ? cc : pp.optString("cc") ;
+            bean.setCCS(cc);
             bean.setSubject(p.optString("subject"));
             bean.setText(p.optString("context"));
             bean.setFrom(pp.optString("from"), pp.optString("disp"));
+            JOLogger.debug("------------------------------------------------------");
+            JOLogger.debug(bean.toJSON());
             mb.sendMessage(sender, bean);
-
             if (pp.has("sleeping")) {
                 Thread.sleep(pp.optLong("sleeping"));
             }
-            JOLogger.debug("------------------------------------------------------");
-            JOLogger.debug("from: " + pp.optString("from")+" disp:"+ pp.optString("disp") + " to:" + p.optString("email") + " subject:" + p.optString("subject"));
-            JOLogger.debug("time: "+(System.nanoTime()-ts)/1E9);
+            JOLogger.debug("time: " + (System.nanoTime() - ts) / 1E9);
             return true;
         } catch (Exception e) {
             // 有debiug mode 可查 email 

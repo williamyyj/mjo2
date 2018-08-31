@@ -10,6 +10,7 @@ import java.util.List;
 
 /**
  * @author William
+ * @param <M>
  */
 public interface IJODao<M> {
     public M row(JSONObject jq) throws Exception ; 

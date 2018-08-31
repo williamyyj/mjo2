@@ -113,6 +113,7 @@ public class JOTools {
         gzip = new GZIPOutputStream(out);
         gzip.write(text.getBytes("UTF-8"));
         gzip.close();
+        
         return Base64.u64_encode(out.toByteArray());
     }
 

@@ -21,9 +21,9 @@ public class FMRS2Rows extends JOFunction<List<JSONObject>> {
 
     public List<JSONObject> exec(List<JSONObject> metadata, ResultSet rs) throws Exception {
         List<JSONObject> rows = new ArrayList<JSONObject>();
-        JSONObject jo = new JSONObject();
+        Object[] p = new Object[]{metadata,rs};
         while(rs.next()){
-            JSONObject row = (JSONObject) JOFunctional.exec("model.FMRS2Row", new Object[]{metadata,rs});
+            JSONObject row = (JSONObject) JOFunctional.exec("model.FMRS2Row", p);
             rows.add(row);
         }
         return rows;

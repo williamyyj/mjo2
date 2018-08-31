@@ -15,7 +15,13 @@ public class JOConfig {
     private String base;
     private String oid;   // object id 
 
-
+    public JOConfig(String base, String id, String scope) {
+        this.oid = id;
+        this.base = base;
+        pcfg = JOCache.load(base, "cfg");
+        String path = pcfg.optString("config_path", base + "/config") + "/" + scope;
+        cfg = JOCache.load(path, oid);
+    }
 
     public JOConfig(String base, String id) {
         init(base, id);
@@ -53,11 +59,10 @@ public class JOConfig {
      */
     private void init_version01(JSONObject pcfg) {
         String scope = pcfg.optString("scope");
-        if("".equals(scope)){
+        if ("".equals(scope)) {
             scope = System.getProperty("scope"); // 測試用或未來系統設定
         }
         String path = pcfg.optString("config_path", base + "/config") + "/" + scope;
-        JOLogger.info("===== config path : " + path);
         cfg = JOCache.load(path, oid);
     }
 

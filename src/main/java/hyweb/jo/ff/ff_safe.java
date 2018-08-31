@@ -18,5 +18,12 @@ public class ff_safe extends JOFFBase<String>  {
     protected String apply(JSONObject row, String id, Object o) {
         return (o==null) ? "" : o.toString().trim();
     }
+
+    @Override
+    public String cast(Object fv) {
+        return (fv==null) ? "" : fv.toString().trim();
+    }
+
+
     
 }

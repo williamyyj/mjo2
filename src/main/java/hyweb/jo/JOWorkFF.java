@@ -1,5 +1,7 @@
 package hyweb.jo;
 
+import hyweb.jo.ff.IJOFF;
+import hyweb.jo.ff.JOFF;
 import hyweb.jo.org.json.JSONObject;
 
 /**
@@ -11,6 +13,11 @@ public class JOWorkFF extends JSONObject {
 
     public JOWorkFF(JOProcObject proc) {
         this.proc = proc;
+    }
+    
+    public Object cast(String id, Object fv){
+       IJOFF ff = (IJOFF) proc.get(JOProcObject.p_request, JOFF.pffId(id), null);
+       return (ff!=null) ? ff.cast(fv) :"";
     }
     
 }

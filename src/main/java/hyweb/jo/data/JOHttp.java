@@ -66,8 +66,8 @@ public class JOHttp {
             boolean redirect = false;
             if (code != HttpURLConnection.HTTP_OK) {
                 if (code == HttpURLConnection.HTTP_MOVED_TEMP
-                        || code == HttpURLConnection.HTTP_MOVED_PERM
-                        || code == HttpURLConnection.HTTP_SEE_OTHER) {
+                  || code == HttpURLConnection.HTTP_MOVED_PERM
+                  || code == HttpURLConnection.HTTP_SEE_OTHER) {
                     redirect = true;
                 }
             }
@@ -88,8 +88,9 @@ public class JOHttp {
                 code = uc.getResponseCode();
                 System.out.println("Redirect to URL : " + newUrl);
             }
-
+            jq.put("$code", code);
             if (code == 200) {
+
                 return IOUtils.loadData(uc.getInputStream());
             } else {
                 return IOUtils.loadData(uc.getErrorStream());
@@ -99,6 +100,13 @@ public class JOHttp {
             uc.disconnect();
         }
 
+    }
+
+    public static JSONObject data(JSONObject jq, String enc) throws Exception {
+        JSONObject ret = new JSONObject(jq);
+        ret.put("$data", bytes(jq, enc));
+        ret.put("$code", jq.opt("$code"));
+        return ret ;
     }
 
     public JSONObject xml(JSONObject jq, String enc) throws Exception {
@@ -115,15 +123,15 @@ public class JOHttp {
 
     public static String text(String url, String enc) throws Exception {
         JSONObject jq = new JSONObject();
-        jq.put("$url", url );
-        return text(jq,enc);
+        jq.put("$url", url);
+        return text(jq, enc);
     }
 
     public static void main(String[] args) throws Exception {
         // JSONObject jq = new JSONObject();
         // jq.put("$url", "http://tw.yahoo.com");
         //jq.put("$url", "http://tw.yahoo.com");
-       // JSONObject jq = JOTools.loadString("{ $url: 'http://pest.baphiq.gov.tw/BAPHIQ/wSite/pos/pos.do' }");
+        // JSONObject jq = JOTools.loadString("{ $url: 'http://pest.baphiq.gov.tw/BAPHIQ/wSite/pos/pos.do' }");
         String content = JOHttp.text("http://readopac.ncl.edu.tw/cgi/ref/refdata?id=A16029960", "UTF-8");
         System.out.println(content);
     }

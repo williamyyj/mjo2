@@ -1,6 +1,7 @@
 package hyweb.jo.fun.model;
 
 import hyweb.jo.JOStatus;
+import hyweb.jo.log.JOLogger;
 import java.sql.ParameterMetaData;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -46,6 +47,7 @@ public class FMPSFill extends JOFunction<JOStatus> {
 
             if (params[i] != null) {
                 Object value = params[i];
+                // JOLogger.debug("===== value : " + value);
                 if (value instanceof Date) {
                     ps.setTimestamp(i + 1, new Timestamp(((Date) value).getTime()));
                 } else if (value instanceof JSONArray) {

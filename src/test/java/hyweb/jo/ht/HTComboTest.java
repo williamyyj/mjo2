@@ -12,12 +12,12 @@ import org.junit.Test;
  */
 public class HTComboTest {
 
-  
+    @Test
     public void barcode() throws Exception {
         JOProcObject proc = new JOProcObject(JOTest.base);
         try {
 
-            String line = "{id:isDelete,rows:['N:N','Y:Y'],class:'combo',ejo:'{meta:barcode,licType:${licType},licNo:${licNo}}'}";
+            String line = "{id:isDelete,rows:[':=== 請選擇 ===','N:N','Y:Y'],class:'combo',ejo:'{meta:barcode,licType:${licType},licNo:${licNo}}'}";
             IHTCell combo = (IHTCell) JOPackages.newInstance("ht.combo", line);
             combo.render(proc);
             String item = combo.display(JOTools.loadJSON("{licType:10,licNo:55555,isDelete:Y}"));
@@ -41,7 +41,7 @@ public class HTComboTest {
         }
     }
 
-      @Test
+
     public void test_combo_table() throws Exception {
         JOProcObject proc = new JOProcObject(JOTest.base);
         try {
@@ -49,6 +49,20 @@ public class HTComboTest {
             IHTCell combo = new HTComboCell("{id:sysId,dp:ht.sysId}");
             combo.render(proc);
             System.out.println(combo.getHtml());
+
+        } finally {
+            proc.release();
+        }
+    }
+       @Test
+        public void test_fagCode() throws Exception {
+        JOProcObject proc = new JOProcObject(JOTest.base);
+        try {
+       
+            IHTCell combo = new HTComboCell("{id:mfaq,dp:ht.faqCode}");
+            combo.render(proc);
+         
+            System.out.println(combo.display("A"));
 
         } finally {
             proc.release();

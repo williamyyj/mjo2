@@ -30,10 +30,11 @@ public class JOConst {
     public final static String ps = "$ps";  // Preparedstatment 
     public final static String conn = "$conn"; // Connection
 
-    public final static String wp = "$wp"; //  ----->  改成 $
-    public final static String wpref = "$wref"; // -----> 改成 　＄＄
+    public final static String wp = "$wp";  // input parameter 
+    public final static String wpref = "$wref"; 
     public final static String fp = "$fp";
-
+    public final static String p = "$";
+    public final static String pp = "$$";
     
 
     public final static String act_add = "add";
@@ -55,6 +56,7 @@ public class JOConst {
         String path =  System.getProperty("catalina.base");
         path = (path!=null) ? path :  System.getProperty("upload") ;
         return  (path==null) ? prefix : path+ prefix ;
+                
     }
     
 }

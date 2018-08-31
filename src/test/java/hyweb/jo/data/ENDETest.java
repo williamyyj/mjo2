@@ -7,6 +7,8 @@ package hyweb.jo.data;
 
 import com.ning.compress.lzf.LZFDecoder;
 import com.ning.compress.lzf.LZFEncoder;
+import hyweb.jo.org.json.JSONObject;
+import hyweb.jo.util.JOTools;
 import org.junit.Test;
 
 /**
@@ -15,12 +17,19 @@ import org.junit.Test;
  */
 public class ENDETest {
     
-     @Test
+
     public void test_ende() throws Exception {
         String test = "中文測試";
         byte[] en = LZFEncoder.encode(test.getBytes("UTF-8"));
         byte[] de = LZFDecoder.decode(en);
         System.out.println(new String(de,"UTF-8"));
+    }
+    
+    @Test
+    public void test_ejo(){
+        String line ="H4sIAAAAAAAAAKtWSikwVLJSMjIwtNA3MAQiJR2QUHyZkhVIzMAQxDWCqzCDqTCCqzDTUXJIzMnJLwcqMgDKJSaXAFmFpalFlUowKUOwXC0Aipu1km4AAAA=";
+        JSONObject ejo = JOTools.decode_jo(line);
+        System.out.println(ejo);
     }
     
 }

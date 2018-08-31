@@ -27,29 +27,28 @@ public class DateUtil {
     }
 
     public static Date to_date(String text) {
-        String sfmt = "yyyyMMdd";
-        String lfmt = "yyyyMMddHHmmss";
-        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
-        if (text.contains("CST ")) {
-            try {
+        try {
+            String sfmt = "yyyyMMdd";
+            String lfmt = "yyyyMMddHHmmss";
+            SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
+            if (text.contains("CST ")) {
                 return sdf.parse(text);
-            } catch (ParseException ex) {
-                ex.printStackTrace();
             }
-        }
 
-        String str = text.replaceAll("[^0-9\\.]+", "");
-        int len = str.length();
-        switch (len) {
-            case 7:
-                return cdate(str);
-            case 8:
-                return to_date(sfmt, str);
-            case 14:
-                return to_date(lfmt, str);
+            String str = text.replaceAll("[^0-9\\.]+", "");
+            int len = str.length();
+            switch (len) {
+                case 7:
+                    return cdate(str);
+                case 8:
+                    return to_date(sfmt, str);
+                case 14:
+                    return to_date(lfmt, str);
+            }
+        } catch (ParseException ex) {
+            JOLogger.info("Can't parser Date : "+text);
         }
         return null;
-
     }
 
     public static Date add_date(Date src, int field, int value) {
@@ -243,7 +242,7 @@ public class DateUtil {
     }
 
     public static String convert(String fmt, Date d) {
-        if (d instanceof Date ) {
+        if (d instanceof Date) {
             SimpleDateFormat sdf = new SimpleDateFormat(fmt);
             return sdf.format(d);
         }
@@ -373,7 +372,7 @@ public class DateUtil {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
             sdf.setLenient(false);
             return sdf.parse(String.valueOf(year));
-        } catch (ParseException ex) {
+        } catch (Exception ex) {
             JOLogger.debug("Can't convet cdate : " + text);
             return null;
         }

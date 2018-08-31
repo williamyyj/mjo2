@@ -20,6 +20,11 @@ public abstract class HTCell implements IHTCell {
         html = new StringBuilder();
     }
 
+    public HTCell(JSONObject cfg) {
+        this.cfg = cfg;
+        html = new StringBuilder();
+    }
+
     public HTCell(String line) {
         cfg = JOCache.loadJSON(line);
         html = new StringBuilder();

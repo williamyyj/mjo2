@@ -1,0 +1,38 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package hyweb.jo.fun.dao;
+
+import hyweb.jo.model.IJOField;
+import hyweb.jo.model.JOWPObject;
+import hyweb.jo.org.json.JSONObject;
+import hyweb.jo.util.JOFunctional;
+import java.util.List;
+
+/**
+ *
+ * @author william
+ */
+public class WPBase {
+
+    protected List<IJOField> getField(JOWPObject wp, String prefix ) {
+        if (wp.act().has(prefix)) {// 使用客制化
+            String line = wp.ref_string(prefix);
+            return wp.metadata().getFields(line);
+        }
+        return wp.metadata().getFields();
+    }
+
+    protected JSONObject getVarPool(JOWPObject wp) {
+        JSONObject jo = new JSONObject();
+        jo.put("$", wp.optJSONObject("$"));
+        jo.put("$$", wp.optJSONObject("$$"));
+        jo.put("$proc", wp.proc());
+        jo.put("$ff", wp.proc().optJSONObject("$ff"));
+        jo.put("$f", JOFunctional.class);
+        jo.put("$this", jo);
+        return jo;
+    }
+}

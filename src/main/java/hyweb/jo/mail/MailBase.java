@@ -1,8 +1,5 @@
 package hyweb.jo.mail;
 
-import hyweb.jo.org.json.JSONObject;
-import hyweb.jo.util.JOCache;
-import java.io.File;
 import java.util.Collection;
 import java.util.Properties;
 import javax.mail.Session;
@@ -57,15 +54,11 @@ public class MailBase {
         return session;
     }
 
-    public void sendMessage(IMailSender sender, IMailBean bean) {
+    public void sendMessage(IMailSender sender, IMailBean bean) throws Exception {
 
         Session session = getMailSession();
         if (sender != null && session != null) {
-            try {
-                sender.process(session, bean);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            sender.process(session, bean);
         }
         session = null;
     }
@@ -94,17 +87,18 @@ public class MailBase {
         session = null;
     }
 
-    public static void main(String[] args) {
-        String base = "D:\\will\\resources\\prj\\baphiq";
-        JSONObject mcfg = JOCache.load(new File(base, "mail.json"));
-        MailCfg cfg = new MailCfg(mcfg.optJSONObject("gmail"));
-        MailBase mb = new MailBase(cfg);
-        IMailSender sender = new SendPlainImpl();
-        IMailBean bean = new MailBean();
-        bean.setCCS("williamyyj@tpe.hyweb.com.tw");
-        bean.setTOS("williamyyj@gmail.com");
-        bean.setSubject("測試");
-        bean.setText("測試信");
-        mb.sendMessage(sender, bean);
+    public static void main(String[] args) throws Exception {
+        /**
+         * String base = "D:\\will\\resources\\prj\\baphiq"; JSONObject mcfg =
+         * JOCache.load(new File(base, "mail.json")); MailCfg cfg = new
+         * MailCfg(mcfg.optJSONObject("gmail")); MailBase mb = new
+         * MailBase(cfg); IMailSender sender = new SendPlainImpl(); IMailBean
+         * bean = new MailBean(); bean.setCCS("williamyyj@tpe.hyweb.com.tw");
+         * bean.setTOS("williamyyj@gmail.com"); bean.setSubject("測試");
+         * bean.setText("測試信"); mb.sendMessage(sender, bean);
+         *
+         *
+         *
+         */
     }
 }

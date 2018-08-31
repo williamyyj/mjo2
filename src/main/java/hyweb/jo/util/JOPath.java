@@ -17,11 +17,9 @@ public class JOPath {
         Object ret = path(jo, jopath);
         if (ret instanceof JSONObject) {
             return (JSONObject) ret;
-        }        
+        }
         return null;
     }
-
-
 
     public static JSONArray asArray(JSONObject jo, String jopath) {
         Object ret = path(jo, jopath);
@@ -33,6 +31,16 @@ public class JOPath {
             return arr;
         }
         return null;
+    }
+
+    public static int asInt(JSONObject jo, String jp) {
+        Object ret = path(jo, jp);
+        return (ret instanceof Number) ? ((Number) ret).intValue() : 0;
+    }
+
+    public static String asString(JSONObject jo, String jp) {
+        Object ret = path(jo, jp);
+        return (ret != null) ? ret.toString() : "";
     }
 
     private static Object opt(Object m, String k) {
@@ -84,6 +92,24 @@ public class JOPath {
             JSONArray ja = new JSONArray();
             set(jo, path, ja);
             ja.put(o);
+        }
+    }
+
+    public static void inc(JSONObject jo, String path, int iv) {
+        Object item = path(jo, path);
+        if (item instanceof Number) {
+            set(jo, path, ((Number) item).intValue() + iv);
+        } else if (item == null) {
+            set(jo, path, iv);
+        }
+    }
+
+    public static void serial(JSONObject jo, String jp, Object o) {
+        Object item = path(jo, jp);
+        if (item != null) {
+            set(jo, jp, item.toString() + "," + o.toString());
+        } else {
+            set(jo, jp, o.toString());
         }
     }
 

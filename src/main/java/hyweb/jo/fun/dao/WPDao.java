@@ -3,7 +3,6 @@ package hyweb.jo.fun.dao;
 import hyweb.jo.JOConst;
 import hyweb.jo.JOProcConst;
 import hyweb.jo.db.DBCmd;
-import hyweb.jo.log.JOLogger;
 import hyweb.jo.model.IJOField;
 import hyweb.jo.model.JOWPObject;
 import hyweb.jo.org.json.JSONObject;
@@ -16,21 +15,20 @@ import java.util.List;
  */
 public class WPDao {
 
-    private boolean hasAutoField(List<IJOField> flds){
-        for(IJOField fld : flds){
-            if("auto".equals(fld.ft()) && "P".equals(fld.ct()) ){
+    private boolean hasAutoField(List<IJOField> flds) {
+        for (IJOField fld : flds) {
+            if ("auto".equals(fld.ft()) && "P".equals(fld.ct())) {
                 return true;
             }
         }
-        return false ;
-    } 
-    
+        return false;
+    }
+
     protected Object proc_dao_cmd(JOWPObject wp, String cmdId, String actId) throws Exception {
         List<IJOField> tbFields = wp.metadata().getFields();
         String cmd = (String) JOFunctional.exec(cmdId, tbFields);
-        if (JOConst.act_add.equals(actId) && !cmd.contains("SCOPE_IDENTITY") && hasAutoField(tbFields)  ) {
-            cmd=cmd+";SELECT SCOPE_IDENTITY()";
-            JOLogger.debug("===== cmd:"+ cmd);
+        if (JOConst.act_add.equals(actId) && !cmd.contains("SCOPE_IDENTITY") && hasAutoField(tbFields)) {
+            cmd = cmd + ";SELECT SCOPE_IDENTITY()";
         }
         JSONObject jq = new JSONObject(wp.p());
         for (IJOField fld : tbFields) {
@@ -47,7 +45,5 @@ public class WPDao {
         JSONObject mq = DBCmd.parser_cmd(wp.proc().db(), jq);
         return wp.proc().db().action(mq);
     }
-    
-    
 
 }

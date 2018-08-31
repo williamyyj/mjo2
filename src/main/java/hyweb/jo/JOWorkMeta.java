@@ -31,13 +31,21 @@ public class JOWorkMeta extends JSONObject {
         }
         return (JOMetadata) md;
     }
-    
-    public JSONObject event(String base, String mId , String eventId){
-        return metadata(base,mId).cfg().optJSONObject(eventId);
+
+    public JSONObject event(String base, String mId, String eventId) {
+        return metadata(base, mId).cfg().optJSONObject(eventId);
     }
 
     public JSONObject event(String mId, String eventId) {
-        return event(proc.base(),mId,eventId);
+        return event(proc.base(), mId, eventId);
     }
-    
+
+    public JSONObject actor(String base, String mId, String eventId) {
+        return metadata(base, mId).cfg().optJSONObject(eventId);
+    }
+
+    public JSONObject actor(String mId, String eventId) {
+        return actor(proc.base(), mId, eventId);
+    }
+
 }

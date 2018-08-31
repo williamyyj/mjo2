@@ -4,6 +4,7 @@ import hyweb.jo.JOProcObject;
 import hyweb.jo.JOTest;
 import org.junit.Test;
 
+
 /**
  * @author william
  */
@@ -42,16 +43,22 @@ public class HTGridTest {
         }
     }
 
+
     public void relaction() throws Exception {
         JOProcObject proc = new JOProcObject(JOTest.base);
         try {
-            String html = new HTGrid("{id:rows, meta:pestcroprelation_t , act:query}").render(proc);
-            System.out.println(html);
+           //String html = new HTGrid("{id:rows, meta:pestcroprelation_t , act:query}").render(proc);
+            //System.out.println(html);
+            String line ="[\"\",\"1234566\",\"xxxxx\"]";
+            line = line.replace("[", "").replace("]", "").replaceAll("\"", "").replaceAll("^\\,", "");
+      
+            System.out.println(line);
         } finally {
             proc.release();
         }
     }
 
+        @Test
     public void lic() throws Exception {
         JOProcObject proc = new JOProcObject(JOTest.base);
         try {

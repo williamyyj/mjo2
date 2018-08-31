@@ -51,4 +51,9 @@ public class regex extends JOFFBase<Boolean> {
         }
     }
 
+    @Override
+    public Boolean cast(Object fv) {
+        return null;
+    }
+
 }

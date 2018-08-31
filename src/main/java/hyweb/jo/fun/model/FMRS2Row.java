@@ -26,6 +26,7 @@ public class FMRS2Row extends JOFunction<JSONObject> {
             String name = meta.optString("name");
             jo.put(name, type.loadRS(rs, name));
         }
+
         return jo;
     }
 

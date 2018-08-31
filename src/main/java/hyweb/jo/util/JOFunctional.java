@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 /**
  * @author william
@@ -26,6 +27,8 @@ public class JOFunctional {
     private static final String prefix = "hyweb.jo.fun";
 
     private static LoadingCache<String, IJOFunction> _cache;
+
+    private static Pattern pNum = Pattern.compile("^[0-9]*$");
 
     private static String key(String id) {
         if (id != null && !id.startsWith(prefix)) {
@@ -159,15 +162,21 @@ public class JOFunctional {
         if (a == null || b == null) {
             return -2;
         }
-       return a.compareTo(b);
+        return a.compareTo(b);
     }
 
     public static Number num(Object v) {
+
         if (v instanceof Number) {
             return (Number) v;
         } else if (v instanceof String) {
             try {
-                return Integer.parseInt((String) v);
+                String text = (String) v;
+                if (pNum.matcher(text).find()) {
+                    return Integer.parseInt((String) v);
+                } else {
+                    return Integer.MIN_VALUE;
+                }
             } catch (Exception e) {
                 return Integer.MIN_VALUE;
             }
@@ -215,9 +224,13 @@ public class JOFunctional {
         }
     }
     
-    public static String replace(Object o , String regex , String replace){
-        
-        return (o!=null) ? ((String)o).replaceAll(regex,replace) :"";
+    public static boolean v_cdate(Object fv){
+        return DateUtil.cdate(fv) != null ;
+    }
+
+    public static String replace(Object o, String regex, String replace) {
+
+        return (o != null) ? ((String) o).replaceAll(regex, replace) : "";
     }
 
 }

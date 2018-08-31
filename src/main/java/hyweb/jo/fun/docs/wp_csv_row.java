@@ -33,15 +33,21 @@ public class wp_csv_row extends wp_csv {
         String split = wp.act().optString("split", ",");
         for (IJOField fld : hFields) {
             Object o = fld.getFieldValue(row);
-            if (o != null) {            
+            if (o != null) {
                 if (o instanceof String) {
                     String text = (String) o;
-                    if(text.contains(",")){
-                        sb.append('"').append(text).append('"');
+                    if (text.contains(",") && text.contains("\"")) {
+                        text = text.replaceAll("\"", "\"\"");
+                        sb.append("\"").append(text).append('"');
+                    } else if (text.contains(",")) {
+                        sb.append("\"").append(text).append('"');
+                    } else if (text.contains("\r") || text.contains("\n")) {
+                        text = text.replaceAll("\"", "\"\"");
+                        sb.append("\"").append(text).append('"');
                     } else {
-                          sb.append(o);
+                        sb.append(text);
                     }
-                }  else {
+                } else {
                     sb.append(o);
                 }
             }

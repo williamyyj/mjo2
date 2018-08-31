@@ -17,6 +17,10 @@ public abstract class JOBatch implements IJOBatch {
     protected String base;
     protected JSONObject cfg;
 
+    public JOBatch(){
+        
+    }
+    
     public JOBatch(String base, String metaId, String cfgId) {
         this.base = base;
         this.cfgId = cfgId;

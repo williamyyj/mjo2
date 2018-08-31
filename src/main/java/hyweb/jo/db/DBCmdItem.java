@@ -29,7 +29,8 @@ public class DBCmdItem {
             op.put("$range", "");  //     fld  betten a and b 
             op.put("$set", "="); // for update 
             op.put("$rm", "");  // 移除最後 ","   
-            op.put("@", "");  //    for table query or const 
+            op.put("$chk", "");  //    checkbox  1,2,3,4,5     1,2,3 
+            op.put("@", "");  //    for table query or const
             op.put("$expr", "$expr");
         }
         return op;
@@ -89,6 +90,8 @@ public class DBCmdItem {
             process_set(dp, sb, mq, row, args);
         } else if ("$rm".equals(name)) {
             process_rm(dp, sb, mq, row, args);
+        } else if ("$chk".equals(name)) {
+            process_checkbox(dp, sb, mq, row, args);
         }
     }
 
@@ -114,9 +117,6 @@ public class DBCmdItem {
     }
 
     private static Object get_value(IDB dp, JSONObject row, String name, String dt, String alias) {
-        //System.out.println("===== debug row " + row);
-        //System.out.println("===== debug name " + name);
-        //System.out.println("===== debug alias " + alias);
         IJOType<?> type = dp.types().type(dt);
         Object value = null;
         if (row.has(name)) {
@@ -125,7 +125,7 @@ public class DBCmdItem {
         if (value == null && alias != null && row.has(alias)) {
             value = type.check(row.opt(alias));
         }
-        
+
         return value;
     }
 
@@ -193,6 +193,25 @@ public class DBCmdItem {
         Object v2 = get_value(dp, row, field + "_2", dt, alias + "_2");
         set_field(fields, dp, row, field + "_2", dt, alias + "_2", v2);
         sb.append(" and").append(field).append(" beteen ? and ?");
+    }
+
+    private static void process_checkbox(IDB dp, StringBuffer sb, JSONObject model, JSONObject row, String[] args) {
+        String op_name = args[0];
+        String field = args[1];
+        String dt = args[2];
+        String alias = (args.length > 3) ? args[3] : null;
+        JSONArray fields = model.optJSONArray(param_fields);
+        Object v = get_value(dp, row, field, dt, alias);
+
+        if (v instanceof String) {
+            // 只會是字串
+            String text = ((String) v).replaceAll("[\\[|\\]\"]", "");
+            String[] items = text.split(",");
+            for (String item : items) {
+                set_field(fields, dp, row, field, dt, alias, "%" + item + "%");
+                sb.append(" and ").append(field).append(" like ").append(" ?");
+            }
+        }
     }
 
     private static void process_set(IDB dp, StringBuffer sb, JSONObject model, JSONObject row, String[] args) {

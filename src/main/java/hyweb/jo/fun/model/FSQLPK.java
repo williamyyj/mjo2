@@ -21,25 +21,19 @@ public class FSQLPK  extends FSQLBase {
         }
         StringBuilder sql = new StringBuilder();
         sql.append("select * from ").append(tb.name());
-        sql.append("\nwhere");
+        sql.append("\nwhere 1=1 ");
         proc_cols_cond(sql, fields);
         return sql.toString();
     }
     
     private void proc_cols_cond(StringBuilder sql, List<IJOField> fields) {
-        int idx = 0;
-        for (IJOField fld : fields) {
-            if ("P".equals(fld.ct())) {
-                sql.append(' ').append(fld.name())
-                        .append("=${").append(fld.name())
+        for (IJOField fld : fields ) {
+            if ("P".equals(fld.ct()) || "U".equals(fld.ct())) {              
+                sql.append("${=,").append(fld.name())
                         .append(',').append(fld.dt())
                         .append(',').append(fld.id())
-                        .append("} and");
-                idx++;
+                        .append("}");
             }
-        }
-        if (idx > 0) {
-            sql.setLength(sql.length() - 3); // remvoe and 
         }
     }
 }

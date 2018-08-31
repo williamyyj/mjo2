@@ -31,4 +31,9 @@ public class mvel<E> extends JOFFBase<E> {
         row.remove("$id");
         return ret ;
     }
+
+    @Override
+    public E cast(Object fv) {
+        return null;
+    }
 }

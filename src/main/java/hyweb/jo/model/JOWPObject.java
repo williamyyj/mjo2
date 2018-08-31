@@ -71,6 +71,9 @@ public class JOWPObject extends JSONObject {
             if (act.isEmpty()) {
                 JOLogger.info("Can't find " + metadata.cfg().optString("id") + "." + actId);
             }
+        } else {
+            act = new JSONObject();
+            JOLogger.info("Using empty actId");
         }
     }
 
@@ -204,6 +207,5 @@ public class JOWPObject extends JSONObject {
     public static JOWPObject newInstance(JOWPObject wp, String actId, JSONObject params, JSONObject ref) {
         return new JOWPObject(wp.proc, wp.metadata, actId, params, ref);
     }
-
 
 }

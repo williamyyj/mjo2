@@ -5,7 +5,6 @@ import hyweb.jo.JOProcObject;
 import hyweb.jo.org.json.JSONObject;
 import hyweb.jo.util.JOPath;
 
-
 /**
  *
  * @author william
@@ -16,10 +15,18 @@ public abstract class JOFFBase<E> implements IJOFF<E>, IJOInit<JSONObject> {
     protected JSONObject cfg;
     protected String ffId;
     protected String alias;
-    protected String pattern ;
+    protected String pattern;
 
     public JOFFBase() {
 
+    }
+
+    public JOFFBase(JSONObject cfg) {
+        try {
+            __init__(cfg);
+        } catch (Exception e) {
+
+        }
     }
 
     public abstract void __init_proc(JOProcObject proc);
@@ -34,11 +41,11 @@ public abstract class JOFFBase<E> implements IJOFF<E>, IJOInit<JSONObject> {
         this.cfg = cfg;
         this.ffId = cfg.optString("$id");
         String[] items = ffId.split("_");
-        this.alias = (items.length > 1) ? items[1] : ffId;
+        this.alias = cfg.has("$alias") ? cfg.optString("$alias") : (items.length > 1) ? items[1] : ffId;
         this.pattern = cfg.optString("pattern");
     }
 
-    protected Object getRowValue(JSONObject row, Object dv)  {
+    protected Object getRowValue(JSONObject row, Object dv) {
         String name = (String) JOPath.path(cfg, "$fld:name");
         Object ret = null;
         if (row.has(ffId)) {
@@ -61,26 +68,29 @@ public abstract class JOFFBase<E> implements IJOFF<E>, IJOInit<JSONObject> {
     protected void setText(JSONObject row, Object v) throws Exception {
         set("$", "Text", row, v);
     }
-    
-  
+
     @Override
     public E apply(JSONObject row) {
         Object o = this.getRowValue(row, null);
         return apply(row, ffId, o);
     }
 
-
     @Override
     public E as(JSONObject row, String id) {
         Object o = row.opt(id);
-        return apply(row,id,o);
+        return apply(row, id, o);
     }
-    
+
     @Override
-    public JSONObject cfg(){
+    public JSONObject cfg() {
         return this.cfg;
     }
-    
+
     protected abstract E apply(JSONObject row, String id, Object o);
-    
+
+    @Override
+    public String getContent() {
+        return "";
+    }
+
 }

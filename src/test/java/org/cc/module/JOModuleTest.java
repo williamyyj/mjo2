@@ -12,7 +12,7 @@ import org.junit.Test;
  */
 public class JOModuleTest  {
 
-    @Test
+
     public void test_module() throws Exception {
         JOModule m = new JOModule(JOTest.project, "baphiq", "db_schema");
         JSONObject row = new JSONObject();

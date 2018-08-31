@@ -20,6 +20,9 @@ public class twid implements IJOFunction<Boolean, String> {
         if (line != null && line.length() == 10) {
             char[] id = line.toCharArray();
             id[0] = Character.toUpperCase(id[0]);
+            if(id[0]<'A' || id[0]>'Z'){
+                return false ;
+            }
             int a = p[id[0] - 'A'];
             int sum = (a % 10) * 9 + a / 10;
             a = 0;

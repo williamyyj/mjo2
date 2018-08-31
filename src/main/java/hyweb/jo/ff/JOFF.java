@@ -7,7 +7,10 @@ import hyweb.jo.model.IJOField;
 import hyweb.jo.model.JOMetadata;
 import hyweb.jo.org.json.JSONArray;
 import hyweb.jo.org.json.JSONObject;
+import hyweb.jo.util.JOCache;
+import hyweb.jo.util.JOPath;
 import hyweb.jo.util.JOUtils;
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,10 +43,32 @@ public class JOFF {
             Object o = cls.newInstance();
             ((IJOInit) o).__init__(cfg);
             ((IJOFF) o).init(proc);
+            JOPath.set(proc, "$ff:" + cfg.optString("$id"), o);
             return (IJOFF) o;
         } catch (Exception ex) {
             ex.printStackTrace();
             JOLogger.error("Can't find " + cfg);
+        }
+        return null;
+    }
+
+    public static IJOFF create(JOProcObject proc, String id) {
+        return create(proc, JOCache.load(new File(proc.base() + "/ff", id + ".json")));
+    }
+
+    public static IJOFF create(JOProcObject proc, JSONObject cfg) {
+        try {
+            String classId = pkg + "." + cfg.optString("$ff");
+            Class cls = Class.forName(classId);
+            Object o = cls.newInstance();
+            ((IJOInit) o).__init__(cfg);
+            ((IJOFF) o).init(proc);
+            proc.set(JOProcObject.p_request, pffId(cfg.optString("$id")), o);
+            JOPath.set(proc, "$ff:" + cfg.optString("$id"), o);
+            return (IJOFF) o;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOLogger.error("Can't  create " + cfg);
         }
         return null;
     }
@@ -63,22 +88,21 @@ public class JOFF {
         }
         return ff;
     }
-    
-    public static Map<String,IJOFF> init_ff(JOProcObject proc, JOMetadata md){
-        Map<String,IJOFF> m = new HashMap<String,IJOFF>();
+
+    public static Map<String, IJOFF> init_ff(JOProcObject proc, JOMetadata md) {
+        Map<String, IJOFF> m = new HashMap<String, IJOFF>();
         JSONArray ja = md.cfg().optJSONArray("$ff");
-        if(ja!=null){
-            for(int i=0; i<ja.length();i++){
-                IJOFF ff = ff_create(proc,md,ja.opt(i));
+        if (ja != null) {
+            for (int i = 0; i < ja.length(); i++) {
+                IJOFF ff = ff_create(proc, md, ja.opt(i));
                 m.put(ff.cfg().optString("$id"), ff);
             }
         }
         return m;
     }
-    
-    public static String dv(Object fv, String dv){
-        return (fv!=null) ? fv.toString().trim() : dv ;
+
+    public static String dv(Object fv, String dv) {
+        return (fv != null) ? fv.toString().trim() : dv;
     }
-  
 
 }

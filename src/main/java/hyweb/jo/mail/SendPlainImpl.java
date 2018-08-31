@@ -21,7 +21,6 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
-
 public class SendPlainImpl implements IMailSender, ConnectionListener, TransportListener {
 
     private IMailBean mb;
@@ -38,43 +37,41 @@ public class SendPlainImpl implements IMailSender, ConnectionListener, Transport
 
     public void proc_before(DB db, JSONObject mlog) throws Exception {
         /**
-        mb = new MailBean();
-        mb.setFrom(mlog.v("LogFrom").toS());
-        mb.setTOS(mlog.v("LogTos").toS());
-        StringBuffer sb = new StringBuffer();
-        sb.append("<!--").append(mlog.v("batchId").toS()).
-                append(':').append(mlog.v("LogId")).append("-->\r\n");
-        sb.append(mlog.v("LogContent"));
-        mb.setText(sb.toString());
-        mb.setSubject(mlog.v("LogSubject").toS());
-        check_error(db, mlog);
-        **/
+         * mb = new MailBean(); mb.setFrom(mlog.v("LogFrom").toS());
+         * mb.setTOS(mlog.v("LogTos").toS()); StringBuffer sb = new
+         * StringBuffer(); * sb.append("<!--").append(mlog.v("batchId").toS()).
+         * append(':').append(mlog.v("LogId")).append("-->\r\n");
+         * sb.append(mlog.v("LogContent")); mb.setText(sb.toString());
+         * mb.setSubject(mlog.v("LogSubject").toS()); check_error(db, mlog);
+         *
+         */
     }
 
+    @Override
     public void proc_after(DB db, JSONObject mlog) throws Exception {
         /**
-        check_error(db, mlog);
-        mlog.v("LogStatus", "S");
-        mlog.v("logrt", new Date());
-        db.update(mlog);
-        **/
+         * check_error(db, mlog); mlog.v("LogStatus", "S"); mlog.v("logrt", new
+         * Date()); db.update(mlog);
+         *
+         */
     }
 
-
+    @Override
     public void process(DB db, Session session, JSONObject mlog) throws Exception {
         proc_before(db, mlog);
         process(session, mb);
         proc_after(db, mlog);
     }
 
+    @Override
     public void process(Session session, IMailBean bean) throws Exception {
         if (session == null || bean == null) {
             return;
         }
         MimeMessage msg = new MimeMessage(session);
         msg.setFrom(bean.from());
-		// If you wish to add all addresses at once you should use setRecipients 
-		// or addRecipients and provide it with an array of addresses. 
+        // If you wish to add all addresses at once you should use setRecipients 
+        // or addRecipients and provide it with an array of addresses. 
         msg.addRecipients(Message.RecipientType.TO, bean.tos());
         msg.addRecipients(Message.RecipientType.CC, bean.ccs());
         msg.addRecipients(Message.RecipientType.BCC, bean.bccs());
@@ -105,7 +102,7 @@ public class SendPlainImpl implements IMailSender, ConnectionListener, Transport
         mp.addBodyPart(part);
     }
 
-    public void process_transport(Session session, Message msg, IMailBean bean) {
+    public void process_transport(Session session, Message msg, IMailBean bean) throws Exception {
         Transport trans = null;
         try {
             trans = session.getTransport();
@@ -113,57 +110,15 @@ public class SendPlainImpl implements IMailSender, ConnectionListener, Transport
             trans.addTransportListener(this);
             trans.connect();
             Address[] addrs = msg.getAllRecipients();
-            for(Address addr : addrs ){
+            for (Address addr : addrs) {
                 System.out.println(addr);
             }
             trans.sendMessage(msg, msg.getAllRecipients());
-            trans.close();
-        } catch (NoSuchProviderException e) {
-            e.printStackTrace();
-        } catch (MessagingException e) {
-            e.printStackTrace();
-//			try {
-//				Thread.sleep(500);
-//			} catch (InterruptedException e1) {
-//				e1.printStackTrace();
-//			}
-//		      Exception ex = e;
-//		      do {
-//		        if (ex instanceof SendFailedException) {
-//		          SendFailedException sfex = (SendFailedException) ex;
-//		          Address[] invalid = sfex.getInvalidAddresses();
-//		          if (invalid != null) {
-//		            System.out.println("    ** Invalid Addresses");
-//		            if (invalid != null) {
-//		              for (int i = 0; i < invalid.length; i++)
-//		                System.out.println("         " + invalid[i]);
-//		            }
-//		          }
-//		          Address[] validUnsent = sfex.getValidUnsentAddresses();
-//		          if (validUnsent != null) {
-//		            System.out.println("    ** ValidUnsent Addresses");
-//		            if (validUnsent != null) {
-//		              for (int i = 0; i < validUnsent.length; i++)
-//		                System.out.println("         " + validUnsent[i]);
-//		            }
-//		          }
-//		          Address[] validSent = sfex.getValidSentAddresses();
-//		          if (validSent != null) {
-//		            System.out.println("    ** ValidSent Addresses");
-//		            if (validSent != null) {
-//		              for (int i = 0; i < validSent.length; i++)
-//		                System.out.println("         " + validSent[i]);
-//		            }
-//		          }
-//		        }
-//		        System.out.println();
-//		        if (ex instanceof MessagingException)
-//		          ex = ((MessagingException) ex).getNextException();
-//		        else
-//		          ex = null;
-//		      } while (ex != null);		
+        } finally {
+            if (trans != null) {
+                trans.close();
+            }
         }
-
     }
 
     @Override
@@ -223,5 +178,4 @@ public class SendPlainImpl implements IMailSender, ConnectionListener, Transport
     public void opened(ConnectionEvent arg0) {
     }
 
-  
 }

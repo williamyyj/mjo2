@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package hyweb.jo.fun;
+package hyweb.jo.model.md;
 
 /**
  *
  * @author william
  */
-public class wp_meta {
+public class JOMDUtils {
     
 }

@@ -1,16 +1,20 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package hyweb.jo.util;
+
+import org.junit.Test;
 
 /**
  *
  * @author william
  */
 public class JOFunctionalTest {
-    public static void main(String[] args){
-        System.out.println(JOFunctional.sha1("1111"));
+
+    @Test
+    public void test_num(){
+        String text ="５";
+        Number num = JOFunctional.num(text);
+        System.out.println(text.equals("5"));
+        System.out.println(5+":::"+num);
+        System.out.println(Integer.parseInt(text));
     }
+ 
 }

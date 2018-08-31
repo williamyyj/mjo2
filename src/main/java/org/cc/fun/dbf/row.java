@@ -8,9 +8,6 @@ import java.sql.ResultSet;
 import java.util.List;
 import org.cc.module.ICCDBF;
 import static org.cc.fun.dbf.DBFBase.__release;
-import static org.cc.fun.dbf.DBFBase.__release;
-import static org.cc.fun.dbf.DBFBase.__release;
-import static org.cc.fun.dbf.DBFBase.__release;
 
 /**
  *

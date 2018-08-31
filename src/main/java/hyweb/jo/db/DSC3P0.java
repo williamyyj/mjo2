@@ -31,8 +31,8 @@ public class DSC3P0 implements IJODataSource<ComboPooledDataSource> {
                 ds.setPassword(cfg.optString("password"));
                 ds.setDriverClass(cfg.optString("driver"));
                 ds.setJdbcUrl(cfg.optString("url"));
-                ds.setMaxPoolSize(cfg.optInt("cp30.maxPoolSize", 35));
-                ds.setMinPoolSize(cfg.optInt("cp30.minPoolSize", 10));
+                ds.setMaxPoolSize(cfg.optInt("cp30.maxPoolSize", 500));
+                ds.setMinPoolSize(cfg.optInt("cp30.minPoolSize", 50));
                 ds.setAcquireIncrement(cfg.optInt("cp30.acquireIncrement", 0));
                 ds.setMaxIdleTime(cfg.optInt("cp30.maxIdleTime", 300));
                 ds.setMaxStatements(cfg.optInt("cp30.maxStatements", 0));

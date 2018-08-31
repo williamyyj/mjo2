@@ -26,4 +26,5 @@ public abstract class wp_base<E> implements IJOFunction<E,JOWPObject> {
             eval_row(proc,eFields,row,ref);
         }
     }
+    
 }

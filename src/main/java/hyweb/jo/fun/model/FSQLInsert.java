@@ -17,7 +17,6 @@ public class FSQLInsert extends FSQLBase {
         sql.append("\r\n values ");
         proc_cols_value(sql, fields);
         proc_scope(sql,fields.get(1));
-        System.out.println(sql);
         return sql.toString();
     }
 

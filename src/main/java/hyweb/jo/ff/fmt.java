@@ -7,14 +7,14 @@ package hyweb.jo.ff;
 
 import hyweb.jo.JOProcObject;
 import hyweb.jo.org.json.JSONObject;
+import hyweb.jo.util.DateUtil;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-
 /**
- *  line   $id:df1,$ff:fmt,$pattern:'yyyy/MM/dd HH:mm:ss'  
- *  json  { "$id":"df1" ..... }  
- *   $ff(df , $ , 'mem_ct') 
+ * line $id:df1,$ff:fmt,$pattern:'yyyy/MM/dd HH:mm:ss' json { "$id":"df1" .....
+ * } $ff(df , $ , 'mem_ct')
+ *
  * @author william
  */
 public class fmt extends JOFFBase<String> {
@@ -28,8 +28,16 @@ public class fmt extends JOFFBase<String> {
 
     @Override
     protected String apply(JSONObject row, String id, Object fv) {
-        if(fv instanceof Date){
-            return sdf.format((Date)fv);
+        return cast(fv);
+    }
+
+    @Override
+    public String cast(Object fv) {
+        if (fv instanceof Date) {
+            return sdf.format((Date) fv);
+        } else if (fv instanceof String){
+            Date d  = DateUtil.to_date(((String)fv).trim());
+            return (d!=null) ? sdf.format(d) : "";            
         }
         return "";
     }

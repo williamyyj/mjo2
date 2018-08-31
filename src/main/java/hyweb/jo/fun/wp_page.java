@@ -42,9 +42,9 @@ public class wp_page implements IJOFunction<List<JSONObject>, JOWPObject> {
         JOLogger.debug("===== mq : " + mq.toString(4));
         proc.set(JOProcObject.p_request, "ejo", JOTools.encode(op.toString())); // 查詢參數
         List<JSONObject> data = rows(proc.db(), mq, jq, numPage, page, orderby);
-        JOFunctional.exec("wp_after", wp);
         String rid = wp.act().optString("rid", "$data");
         proc.put(rid, data);
+        JOFunctional.exec("wp_after", wp);
         return data;
     }
 

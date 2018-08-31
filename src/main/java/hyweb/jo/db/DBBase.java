@@ -22,7 +22,7 @@ import java.util.Set;
  * @author william
  * @param <M>
  */
-public abstract class DBBase<M> implements IDB<M> {
+public abstract class DBBase<M> implements IDB<M>, DBMBean {
 
     protected static int connCount;
 
@@ -226,6 +226,28 @@ public abstract class DBBase<M> implements IDB<M> {
 
     @Override
     public long execute(String sql, Object... params) throws Exception {
+        //  多個Statement 一般是回傳mssql 的 identify 
+        PreparedStatement ps = connection().prepareStatement(sql);
+        ResultSet rs = null;
+        try {
+            JOFunctional.exec2(cfg.optString("@mfill"), ps, params);
+            ps.execute();
+            long ret = 0;
+            if (ps.getMoreResults()) {
+                rs = ps.getResultSet();
+                if (rs != null && rs.next()) {
+                    ret = rs.getLong(1);
+                }
+            }
+            return ret;
+        } finally {
+            __release(rs);
+            __release(ps);
+        }
+    }
+
+    public long executeUpdate(String sql, Object... params) throws Exception {
+        //  理論上不該使用多個Statement
         PreparedStatement ps = connection().prepareStatement(sql);
         ResultSet rs = null;
         try {
@@ -301,6 +323,11 @@ public abstract class DBBase<M> implements IDB<M> {
 
     @Override
     public String status() {
+        return "{  \"conn\":" + connCount + " \"mds\":" + mds + "\"}";
+    }
+
+    @Override
+    public String getDbStatus() {
         return "{  \"conn\":" + connCount + " \"mds\":" + mds + "\"}";
     }
 

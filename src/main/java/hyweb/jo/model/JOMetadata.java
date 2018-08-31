@@ -34,7 +34,8 @@ public class JOMetadata extends HashMap<String, IJOField> {
             this.base = base;
             this.use_path = path;
             //System.out.println(base + use_path + "/" + id);
-            this.cfg = new JSONObject(JOCache.load(base + use_path, id));
+            String pid = id.replace(".", "/");
+            this.cfg = new JSONObject(JOCache.load(base + use_path, pid));
             init_tb_field();
             init_import();
             init_imp_meta(cfg.optString("@imp_meta"));

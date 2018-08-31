@@ -233,7 +233,9 @@ public class JOBaseField<E> implements IJOField<E> {
      */
     @Override
     public String getFieldText(JSONObject row) {
-        return row.optString(getFieldName());
+        // return row.optString(getFieleName())'; 
+        Object o = this.getFieldValue(row);
+        return (o!=null) ? o.toString() : "";
     }
 
     @Override

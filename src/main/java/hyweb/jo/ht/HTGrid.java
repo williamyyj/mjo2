@@ -12,7 +12,8 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- *    using   {id:rows, meta:barcode_t , act:query}
+ * using {id:rows, meta:barcode_t , act:query}
+ *
  * @author william
  */
 public class HTGrid extends HTCell {
@@ -23,7 +24,7 @@ public class HTGrid extends HTCell {
 
     @Override
     public String render(JOProcObject proc) {
-       html = new StringBuilder();
+        html = new StringBuilder();
         try {
             JOLogger.debug(cfg);
             JOWPObject wp = new JOWPObject(proc, cfg.optString("meta"), cfg.optString("act"));
@@ -49,8 +50,8 @@ public class HTGrid extends HTCell {
     }
 
     private void render_grid(StringBuilder sb, JOWPObject wp, List<JSONObject> rows) {
-         List<IJOField> grid = null;
-        if(wp.act().has("$grid")){
+        List<IJOField> grid = null;
+        if (wp.act().has("$grid")) {
             grid = wp.metadata().getFields(wp.act().optString("$grid"));
         } else {
             grid = wp.mdFields();
@@ -67,10 +68,15 @@ public class HTGrid extends HTCell {
         for (IJOField fld : flds) {
             if (!"table".equals(fld.dt())) {
                 sb.append("\r\n<th>");
-                sb.append(fld.name());
+                if (fld.cfg().has("args")) {
+                    sb.append(fld.cfg().optString("args"));
+                } else {
+                    sb.append(fld.name());
+                }
                 sb.append("</th>");
                 init_ht_cell(proc, fld);
             }
+            System.out.println(fld.cfg());
         }
         sb.append("\r\n</tr>\r\n");
     }
@@ -84,6 +90,7 @@ public class HTGrid extends HTCell {
                     IHTCell cell = (IHTCell) fld.cfg().opt("cell");
                     sb.append("\r\n").append(cell.display(row)).append("\r\n");
                 } else {
+
                     sb.append(fld.getFieldText(row));
                 }
                 sb.append("</td>");
@@ -96,7 +103,8 @@ public class HTGrid extends HTCell {
         if (fld.cfg().has("ht")) {
             try {
                 JSONObject cfg = JOTools.loadJSON(fld.cfg().optString("ht"));
-                IHTCell combo = (IHTCell) JOPackages.newInstance("ht.combo", cfg);
+
+                IHTCell combo = (IHTCell) JOPackages.newInstance(cfg.optString("dt"), cfg);
                 combo.render(proc);
                 fld.cfg().put("cell", combo);
             } catch (IOException ex) {

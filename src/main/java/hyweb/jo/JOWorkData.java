@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package hyweb.jo;
 
 import hyweb.jo.org.json.JSONObject;
@@ -18,4 +13,5 @@ public class JOWorkData extends JSONObject {
     public JOWorkData(JOProcObject proc){
         this.proc = proc ;
     }
+    
 }
