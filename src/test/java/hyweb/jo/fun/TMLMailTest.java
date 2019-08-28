@@ -15,7 +15,7 @@ import org.junit.Test;
  *
  * @author william
  */
-public class tml_mail extends JOTest {
+public class TMLMailTest extends JOTest {
 
     public void mail() throws Exception {
         JOProcObject proc = new JOProcObject(base);
@@ -34,7 +34,6 @@ public class tml_mail extends JOTest {
         }
     }
 
-    @Test
     public void test_tml_sendmail() throws Exception {
         JOProcObject proc = new JOProcObject(base);
         JSONObject p = JOTools.loadJSON("{\"fbname\":\"大頭頁\",\"fbkey\":\"F\",\"VerifyCode\":\"2372\",\"fbphone\":\"12345678\",\"fbtitle\":\"大頭頁測試\",\"fbcontext\":\"大頭頁測試（內容）\",\"fbtype\":\"1\",\"act\":\"add\",\"fbct\":\"Mon Dec 25 11:14:14 CST 2017\",\"fbemail\":\"williamyyj@gmail.com\"}");

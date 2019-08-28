@@ -1,2 +1,11 @@
 /logs/
 /target/
+/nbproject/
+/.svn
+/.settings
+/nb-configuration.xml
+/logs
+/nbproject
+/target
+/.classpath
+/.project
