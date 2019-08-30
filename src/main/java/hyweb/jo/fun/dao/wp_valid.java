@@ -22,7 +22,6 @@ public class wp_valid extends WPBase implements IJOFunction<JSONObject, JOWPObje
         valid.put("$ret", true);
         for (IJOField fld : flds) {
             try {
-
                 if (!proc_field_valid(fld, pool)) {
                     JOPath.serial(valid, fld.getFieldName()+ "_msg",  fld.cfg().opt("msg"));
                     valid.put("$ret", false);
@@ -39,7 +38,7 @@ public class wp_valid extends WPBase implements IJOFunction<JSONObject, JOWPObje
 
     private Boolean proc_field_valid(IJOField fld, JSONObject pool) throws Exception {
         Object fv = fld.getFieldValue(pool.optJSONObject("$")); // field value 
-        pool.put("$fv", fv);
+        pool.put("$fv", fv != null ? fv : JSONObject.NULL);
         pool.put("$fld", fld.cfg());
         try {
             String valid = fld.cfg().optString("valid");

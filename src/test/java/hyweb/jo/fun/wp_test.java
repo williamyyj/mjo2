@@ -83,7 +83,6 @@ public class wp_test extends JOTest {
         }
     }
 
-
     public void test_nvarchar() throws Exception {
         JOProcObject proc = new JOProcObject(base);
         String line = "{\"dataid\":\"6983\",\"cid\":\"\",\"cName\":\"國豐農業資材行\",\"cAddr\":\"花蓮縣玉里鎮興國路一段193號\",\"city\":\"花蓮縣\",\"zip\":\"O\",\"uName\":\"王𤦌蕾\",\"oldId\":\"O00073\",\"newId\":\"O00073\",\"comptel\":\"038881330\",\"updateDt\":\"20161220\",\"status\":\"1\",\"Trandatb\":\"\",\"SellType\":\"D\"}";
@@ -98,21 +97,36 @@ public class wp_test extends JOTest {
             proc.release();
         }
     }
-    
-    @Test
-      public void test_queryCheckbox() throws Exception {
+
+    public void test_queryCheckbox() throws Exception {
         JOProcObject proc = new JOProcObject(base);
         String line = "{level:[1,2]}";
         JSONObject row = JOTools.loadString(line);
         System.out.println(row.toString(4));
         try {
-            JOWPObject wp = new JOWPObject(proc, "psSprayPerson", "query",row,null);
-            
+            JOWPObject wp = new JOWPObject(proc, "psSprayPerson", "query", row, null);
+
             List<JSONObject> rows = (List<JSONObject>) JOFunctional.exec("wp_page", wp);
-            if(rows!=null){
-                for(JSONObject crow : rows){
+            if (rows != null) {
+                for (JSONObject crow : rows) {
                     System.out.println(crow);
                 }
+            }
+        } finally {
+            proc.release();
+        }
+    }
+
+    @Test
+    public void test_wp_rows_orderby() throws Exception {
+        JOProcObject proc = new JOProcObject(base);
+        String ejo = "H4sIAAAAAAAAAKtWUkn1SE1MUbKKVjIyMLR8unOLgcmzOR1KOnCuKSrXDJVrDuLG6gCN8UvMTYUZY2ACVWJgCmOYwRjmIOUOhc75eUBblaIhymNtDRTyixQgPFMUnhkKzxzEUwIZ4JaZmpNSjGSEDky3DkyjDkwPUENicglQbWFpalElkJdSYAjkgWT1DUz0DQzBQkZwIXOIUHFJflFqSWUB0F9Kjkq1ANui22stAQAA";
+        JSONObject p = JOTools.decode_jo(ejo);
+        try {
+            JOWPObject wp = new JOWPObject(proc, "rpt_pupload", "query",p,null);
+            List<JSONObject> rows = (List<JSONObject>) JOFunctional.exec("wp_rows", wp);
+            for (JSONObject row : rows) {
+                System.out.println(row);
             }
         } finally {
             proc.release();

@@ -1,7 +1,6 @@
 package hyweb.jo.fun.model;
 
 import hyweb.jo.JOStatus;
-import hyweb.jo.log.JOLogger;
 import java.sql.ParameterMetaData;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -13,7 +12,7 @@ import hyweb.jo.org.json.JSONObject;
 import hyweb.jo.util.JOFunction;
 
 /**
- *
+ * 很重要不要隋更動
  * @author william
  */
 public class FMPSFill extends JOFunction<JOStatus> {

@@ -68,7 +68,7 @@ public class JOActor {
         String jp = part.length > 1 ? part[1] : "";
         String dataId = part.length > 2 ? part[2] : "$";
         IJOFF ff = (IJOFF) JOPath.path(proc, "$ff:" + ffId);
-        JOLogger.debug(ffId + ":::" + ff);
+        JOLogger.debug(ffId + ":::" + ff+":::"+dataId);
         if (ff != null) {
             Object data = JOPath.path(proc, dataId);
             if (data == null && dataId.equals("$")) { // 

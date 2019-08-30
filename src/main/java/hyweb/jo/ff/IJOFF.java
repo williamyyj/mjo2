@@ -34,6 +34,8 @@ public interface IJOFF<R> {
      * @return 
      */
     public R cast(Object fv);
+    
+    public R cast(Object fv,R dv);
 
     public String getContent();
     

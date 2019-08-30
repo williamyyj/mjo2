@@ -5,9 +5,11 @@
  */
 package hyweb.jo.util;
 
+import hyweb.jo.org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.zip.GZIPOutputStream;
+import org.junit.Test;
 
 /**
  *
@@ -38,7 +40,16 @@ public class JOToolsTest {
         System.out.println();
 
         String decode = JOTools.decode("H4sIAAAAAAAA_8tIzcnJVyjPL8pJUXi6Yefz9qlP121TBADF1ouzFgAAAA==");
-         System.out.println(decode);
+        System.out.println(decode);
 
     }
+
+    @Test
+    public void test_decode() throws Exception {
+        //String line = "H4sIAAAAAAAAAKtWUskvSkktSqpUslJKLkpNLElNAWKFlNTiZCUdpZzM5NS84lSgXJilgYGBEVAoH8gxBNLFQNoARJcklpRCOLUAE5RlD04AAAA=";
+        String line ="H4sIAAAAAAAAAKtWUklJLElUsoqO1VFSyS8tUbJSKsovL1aqBQC2u0FdGgAAAA==";
+        JSONObject jo = JOTools.decode_jo(line);
+        System.out.println(jo);
+    }
+
 }

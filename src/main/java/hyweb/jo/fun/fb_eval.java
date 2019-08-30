@@ -25,7 +25,7 @@ public class fb_eval implements IJOFunction<Boolean, Object[]> {
         List<IJOField> eFields = (List<IJOField>) p[1];
         JSONObject row = (JSONObject) p[2];
         JSONObject ref = (JSONObject) ((p.length > 3) ? p[3] : new JSONObject());
-        return exec(proc,eFields,row,ref);
+        return exec(proc, eFields, row, ref);
     }
 
     public Boolean exec(JOProcObject proc, List<IJOField> eFields, JSONObject row, JSONObject ref) throws Exception {

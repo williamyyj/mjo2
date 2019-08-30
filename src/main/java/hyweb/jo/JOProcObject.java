@@ -28,7 +28,6 @@ public class JOProcObject extends JSONObject {
     private JOWorkMeta wMeta;
     private JOWorkData wData; // 資料 in -->  out 
     private JOWorkStatus wStatus;  // 異常及物件狀態
-    private JOWorkFF wFF;
 
     public JOProcObject(String base) {
         put(JOProcConst.base, base);
@@ -38,7 +37,15 @@ public class JOProcObject extends JSONObject {
         }
     }
 
- 
+    /**
+     *   支援多個Database
+     * @param base
+     * @param oId 
+     */
+    public JOProcObject(String base, String oId) {
+        this(base);
+          put(JOProcConst.db, new DB(base(),null,oId));
+    }
 
     public String base() {
         return optString(JOProcConst.base);
@@ -108,7 +115,7 @@ public class JOProcObject extends JSONObject {
     /**
      * @param mid
      * @return
-     * @deprecated 請改用 wMeta() ( JOWorkMeta） 
+     * @deprecated 請改用 wMeta() ( JOWorkMeta）
      */
     @Deprecated
     public JOMetadata metadata(String mid) {
@@ -196,6 +203,13 @@ public class JOProcObject extends JSONObject {
     public Object ff(String id, Object fv) {
         IJOFF ff = (IJOFF) get(JOProcObject.p_request, JOFF.pffId(id), null);
         return (ff != null) ? ff.cast(fv) : "";
+    }
+
+    public JSONObject fp() {
+        if (!has(JOProcConst.fp)) {
+            put(JOProcConst.fp, new JSONObject());
+        }
+        return optJSONObject(JOProcConst.fp);
     }
 
 }

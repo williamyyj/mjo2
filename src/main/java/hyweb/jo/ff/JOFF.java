@@ -9,6 +9,7 @@ import hyweb.jo.org.json.JSONArray;
 import hyweb.jo.org.json.JSONObject;
 import hyweb.jo.util.JOCache;
 import hyweb.jo.util.JOPath;
+import hyweb.jo.util.JOTools;
 import hyweb.jo.util.JOUtils;
 import java.io.File;
 import java.util.HashMap;
@@ -46,7 +47,6 @@ public class JOFF {
             JOPath.set(proc, "$ff:" + cfg.optString("$id"), o);
             return (IJOFF) o;
         } catch (Exception ex) {
-            ex.printStackTrace();
             JOLogger.error("Can't find " + cfg);
         }
         return null;
@@ -67,10 +67,14 @@ public class JOFF {
             JOPath.set(proc, "$ff:" + cfg.optString("$id"), o);
             return (IJOFF) o;
         } catch (Exception ex) {
-            ex.printStackTrace();
             JOLogger.error("Can't  create " + cfg);
         }
         return null;
+    }
+
+    public static IJOFF exec(JOProcObject proc, String line ) {
+        JSONObject cfg = JOTools.loadString(line);
+        return create(proc,cfg);
     }
 
     public static IJOFF ff_create(JOProcObject proc, JOMetadata md, Object line) {
@@ -95,7 +99,9 @@ public class JOFF {
         if (ja != null) {
             for (int i = 0; i < ja.length(); i++) {
                 IJOFF ff = ff_create(proc, md, ja.opt(i));
-                m.put(ff.cfg().optString("$id"), ff);
+                if (ff != null) {
+                    m.put(ff.cfg().optString("$id"), ff);
+                }
             }
         }
         return m;

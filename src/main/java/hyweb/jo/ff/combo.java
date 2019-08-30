@@ -11,7 +11,7 @@ import hyweb.jo.org.json.JSONObject;
  */
 public class combo extends JOFFBase<String> {
 
-    private StringBuilder content;
+    protected StringBuilder content;
 
     private String fmt_select = "<select id=\"%s\" name=\"%s\" class=\"%s\" ejo=\"%s\" >";
 
@@ -40,7 +40,7 @@ public class combo extends JOFFBase<String> {
         return content.toString();
     }
 
-    private void init_default(JOProcObject proc) {
+    protected void init_default(JOProcObject proc) {
         String dv = (String) this.getRowValue(proc.params(), "");
         String act = proc.params().optString("act");
         JSONArray names = cfg.optJSONArray("$ord");
@@ -57,9 +57,6 @@ public class combo extends JOFFBase<String> {
                 select_item(content, value, display, dv);
             }
         }
-        
-        
-
         proc.set(JOProcObject.p_request, "cb_" + ffId, content.toString());
     }
 

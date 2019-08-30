@@ -3,8 +3,6 @@ package hyweb.jo.util;
 import hyweb.jo.org.json.JSONArray;
 import hyweb.jo.org.json.JSONException;
 import hyweb.jo.org.json.JSONObject;
-import hyweb.jo.org.json.XML;
-import static hyweb.jo.org.json.XML.escape;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -12,9 +10,9 @@ import java.util.Iterator;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-
+import org.cc.org.apache.commons.text.StringEscapeUtils;
 /**
- *
+ *  修正  hyweb.jo.org.json.XML.escape 無法處理非法字元
  * @author william
  */
 public class XMLUtils {
@@ -95,7 +93,7 @@ public class XMLUtils {
     private static void text_element(StringBuilder sb, String name, Object o) {
         if (o != null) {
             sb.append('<').append(name).append('>');
-            sb.append(XML.escape(o.toString())); // #
+            sb.append(escape(o.toString())); // #
             sb.append("</").append(name).append('>');
         } else {
             sb.append('<').append(name).append("/>");
@@ -114,7 +112,7 @@ public class XMLUtils {
                     proc_element(sb, c, cdata);
                 }
             } else if (data != null) {
-                sb.append(XML.escape(data.toString()));
+                sb.append(escape(data.toString()));
             }
         }
 
@@ -268,6 +266,12 @@ public class XMLUtils {
                                 : "<" + tagName + ">" + string + "</" + tagName + ">";
             }
         }
+    }
+    
+    
+    private static String escape(String line){
+        //return XML.escape(line);
+        return StringEscapeUtils.escapeXml11(line);
     }
 
 }

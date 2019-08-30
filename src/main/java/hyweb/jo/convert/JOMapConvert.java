@@ -1,6 +1,7 @@
 package hyweb.jo.convert;
 
 import hyweb.jo.JOProcObject;
+import hyweb.jo.log.JOLogger;
 import hyweb.jo.org.json.JSONObject;
 import hyweb.jo.util.JOTools;
 import java.io.IOException;
@@ -35,7 +36,9 @@ public class JOMapConvert extends JOConvert<String, Object> {
             String[] key = cfg.optString("key").split(",");
             String cols = cfg.optString("cols", "*");
             String cond = cfg.optString("cond", "*");
-            List<JSONObject> rows = proc.db().rows(to_sql(key, cols, cond));
+            String sql = to_sql(key, cols, cond);
+            System.out.println("===== to_sql : " + sql);
+            List<JSONObject> rows = proc.db().rows(sql);
             for (JSONObject row : rows) {
                 proc_item(m, key, row);
             }

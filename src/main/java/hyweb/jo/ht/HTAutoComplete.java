@@ -45,7 +45,7 @@ public class HTAutoComplete extends HTCell {
 
     @Override
     public String display(Object p, Object dv) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return "";
     }
 
 }

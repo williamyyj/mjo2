@@ -7,6 +7,7 @@ import hyweb.jo.org.json.JSONArray;
 import hyweb.jo.org.json.JSONObject;
 import hyweb.jo.util.DateUtil;
 import hyweb.jo.util.JOFunctional;
+import hyweb.jo.util.TextUtils;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -49,6 +50,7 @@ public class wp_setting implements  IJOFunction<JSONObject, JOWPObject>{
         m.put("$now", new Date());
         m.put("$f", JOFunctional.class);
         m.put("$du", DateUtil.class);
+        m.put("$tu", TextUtils.class);
         m.put("$ff", wp.proc().opt("$ff"));
         m.put("$now", new Date());
         return m;

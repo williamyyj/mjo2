@@ -9,6 +9,7 @@ import hyweb.jo.util.JOCache;
 import hyweb.jo.util.JOTools;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -155,12 +156,36 @@ public class JOMetadata extends HashMap<String, IJOField> {
         return ret;
     }
 
+    public List<IJOField> getFields(Object o) {
+        if (o instanceof String) {
+            return getFields((String) o);
+        } else if (o instanceof Collection) {
+            return getFields((Collection) o);
+        }
+        return getFields((String) null);
+    }
+
     public List<IJOField> getFields(String line) {
         if ("db".equals(line) || "table".equals(line) || line == null || line.trim().length() == 0) {
             line = cfg.optString(JOConst.meta_fields);
         }
         String[] items = line.split(",");
         return getFields(items);
+    }
+
+    public List<IJOField> getFields(Collection items) {
+        List<IJOField> ret = new ArrayList<IJOField>();
+        for (Object o : items) {
+            String item = o.toString();
+            int ps = item.indexOf(':');
+            String id = (ps > 0) ? item.substring(0, ps) : item;
+            String args = (ps > 0) ? item.substring(ps + 1) : null;
+            IJOField fld = getField(id, args);
+            if (fld != null) {
+                ret.add(fld);
+            }
+        }
+        return ret;
     }
 
     /**
@@ -203,5 +228,5 @@ public class JOMetadata extends HashMap<String, IJOField> {
         }
         return fld;
     }
-
+    
 }

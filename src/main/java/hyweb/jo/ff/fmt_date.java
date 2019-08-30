@@ -6,9 +6,6 @@ import hyweb.jo.log.JOLogger;
 import hyweb.jo.org.json.JSONObject;
 import hyweb.jo.util.JOFunctional;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -33,7 +30,7 @@ public class fmt_date extends JOFFBase<String> {
         try {
             return sdf.format(JOFunctional.exec("cast.date", fv));
         } catch (Exception ex) {
-            JOLogger.warn("Can't cast date " + fv, ex);
+            JOLogger.warn("Can't cast date " + fv);
             return "";
         }
     }

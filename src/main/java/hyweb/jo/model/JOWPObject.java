@@ -13,7 +13,7 @@ import java.util.List;
  * @deprecated 請改用 JOWorkData
  * @author william
  */
-@Deprecated
+//@Deprecated
 public class JOWPObject extends JSONObject {
 
     private JOProcObject proc;
@@ -59,6 +59,18 @@ public class JOWPObject extends JSONObject {
         init_act(actId);
         params = (params == null) ? proc.params() : params;
         ref = (ref == null) ? new JSONObject() : ref;
+        this.put("$", params);
+        this.put("$$", ref);
+        this.scope = JOConst.eval;
+    }
+
+    public JOWPObject(JOActorObject actor) {
+        super();
+        this.proc = actor.proc();
+        this.metadata = actor.proc().wMeta().metadata(actor.metaId());
+        this.act = actor;
+        JSONObject params = proc.params();
+        JSONObject ref = (proc.has("$$")) ? proc.optJSONObject("$$") : new JSONObject() ;
         this.put("$", params);
         this.put("$$", ref);
         this.scope = JOConst.eval;
@@ -134,6 +146,7 @@ public class JOWPObject extends JSONObject {
      * @return
      */
     public List<IJOField> fields() {
+        System.out.println("ref scope ::: "+scope+":::"+ref_string(scope));
         return metadata().getFields(ref_string(scope));
     }
 
@@ -170,7 +183,7 @@ public class JOWPObject extends JSONObject {
         jq.put(JOProcConst.act, act().optString(JOConst.act));
         return DBCmd.parser_cmd(proc.db(), jq);
     }
-
+    
     public Object ref(String id) {
         if (act == null) {
             return null;

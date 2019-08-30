@@ -102,9 +102,9 @@ public class HTGrid extends HTCell {
     private void init_ht_cell(JOProcObject proc, IJOField fld) {
         if (fld.cfg().has("ht")) {
             try {
-                JSONObject cfg = JOTools.loadJSON(fld.cfg().optString("ht"));
+                JSONObject htCfg = JOTools.loadJSON(fld.cfg().optString("ht"));
 
-                IHTCell combo = (IHTCell) JOPackages.newInstance(cfg.optString("dt"), cfg);
+                IHTCell combo = (IHTCell) JOPackages.newInstance(htCfg.optString("dt"), htCfg);
                 combo.render(proc);
                 fld.cfg().put("cell", combo);
             } catch (IOException ex) {

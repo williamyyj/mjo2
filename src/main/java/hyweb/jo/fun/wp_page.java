@@ -65,7 +65,7 @@ public class wp_page implements IJOFunction<List<JSONObject>, JOWPObject> {
         sb.append(" ) c ) t ");
         sb.append(" where rowid > ").append(+(pageId - 1) * num);
         sb.append(" and rowid <= ").append((pageId) * num);
-        JOLogger.debug("===== page sql --> \r\n" + sql);
+        JOLogger.debug("===== page sql --> \r\n" + sb.toString());
         JOLogger.debug("===== page params --> \r\n" + mq.opt(param_fields));
         return db.rows(sb.toString(), params);
     }

@@ -44,7 +44,7 @@ public class wp_csv_col extends wp_csv {
     private void proc_csv_head(JOWPObject wp, List<IJOField> hFields) {
         List<String> csv = get_pcsv(wp);
         for (IJOField fld : hFields) {
-            csv.add(fld.label());
+            csv.add('"'+fld.label()+'"');
         }
     }
 }

@@ -23,9 +23,12 @@ public class wp_eval implements IJOFunction<Boolean, JOWPObject> {
         Map<String, Object> m = eval_pool(wp);
         JSONObject reval = new JSONObject();
         m.put("$eval", reval.m());
+        
+        
         for (IJOField fld : wp.fields()) {
             m.put("$fld", fld);
-            m.put("$fv", fld.getFieldValue(wp.p()));
+            Object fv =  fld.getFieldValue(wp.p());
+            m.put("$fv", fv!=null ? fv : "");
             try {
                 Object o = MVEL.eval(fld.eval(), m);
                 if (o instanceof Boolean) {

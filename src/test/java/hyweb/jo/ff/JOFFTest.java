@@ -13,13 +13,16 @@ import org.junit.Test;
  * @author william
  */
 public class JOFFTest {
-    
+
     @Test
     public void test_barcode() throws Exception {
         JOProcObject proc = new JOProcObject(JOTest.base);
         try {
             //chk_city(proc);
-            test_fmt(proc);
+            //test_fmt(proc
+            IJOFF ff = JOFF.exec(proc, "{$id:level,$codeId:sprayLevel,$ff:ht.cmradio}");
+            System.out.println(ff.getContent());
+            System.out.println(ff.cast("1", "不限"));
         } finally {
             proc.release();
         }
@@ -32,7 +35,7 @@ public class JOFFTest {
         JSONObject row = new JSONObject();
         row.put("mem_ct", "100/05/02");
         Object ret = ff.as(row, "mem_ct");
-        System.out.println("===== ret : "+ret);
+        System.out.println("===== ret : " + ret);
         System.out.println(proc);
     }
 
@@ -107,7 +110,7 @@ public class JOFFTest {
         JSONArray arr = new JSONArray();
         arr.put("01").put("20");
         proc.params().put("city", arr);
-       //proc.params().put("city","01,20");
+        //proc.params().put("city","01,20");
         IJOFF ff = JOFF.create(proc, "chk_city");
         String content = (String) proc.get(JOProcObject.p_request, "ht_city", "");
         content = content.replace("<br/>", "\n");
@@ -116,7 +119,7 @@ public class JOFFTest {
         System.out.println(content);
         System.out.println(".................................................");
     }
-    
+
     private void radio_sex(JOProcObject proc) {
         proc.params().put("sex", "F");
         IJOFF ff = JOFF.create(proc, "radio_sex");

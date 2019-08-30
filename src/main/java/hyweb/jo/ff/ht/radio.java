@@ -4,9 +4,6 @@ import hyweb.jo.JOProcObject;
 import hyweb.jo.ff.JOFFBase;
 import hyweb.jo.org.json.JSONArray;
 import hyweb.jo.org.json.JSONObject;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  *
@@ -14,7 +11,7 @@ import java.util.Set;
  */
 public class radio extends JOFFBase<String> {
 
-    private StringBuilder content;
+    protected StringBuilder content;
 
     @Override
     public void __init_proc(JOProcObject proc) {
@@ -41,7 +38,7 @@ public class radio extends JOFFBase<String> {
         return content.toString();
     }
 
-    private void init_content(JOProcObject proc) {
+    protected void init_content(JOProcObject proc) {
         String dv = (String) this.getRowValue(proc.params(), "");
         String act = proc.params().optString("act");
         JSONArray names = cfg.optJSONArray("$ord");

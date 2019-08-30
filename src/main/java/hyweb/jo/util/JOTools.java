@@ -113,7 +113,7 @@ public class JOTools {
         gzip = new GZIPOutputStream(out);
         gzip.write(text.getBytes("UTF-8"));
         gzip.close();
-        
+
         return Base64.u64_encode(out.toByteArray());
     }
 
@@ -147,6 +147,18 @@ public class JOTools {
                 return null;
             }
             return new JSONObject(new JSONTokener(new StringReader(text)));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static JSONArray toJSONArray(String text) {
+        try {
+            if (text == null || text.length() == 0) {
+                return null;
+            }
+            return new JSONArray(new JSONTokener(new StringReader(text)));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -198,6 +210,7 @@ public class JOTools {
     }
 
     public static JSONArray loadJA(String text) throws IOException {
+
         return loadJA(new StringReader(text));
     }
 

@@ -5,6 +5,7 @@
  */
 package hyweb.jo.db;
 
+import hyweb.jo.JOProcObject;
 import hyweb.jo.JOTest;
 import hyweb.jo.log.JOLogger;
 import org.junit.Test;
@@ -19,11 +20,11 @@ public class DBTest {
     public void db_cfg_test() {
         String base = JOTest.base;
         JOLogger.debug(base);
-        DB db = new DB(base, "wsdb");
+        JOProcObject proc = new JOProcObject(base,"dbWebPos");
         try {
-            System.out.println(db.cfg().toString(4));
+            System.out.println(proc.db().cfg().toString(4));
         } finally {
-            db.close();
+            proc.release();
         }
     }
 

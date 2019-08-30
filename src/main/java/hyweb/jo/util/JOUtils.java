@@ -73,6 +73,18 @@ public class JOUtils {
         return null;
     }
 
+    public static JSONArray toJA(Object o) {
+        if (o instanceof JSONArray) {
+            return (JSONArray) o;
+        } else if (o instanceof String) {
+            String text = (String) o;
+            text = (text.charAt(0) == '[' ? text : "[" + text + "]");
+            JOLogger.debug("text:"+text);
+            return JOTools.toJSONArray(text);
+        }
+        return null;
+    }
+
     public static String md5(JSONObject row, String[] items) {
         try {
 
@@ -88,7 +100,7 @@ public class JOUtils {
     }
 
     public static String md5(JSONObject row, String line) {
-        return md5(row,line.split("[,|:]"));
+        return md5(row, line.split("[,|:]"));
     }
 
 }

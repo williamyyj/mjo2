@@ -232,5 +232,9 @@ public class JOFunctional {
 
         return (o != null) ? ((String) o).replaceAll(regex, replace) : "";
     }
+    
+    public static Object fn(String funId ,Object fv) throws Exception{
+        return JOFunctional.exec(funId, fv);
+    }
 
 }

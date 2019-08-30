@@ -1,6 +1,5 @@
 package hyweb.jo;
 
-import hyweb.jo.log.JOLogger;
 import hyweb.jo.org.json.JSONObject;
 import hyweb.jo.util.JOCache;
 
@@ -76,6 +75,12 @@ public class JOConfig {
 
     public JSONObject pcfg() {
         return pcfg;
+    }
+    
+    public String scopeAsString(JSONObject row, String id){
+        String scope =pcfg.optString("scope");
+        String key = scope+"_"+id ;
+        return row.optString(key,row.optString(id));
     }
 
 }

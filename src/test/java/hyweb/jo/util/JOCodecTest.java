@@ -22,6 +22,10 @@ public class JOCodecTest {
         System.out.println(JOCodec.encodeForHTML("\""));
         String uri = "/mPosCService/__data__/2016/20161214000000pestCropRelation.zip";
         System.out.println(uri.replace("/mPosCService/__data__/", "D:\\ftproot"));
+        
+       System.out.println( Base64.b64_encode("4438-DC02".getBytes("UTF-8")));
+
+  
     }
 
 }

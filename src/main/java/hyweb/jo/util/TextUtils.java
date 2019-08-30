@@ -32,9 +32,6 @@ public class TextUtils {
     public final static String d_long_fmt = "yyyyMMddHHmmss";
     public final static String d_short_fmt = "yyyyMMdd";
 
-    
-
-    
     public static void mask(JSONObject jo, String name, int ps, int pe) {
         String ret = jo.optString(name, "");
         char[] buf = ret.toCharArray();
@@ -161,8 +158,8 @@ public class TextUtils {
         m.appendTail(sb);
         return sb.toString();
     }
-    
-      public static String render_value(Map<String,Object> model, String text) {
+
+    public static String render_value(Map<String, Object> model, String text) {
         StringBuffer sb = new StringBuffer();
         Matcher m = p.matcher(text);
         while (m.find()) {
@@ -319,20 +316,45 @@ public class TextUtils {
     }
 
     public static String fixStringSize(IJOField fld, String text) throws UnsupportedEncodingException {
-        if (fld.size() > 0  && text!=null) {
-                int size = fld.size();
-                if (fld.cfg().optBoolean("char")) {
-                    byte[] buf = text.getBytes("UTF-8");
-                    int len = buf.length;
-                    len = (size > len) ? len : size;
-                    text = new String(buf, 0, len, "UTF-8");
-                } else {
-                    int len = text.length();
-                    len = (size > len) ? len : size;
-                    text = text.substring(0, len);
-                }        
+        if (fld.size() > 0 && text != null) {
+            int size = fld.size();
+            if (fld.cfg().optBoolean("char")) {
+                byte[] buf = text.getBytes("UTF-8");
+                int len = buf.length;
+                len = (size > len) ? len : size;
+                text = new String(buf, 0, len, "UTF-8");
+            } else {
+                int len = text.length();
+                len = (size > len) ? len : size;
+                text = text.substring(0, len);
+            }
         }
-        return text ;
+        return text;
+    }
+
+    public static String df(String fmt, Object o) {
+        try {
+            Date d = (Date) JOFunctional.exec("cast.date", o);
+            return DateUtil.convert(fmt, d);
+        } catch (Exception e) {
+            return "";
+        }
+    }
+    
+
+    
+    public static String toNumString(String line) {
+        if (line != null) {
+            char[] buf = line.toCharArray();
+            StringBuilder sb = new StringBuilder();
+            for (char c : buf) {
+                if (c >= '0' && c <= '9') {
+                    sb.append(c);
+                }
+            }
+            return sb.toString();
+        }
+        return "";
     }
 
 }

@@ -7,7 +7,6 @@ import hyweb.jo.org.json.JSONObject;
 import java.util.List;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 
 /**
  *
@@ -28,7 +27,7 @@ public class CCFuncTest {
         proc.release();
     }
 
-    @Test
+
     public void test_proc_row() throws Exception {
         ICCPF<JSONObject> f = new org.cc.fun.proc.row();
         JSONObject event = new JSONObject();
@@ -37,7 +36,7 @@ public class CCFuncTest {
         System.out.println(row);
     }
 
-    @Test
+
     public void test_proc_rows() throws Exception {
         ICCPF<List<JSONObject>> f = new org.cc.fun.proc.rows();
         JSONObject evt = new JSONObject();

@@ -6,17 +6,18 @@ import hyweb.jo.org.json.JSONArray;
 import hyweb.jo.org.json.JSONObject;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
+
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
- *
+ *          <input type="checkbox" id="level_1" name="level" value="1"/><label for="level_1">
+ * -->   <input type="checkbox" id="level_1" name="level_1" value="1"/><label for="level_1">
  * @author william
  */
 public class checkbox extends JOFFBase<String> {
 
-    private StringBuilder content;
+    protected StringBuilder content;
 
     @Override
     public void __init_proc(JOProcObject proc) {
@@ -68,11 +69,12 @@ public class checkbox extends JOFFBase<String> {
     
     
 
-    private void init_content(JOProcObject proc) {
-        Set<String> dv = getDefaultValue(this.getRowValue(proc.params(), null));
-        System.out.println(dv);
+    protected void init_content(JOProcObject proc) {
+        JSONObject p = proc.params();
+
         String act = proc.params().optString("act");
         JSONArray names = cfg.optJSONArray("$ord");
+        String prefix = cfg.optString("$alias",cfg.optString("$id"));
         if (names != null) {
             for (int i = 0; i < names.length(); i++) {
                 String value = names.optString(i);
@@ -80,16 +82,15 @@ public class checkbox extends JOFFBase<String> {
                 if ("$br".equals(value)) {
                     content.append("<br/>");
                 } else {
-                    String id = cfg.optString("$id") + "_" + value;
-                    String name = cfg.optString("$id");
-                    content.append("<input type=\"checkbox\" id=\"").append(id)
-                      .append("\" name=\"").append(name)
+                    String fid= prefix + "_" + value;
+                    content.append("<input type=\"checkbox\" id=\"").append(fid)
+                      .append("\" name=\"").append(fid)
                       .append("\" value=\"").append(value).append("\"");
-                    if (dv.contains(value)) {
+                    if (p.has(fid)) {
                         content.append(" checked ");
                     }
                     content.append("/>");
-                    content.append("<label for=\"").append(id).append("\">").append(label).append("</label>");
+                    content.append("<label for=\"").append(fid).append("\">").append(label).append("</label>");
                 }
             }
         }

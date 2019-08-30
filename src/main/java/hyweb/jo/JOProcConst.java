@@ -13,7 +13,7 @@ public class JOProcConst extends JOConst {
     public final static String w_req = "$w_request";
     public final static String w_pg = "$w_pg";
     public final static String w_resp = "$w_response";
-    public final static String w_proc = "$w_proc";
+    public final static String w_proc = "$w_proc";  // 這個似乎可省略 
     public final static String w_status = "$w_status";
     public final static String w_exception = "$w_exception";
     public final static String w_upload = "$upload";

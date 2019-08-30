@@ -6,6 +6,8 @@ import hyweb.jo.org.json.JSONObject;
 
 /**
  * @author william
+ *  管理  IJOFF
+ * 
  */
 public class JOWorkFF extends JSONObject {
 

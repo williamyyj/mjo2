@@ -5,7 +5,9 @@ import hyweb.jo.JOProcObject;
 /**
  * @author william $id , $type , $label , $params id: , ref: , params : { }
  * ..... [ "id:xxxx , ref: ,
+ *  @deprecated use {@link IHT} instead. 
  */
+ @Deprecated
 public interface IHTCell extends IJOInit<Object> {
 
     public String getId();

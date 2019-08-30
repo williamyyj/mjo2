@@ -1,8 +1,6 @@
 package hyweb.jo.model;
 
 import hyweb.jo.JOProcObject;
-import hyweb.jo.org.json.JSONObject;
-import hyweb.jo.util.JOPath;
 
 /**
  *

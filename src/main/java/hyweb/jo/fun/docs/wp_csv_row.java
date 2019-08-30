@@ -13,15 +13,20 @@ public class wp_csv_row extends wp_csv {
 
     @Override
     public Object exec(JOWPObject wp) throws Exception {
-        JSONObject act = wp.act();
-        List<IJOField> mFields = wp.metadata().getFields(act.optString("$fields"));
-        List<IJOField> bFields = wp.metadata().getFields(act.optString("$before"));
+        List<IJOField> mFields = getFields(wp, "$fields");
+        List<IJOField> bFields = getFields(wp, "$before");
         proc_csv_head(wp, mFields);
-        List<JSONObject> data = (List<JSONObject>) wp.proc().db().action(wp.mq_orderby());
+         List<JSONObject> data = null;
+        if(wp.act().optBoolean("$usedData")){
+            data = (List<JSONObject>) wp.proc().opt("$data");
+        } else {
+            data =  (List<JSONObject>) wp.proc().db().action(wp.mq_orderby()); 
+        }
+       
         int idx = 0;
         for (JSONObject row : data) {
             row.put("$i", idx);
-            JOFunctional.exec2("fb_eval", wp.proc(), bFields, row, wp.p());
+            JOFunctional.exec2("proc_eval", wp.proc(), bFields, row, wp.p());
             proc_csv_row(wp, mFields, row);
             idx++;
         }
@@ -63,7 +68,7 @@ public class wp_csv_row extends wp_csv {
         StringBuilder sb = new StringBuilder();
         String split = wp.act().optString("split", ",");
         for (IJOField fld : hFields) {
-            sb.append(fld.label()).append(split);
+            sb.append('"').append(fld.label()).append('"').append(split);
         }
         if (hFields.size() > 0) {
             sb.setLength(sb.length() - split.length());

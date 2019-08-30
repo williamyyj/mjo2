@@ -6,7 +6,9 @@ import hyweb.jo.ht.HTCell;
 import hyweb.jo.log.JOLogger;
 import hyweb.jo.org.json.JSONArray;
 import hyweb.jo.org.json.JSONObject;
+import hyweb.jo.util.JOPath;
 import hyweb.jo.util.JOTools;
+import java.util.List;
 import org.mvel2.templates.TemplateRuntime;
 
 /**
@@ -38,6 +40,21 @@ public class HTCombo extends HTCell {
                 item.put("value", args[0]);
                 item.put("display", (args.length > 1) ? args[1] : args[0]);
                 items.put(item);
+            }
+        }
+
+        if (cfg.has("codeId")) { // codemain 
+            try {
+                String codeId = cfg.optString("codeId");
+                String sql = "select codeValue [value] , codeShow [display] from baphiqCodeMain where codeId = ? order by codeSort";
+                List<JSONObject> dbRows = proc.db().rows(sql, codeId);
+                if (rows != null) {
+                    for (JSONObject row : dbRows) {
+                        items.put(row);
+                    }
+                }
+            } catch (Exception e) {
+
             }
         }
         cfg.put("items", items);

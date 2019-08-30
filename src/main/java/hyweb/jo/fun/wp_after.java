@@ -13,7 +13,6 @@ public class wp_after extends wp_base<Boolean> {
 
     @Override
     public Boolean exec(JOWPObject wp) throws Exception {
-        System.out.println("===== wp_after");
         JSONObject act = wp.act();
         Object data = wp.opt("$data");
         data = data != null ? data : wp.proc().opt("$data") ;
@@ -25,7 +24,6 @@ public class wp_after extends wp_base<Boolean> {
                 this.eval_rows(wp.proc(), aFields, (List) data, wp.pp());
             }
         }
-        System.out.println(data);
         return true;
     }
 

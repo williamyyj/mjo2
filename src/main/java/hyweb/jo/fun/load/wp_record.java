@@ -31,13 +31,13 @@ public class wp_record implements IJOFunction<List<JSONObject>, JOWPObject> {
             proc_fields(eFields);
             String[] items = text.split(lineSplit);
             for (String item : items) {
-                try{
-                JSONObject row = proc_record(eFields, item, min);
-                row.put("rid", p.opt("rid"));
-                row.put("sysId", p.opt("sysId"));
-                rows.add(row);
-                } catch(Exception e){
-                    JOLogger.info("Fail row : [" + item+"]");
+                try {
+                    JSONObject row = proc_record(eFields, item, min);
+                    row.put("rid", p.opt("rid"));
+                    row.put("sysId", p.opt("sysId"));
+                    rows.add(row);
+                } catch (Exception e) {
+                    JOLogger.info("Fail row : [" + item + "]");
                 }
             }
         }

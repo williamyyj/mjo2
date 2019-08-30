@@ -30,6 +30,12 @@ public abstract class JOFFBase<E> implements IJOFF<E>, IJOInit<JSONObject> {
     }
 
     public abstract void __init_proc(JOProcObject proc);
+    
+    @Override
+    public E cast(Object fv, E dv){
+        E ret = cast(fv);
+        return (ret != null) ? ret : dv ;  
+    }
 
     @Override
     public void init(JOProcObject proc) throws Exception {
